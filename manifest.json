@@ -1,0 +1,23 @@
+{
+
+  "description": "Princess Princess Copy.",
+  "manifest_version": 2,
+  "name": "prsprscopy",
+  "version": "0.0.0",
+  "icons": {
+    "48": "icons/icon-48.png"
+  },
+
+  "background": {
+    "scripts": [
+      "background/background.js"
+    ]
+  },
+
+  "permissions":[
+    "activeTab",
+    "clipboardWrite",
+    "storage"
+  ]
+
+}

@@ -1,0 +1,25 @@
+{
+  "name": "prsprscopy",
+  "version": "0.0.0",
+  "description": "Princess Princess Copy",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "eslint": "eslint --color --ext=.js ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "WebExtensions",
+    "Copy",
+    "Clipboard"
+  ],
+  "author": "PrsPrsBK",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "mocha": "^4.0.1"
+  }
+}
