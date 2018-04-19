@@ -1,0 +1,7 @@
+{
+  "libs": [
+    "browser",
+    "node_modules/tern-def-webextensions/defs/webextensions-desktop-beta"
+  ]
+}
+
