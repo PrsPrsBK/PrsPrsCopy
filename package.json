@@ -1,25 +1,26 @@
 {
   "name": "prsprscopy",
-  "version": "0.0.0",
   "description": "Princess Princess Copy",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha",
-    "eslint": "eslint --color --ext=.js ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "none"
+  "version": "0.0.1",
+  "author": "PrsPrsBK",
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "mocha": "^4.0.1",
+    "tern-def-webextensions": "^0.2.0"
   },
   "keywords": [
     "WebExtensions",
     "Copy",
     "Clipboard"
   ],
-  "author": "PrsPrsBK",
   "license": "MIT",
-  "devDependencies": {
-    "eslint": "^4.11.0",
-    "mocha": "^4.0.1"
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "scripts": {
+    "test": "mocha",
+    "eslint": "eslint --color --ext=.js ."
   }
 }
