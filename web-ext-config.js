@@ -3,6 +3,7 @@ module.exports = {
   ignoreFiles: [
     '*.log',
     'package.json',
+    'package-lock.json',
     '.tern-project',
     'note/',
     'test/',
