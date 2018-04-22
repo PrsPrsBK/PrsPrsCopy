@@ -47,10 +47,9 @@ const onCopy = (evt) => {
   });
 };
 
-document.addEventListener('copy', onCopy);
-
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'what') {
+    document.addEventListener('copy', onCopy);
     RESULT_ARR = textPick(message.target);
     document.execCommand('copy');
   }
