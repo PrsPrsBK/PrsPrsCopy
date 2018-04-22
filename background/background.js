@@ -4,11 +4,13 @@ if(typeof browser === 'undefined') {
 }
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
-  console.log(`ppcopy ${tab.url}`);
-  if(tab.url.startsWith('https://twitter.com')) {
-    browser.tabs.executeScript(tabId, {
-      file: '/content_scripts/TextPicker.js',
-    });
+  console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
+  if(chgInfo.status === 'complete') {
+    if(tab.url.startsWith('https://twitter.com')) {
+      browser.tabs.executeScript(tabId, {
+        file: '/content_scripts/TextPicker.js',
+      });
+    }
   }
 });
 
