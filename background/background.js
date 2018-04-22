@@ -8,7 +8,7 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
   if(chgInfo.status === 'complete') {
     if(tab.url.startsWith('https://twitter.com')) {
       browser.tabs.executeScript(tabId, {
-        file: '/content_scripts/TextPicker.js',
+        file: '/content_scripts/tweetPicker.js',
       });
     }
   }
