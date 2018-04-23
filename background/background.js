@@ -6,11 +6,20 @@ if(typeof browser === 'undefined') {
 const injected = {};
 
 const defaultTargets = [
-  {string: '  <dt><a href="'},
-  {plain: 'url'},
-  {string: '">'},
-  {plain: 'title'},
-  {string: '</a></dt>\n'},
+  [
+    {string: '<dt><a href="'},
+    {plain: 'url'},
+    {string: '">'},
+    {plain: 'title'},
+    {string: '</a></dt>\n'},
+  ],
+  [
+    {string: '<a href="'},
+    {plain: 'url'},
+    {string: '">'},
+    {plain: 'title'},
+    {string: '</a>\n'},
+  ],
 ];
 
 const onError = (err) => {
@@ -18,14 +27,16 @@ const onError = (err) => {
 };
 
 const tellWhat = (tabId) => {
+  const curTgt = defaultTargets[injected[tabId].index];
+  injected[tabId].index = ++injected[tabId].index % defaultTargets.length;
   browser.tabs.sendMessage(tabId, {
     task: 'what',
-    target: defaultTargets
+    target: curTgt
   });
   //Google Chrome, sendResponse not work.
   //sendResponse({
   //  task: 'what',
-  //  target: defaultTargets
+  //  target: curTgt
   //});
 };
 
@@ -38,7 +49,7 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
       });
     }
     else {
-      injected[tab.id] = false;
+      injected[tab.id] = undefined;
     }
   }
 });
@@ -49,6 +60,7 @@ browser.tabs.onRemoved.addListener((tabId, rmInfo) => {
 
 browser.commands.onCommand.addListener((cmd) => {
   if(cmd === 'PrsPrsCopy') {
+    //Google Chrome, Promise not work.
     //const querying = browser.tabs.query({currentWindow: true, active: true});
     //querying.then((tabs) => {
     //  for(const tab of tabs) {
@@ -61,14 +73,16 @@ browser.commands.onCommand.addListener((cmd) => {
     //}, onError);
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        if(!injected[tab.id] && !tab.url.startsWith('https://twitter.com')) {
-          browser.tabs.executeScript(tab.id, {
-            file: '/content_scripts/textPicker.js',
-          });
-          injected[tab.id] = true;
-        }
-        else if(injected[tab.id] && !tab.url.startsWith('https://twitter.com')) {
-          tellWhat(tab.id);
+        if(!tab.url.startsWith('https://twitter.com')) {
+          if(!injected[tab.id]) {// case of undefined
+            browser.tabs.executeScript(tab.id, {
+              file: '/content_scripts/textPicker.js',
+            });
+            injected[tab.id] = {index: 0};
+          }
+          else if(injected[tab.id]) {
+            tellWhat(tab.id);
+          }
         }
       }
     });
