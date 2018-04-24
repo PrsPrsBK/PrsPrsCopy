@@ -1,6 +1,6 @@
 {
 
-  "description": "Princess Princess Copy.",
+  "description": "Princess Princess Copy. When no range selected on page, Ctrl-c copy with template of url, title, or so",
   "manifest_version": 2,
   "name": "prsprscopy",
   "version": "0.1.0",
@@ -17,7 +17,7 @@
   "commands": {
     "PrsPrsCopy": {
       "suggested_key": {
-        "default": "Alt+C"
+        "default": "Ctrl+C"
       },
       "description": "Addon's Copy key."
     }
