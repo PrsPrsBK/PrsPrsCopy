@@ -53,7 +53,26 @@ const tellWhat = (tab) => {
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
   console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
-    injected[tab.id] = undefined;
+    if(tab.url.startsWith('https://twitter.com')) {
+      //when move from twitter to twitter, content scripts remain loaded.
+      if(injected[tab.id] && injected[tab.id].loaded && injected[tab.id].twitter) {
+        injected[tab.id].index = 0;
+      }
+      else {
+        injected[tab.id] = {
+          loaded: false,
+          twitter: true,
+          index: 0,
+        };
+      }
+    }
+    else {
+      injected[tab.id] = {
+        loaded: false,
+        twitter: false,
+        index: 0,
+      };
+    }
   }
 });
 
@@ -77,25 +96,25 @@ browser.commands.onCommand.addListener((cmd) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         if(tab.url.startsWith('https://twitter.com')) {
-          if(!injected[tab.id]) {// case of undefined
+          if(injected[tab.id].loaded) {
+            tellWhat(tab);
+          }
+          else {
             browser.tabs.executeScript(tab.id, {
               file: '/content_scripts/tweetPicker.js',
             });
-            injected[tab.id] = {index: 0};
-          }
-          else if(injected[tab.id]) {
-            tellWhat(tab);
+            injected[tab.id].loaded = true;
           }
         }
         else {
-          if(!injected[tab.id]) {// case of undefined
+          if(injected[tab.id].loaded) {
+            tellWhat(tab);
+          }
+          else {
             browser.tabs.executeScript(tab.id, {
               file: '/content_scripts/textPicker.js',
             });
-            injected[tab.id] = {index: 0};
-          }
-          else if(injected[tab.id]) {
-            tellWhat(tab);
+            injected[tab.id].loaded = true;
           }
         }
       }
