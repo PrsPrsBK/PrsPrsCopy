@@ -3,6 +3,8 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
+let RESULT_ARR = [];
+
 /**
  * make and return Object contains each datetime infos as string, made from mill seconds string.
  * @param {string} milsec_txt - string
@@ -111,15 +113,15 @@ const copyFromOverlay = (tgt_elm) => {
     result.text = mainText;
   }
   //console.log(result);
-  const result_text = '<dt><a href="' +
-    result.href + '">' +
-    result.time['year'] + '-' +
-    result.time['month'] + '-' +
-    result.time['day'] + ' ' +
-    result.time['hour'] + ':' +
-    result.time['minute'] + ' ' +
-    result.fullname + ':</a> ' +
-    result.text + '</dt>';
+  const result_text = '<dt><a href="'
+    + result.href + '">'
+    + result.time['year'] + '-'
+    + result.time['month'] + '-'
+    + result.time['day'] + ' '
+    + result.time['hour'] + ':'
+    + result.time['minute'] + ' '
+    + result.fullname + ':</a> '
+    + result.text + '</dt>';
   return result_text;
 };
 
@@ -129,8 +131,8 @@ const setTextForCopy = () => {
   let wk_elm;
   wk_elm = document.getElementById('permalink-overlay');
   console.log('setTextForCopy1');
-  if(wk_elm &&
-    (wk_elm.style === undefined
+  if(wk_elm
+    && (wk_elm.style === undefined
       || (wk_elm.style !== undefined && wk_elm.style.display === undefined)
       || wk_elm.style.display === 'block'
       || wk_elm.style.opacity === 1)) {
@@ -153,6 +155,21 @@ const setTextForCopy = () => {
   return ret;
 };
 
+const textPick = (tgt) => {
+  tgt.forEach((val, idx) => {
+    if(val.hasOwnProperty('plain')) {
+      if(val.plain === 'url') {
+        tgt[idx] = {string: window.location.href};
+      }
+      else if(val.plain === 'title') {
+        tgt[idx] = {string: document.title};
+      }
+      console.log(tgt[idx]);
+    }
+  });
+  return tgt;
+};
+
 const onCopy = (evt) => {
   console.log('onCopy start');
   if(window.getSelection().toString() === '') {
@@ -163,14 +180,25 @@ const onCopy = (evt) => {
       transfer.setData('text/plain', outputText);
     }
   }
+  document.removeEventListener('copy', onCopy);
+  browser.runtime.sendMessage({
+    task: 'copyEnd',
+    result: RESULT_ARR,
+  });
 };
 
-const start = () => {
-  console.debug(window.location.href);
-  document.addEventListener('copy', onCopy);
-};
+console.debug(window.location.href);
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if(message.task === 'what') {
+    document.addEventListener('copy', onCopy);
+    RESULT_ARR = textPick(message.target);
+    document.execCommand('copy');
+  }
+});
 
-start();
+browser.runtime.sendMessage({
+  task: 'what',
+});
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
 

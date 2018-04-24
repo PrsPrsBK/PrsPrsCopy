@@ -27,12 +27,14 @@
     "page": "options_ui/options.html"
   },
 
+  "optional_permissions":[
+  ],
+
   "permissions":[
     "activeTab",
     "clipboardWrite",
     "storage",
-    "tabs",
-    "<all_urls>"
+    "tabs"
   ]
 
 }

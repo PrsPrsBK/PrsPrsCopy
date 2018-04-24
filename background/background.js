@@ -26,10 +26,20 @@ const onError = (err) => {
   console.log(`${err}`);
 };
 
-const tellWhat = (tabId) => {
-  const curTgt = defaultTargets[injected[tabId].index];
-  injected[tabId].index = ++injected[tabId].index % defaultTargets.length;
-  browser.tabs.sendMessage(tabId, {
+const getTemplate = (tab) => {
+  if(tab.url.startsWith('https://twitter.com')) {
+    return [[ {string: 'dummy'} ]];
+  }
+  else {
+    return defaultTargets;
+  }
+};
+
+const tellWhat = (tab) => {
+  const templateArr = getTemplate(tab);
+  const curTgt = templateArr[injected[tab.id].index];
+  injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
+  browser.tabs.sendMessage(tab.id, {
     task: 'what',
     target: curTgt
   });
@@ -43,14 +53,7 @@ const tellWhat = (tabId) => {
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
   console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
-    if(tab.url.startsWith('https://twitter.com')) {
-      browser.tabs.executeScript(tabId, {
-        file: '/content_scripts/tweetPicker.js',
-      });
-    }
-    else {
-      injected[tab.id] = undefined;
-    }
+    injected[tab.id] = undefined;
   }
 });
 
@@ -73,7 +76,18 @@ browser.commands.onCommand.addListener((cmd) => {
     //}, onError);
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        if(!tab.url.startsWith('https://twitter.com')) {
+        if(tab.url.startsWith('https://twitter.com')) {
+          if(!injected[tab.id]) {// case of undefined
+            browser.tabs.executeScript(tab.id, {
+              file: '/content_scripts/tweetPicker.js',
+            });
+            injected[tab.id] = {index: 0};
+          }
+          else if(injected[tab.id]) {
+            tellWhat(tab);
+          }
+        }
+        else {
           if(!injected[tab.id]) {// case of undefined
             browser.tabs.executeScript(tab.id, {
               file: '/content_scripts/textPicker.js',
@@ -81,7 +95,7 @@ browser.commands.onCommand.addListener((cmd) => {
             injected[tab.id] = {index: 0};
           }
           else if(injected[tab.id]) {
-            tellWhat(tab.id);
+            tellWhat(tab);
           }
         }
       }
@@ -91,7 +105,7 @@ browser.commands.onCommand.addListener((cmd) => {
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'what') {
-    tellWhat(sender.tab.id);
+    tellWhat(sender.tab);
   }
   else if(message.task === 'copyEnd') {
     console.log(`copy end ${JSON.stringify(message.result)}`);
