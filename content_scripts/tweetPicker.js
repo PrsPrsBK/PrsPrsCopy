@@ -133,103 +133,29 @@ const getTweetText = (tgt_elm) => {
   }
 };
 
-const copyFromOverlay = (tgt_elm) => {
-  const result = {};
-  let wk_elm;
-  wk_elm = tgt_elm.getElementsByClassName('tweet-timestamp');
-  if(wk_elm && wk_elm.length > 0) {
-    console.log(1);
-    result.href = wk_elm[0].href.trim();
-  }
-  wk_elm = tgt_elm.getElementsByClassName('_timestamp');
-  if(wk_elm && wk_elm.length > 0) {
-    console.log(2);
-    result.time = parseTweetTime(wk_elm[0].getAttribute('data-time-ms').trim());
-  }
-  wk_elm = tgt_elm.getElementsByClassName('fullname');
-  if(wk_elm && wk_elm.length > 0) {
-    console.log(3);
-    const fullname = escapeHtmlChar(wk_elm[0].textContent.trim());
-    result.fullname = fullname;
-  }
-  wk_elm = tgt_elm.getElementsByClassName('tweet-text');
-  if(wk_elm && wk_elm.length > 0) {
-    console.log(4);
-    let mainText = wk_elm[0].textContent.trim();
-    mainText = mainText.replace(/\r?\n/g, ' ');
-    const quoteTweetText = getQuoteTweetText(tgt_elm);
-    if(quoteTweetText !== '') {
-      console.log('add quote');
-      mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
-    }
-    mainText = activateHrefText(mainText);
-    mainText += quoteTweetText;
-    result.text = mainText;
-  }
-  //console.log(result);
-  const result_text = '<dt><a href="'
-    + result.href + '">'
-    + result.time['year'] + '-'
-    + result.time['month'] + '-'
-    + result.time['day'] + ' '
-    + result.time['hour'] + ':'
-    + result.time['minute'] + ' '
-    + result.fullname + ':</a> '
-    + result.text + '</dt>';
-  return result_text;
-};
-
-const setTextForCopy = () => {
-  console.log('setTextForCopy');
-  let ret = '';
-  let wk_elm;
-  wk_elm = document.getElementById('permalink-overlay');
-  console.log('setTextForCopy1');
-  if(wk_elm
-    && (wk_elm.style === undefined
-      || wk_elm.style.display === undefined
-      || wk_elm.style.display === 'block'
-      || wk_elm.style.opacity === 1)) {
-    console.log('go permalink0');
-    wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
-    if(wk_elm && wk_elm.length > 0) {
-      console.log('go permalink1');
-      ret = copyFromOverlay(wk_elm[0]);
-    }
-    return ret;
-  }
-  console.log('setTextForCopy2');
-  wk_elm = document.getElementsByClassName('selected-stream-item');
-  console.log('setTextForCopy3');
-  if(wk_elm && wk_elm.length > 0) {
-    console.log('go stream-item');
-    ret = copyFromOverlay(wk_elm[0]);
-    return ret;
-  }
-  return ret;
-};
-
 let CUR_MAIN_TWEET = undefined;
 
 const getCurTweet = () => {
-  let wk_elm = document.getElementById('permalink-overlay');
-  if(wk_elm
-    && (wk_elm.style === undefined
-      || wk_elm.style.display === undefined
-      || wk_elm.style.display === 'block'
-      || wk_elm.style.opacity === 1)) {
-    console.log('may be overlay');
-    wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
-    if(wk_elm && wk_elm.length > 0) {
-      console.log(`overlay ${wk_elm.length}`);
-      CUR_MAIN_TWEET = wk_elm[0];
+  if(!CUR_MAIN_TWEET) {
+    let wk_elm = document.getElementById('permalink-overlay');
+    if(wk_elm
+      && (wk_elm.style === undefined
+        || wk_elm.style.display === undefined
+        || wk_elm.style.display === 'block'
+        || wk_elm.style.opacity === 1)) {
+      console.log('may be overlay');
+      wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
+      if(wk_elm && wk_elm.length > 0) {
+        console.log(`overlay ${wk_elm.length}`);
+        CUR_MAIN_TWEET = wk_elm[0];
+      }
     }
-  }
-  else {
-    wk_elm = document.getElementsByClassName('selected-stream-item');
-    if(wk_elm && wk_elm.length > 0) {
-      console.log(`may be selected one ${wk_elm.length}`);
-      CUR_MAIN_TWEET = wk_elm[0];
+    else {
+      wk_elm = document.getElementsByClassName('selected-stream-item');
+      if(wk_elm && wk_elm.length > 0) {
+        console.log(`may be selected one ${wk_elm.length}`);
+        CUR_MAIN_TWEET = wk_elm[0];
+      }
     }
   }
   return CUR_MAIN_TWEET;
@@ -263,6 +189,7 @@ const textPick = (tgt) => {
       console.log(tgt[idx]);
     }
   });
+  CUR_MAIN_TWEET = null;
   return tgt;
 };
 
@@ -274,7 +201,6 @@ const onCopy = (evt) => {
         return acm + val.string;
       }, '');
     console.log(outputText);
-    //const outputText = setTextForCopy();
     if(outputText !== '') {
       evt.preventDefault();
       const transfer = evt.clipboardData;
