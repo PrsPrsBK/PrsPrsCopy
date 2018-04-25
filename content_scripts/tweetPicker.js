@@ -138,19 +138,21 @@ let CUR_MAIN_TWEET = undefined;
 const getCurTweet = () => {
   if(!CUR_MAIN_TWEET) {
     let wk_elm = document.getElementById('permalink-overlay');
-    if(wk_elm
-      && (wk_elm.style === undefined
-        || wk_elm.style.display === undefined
-        || wk_elm.style.display === 'block'
-        || wk_elm.style.opacity === 1)) {
-      console.log('may be overlay');
-      wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
-      if(wk_elm && wk_elm.length > 0) {
-        console.log(`overlay ${wk_elm.length}`);
-        CUR_MAIN_TWEET = wk_elm[0];
+    if(wk_elm) {
+      const computedStyle = window.getComputedStyle(wk_elm);
+      if(computedStyle === undefined
+        || computedStyle.display === undefined
+        || computedStyle.display === 'block'
+        || computedStyle.opacity === 1) {
+        console.log('may be modal overlay');
+        wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
+        if(wk_elm && wk_elm.length > 0) {
+          console.log(`overlay ${wk_elm.length}`);
+          CUR_MAIN_TWEET = wk_elm[0];
+        }
       }
     }
-    else {
+    if(!CUR_MAIN_TWEET) {
       wk_elm = document.getElementsByClassName('selected-stream-item');
       if(wk_elm && wk_elm.length > 0) {
         console.log(`may be selected one ${wk_elm.length}`);
