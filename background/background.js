@@ -5,20 +5,34 @@ if(typeof browser === 'undefined') {
 
 const injected = {};
 
+const tweetTargets = [
+  [
+    {string: '<dt><a href="'},
+    {tweet: 'url'},
+    {string: '">'},
+    {tweet: 'datetime'},
+    {string: ' '},
+    {tweet: 'username'},
+    {string: '</a>: '},
+    {tweet: 'text'},
+    {string: '</dt>'},
+  ],
+];
+
 const defaultTargets = [
   [
     {string: '<dt><a href="'},
     {plain: 'url'},
     {string: '">'},
     {plain: 'title'},
-    {string: '</a></dt>\n'},
+    {string: '</a></dt>'},
   ],
   [
     {string: '<a href="'},
     {plain: 'url'},
     {string: '">'},
     {plain: 'title'},
-    {string: '</a>\n'},
+    {string: '</a>'},
   ],
 ];
 
@@ -28,7 +42,7 @@ const onError = (err) => {
 
 const getTemplate = (tab) => {
   if(tab.url.startsWith('https://twitter.com')) {
-    return [[ {string: 'dummy'} ]];
+    return tweetTargets;
   }
   else {
     return defaultTargets;
@@ -95,6 +109,7 @@ browser.commands.onCommand.addListener((cmd) => {
     //}, onError);
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
+        console.log(`url: ${tab.url}`);
         if(tab.url.startsWith('https://twitter.com')) {
           if(injected[tab.id].loaded) {
             tellWhat(tab);
