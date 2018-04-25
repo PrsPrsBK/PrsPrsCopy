@@ -93,11 +93,11 @@ const getTweetTimestamp = (tgt_elm) => {
   const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
   if(wk_elm && wk_elm.length > 0) {
     const result = parseTweetTime(wk_elm[0].getAttribute('data-time-ms').trim());
-    return result.time['year'] + '-'
-    + result.time['month'] + '-'
-    + result.time['day'] + ' '
-    + result.time['hour'] + ':'
-    + result.time['minute'];
+    return result['year'] + '-'
+    + result['month'] + '-'
+    + result['day'] + ' '
+    + result['hour'] + ':'
+    + result['minute'];
   }
   else {
     return '';
@@ -212,26 +212,24 @@ const setTextForCopy = () => {
 let CUR_MAIN_TWEET = undefined;
 
 const getCurTweet = () => {
-  if(!CUR_MAIN_TWEET) {
-    let wk_elm = document.getElementById('permalink-overlay');
-    if(wk_elm
-      && (wk_elm.style === undefined
-        || wk_elm.style.display === undefined
-        || wk_elm.style.display === 'block'
-        || wk_elm.style.opacity === 1)) {
-      console.log('may be overlay');
-      wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
-      if(wk_elm && wk_elm.length > 0) {
-        console.log(`overlay ${wk_elm.length}`);
-        CUR_MAIN_TWEET = wk_elm[0];
-      }
+  let wk_elm = document.getElementById('permalink-overlay');
+  if(wk_elm
+    && (wk_elm.style === undefined
+      || wk_elm.style.display === undefined
+      || wk_elm.style.display === 'block'
+      || wk_elm.style.opacity === 1)) {
+    console.log('may be overlay');
+    wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
+    if(wk_elm && wk_elm.length > 0) {
+      console.log(`overlay ${wk_elm.length}`);
+      CUR_MAIN_TWEET = wk_elm[0];
     }
-    else {
-      wk_elm = document.getElementsByClassName('selected-stream-item');
-      if(wk_elm && wk_elm.length > 0) {
-        console.log(`may be selected one ${wk_elm.length}`);
-        CUR_MAIN_TWEET = wk_elm[0];
-      }
+  }
+  else {
+    wk_elm = document.getElementsByClassName('selected-stream-item');
+    if(wk_elm && wk_elm.length > 0) {
+      console.log(`may be selected one ${wk_elm.length}`);
+      CUR_MAIN_TWEET = wk_elm[0];
     }
   }
   return CUR_MAIN_TWEET;
@@ -249,17 +247,18 @@ const textPick = (tgt) => {
       console.log(tgt[idx]);
     }
     else if(val.hasOwnProperty('twitter')) {
+      const tweetBody = getCurTweet();
       if(val.twitter === 'url') {
-        tgt[idx] = {string: getTweetUrl(getCurTweet)};
+        tgt[idx] = {string: getTweetUrl(tweetBody)};
       }
       else if(val.twitter === 'datetime') {
-        tgt[idx] = {string: getTweetTimestamp(getCurTweet)};
+        tgt[idx] = {string: getTweetTimestamp(tweetBody)};
       }
       else if(val.twitter === 'username') {
-        tgt[idx] = {string: getTweetUsername(getCurTweet)};
+        tgt[idx] = {string: getTweetUsername(tweetBody)};
       }
       else if(val.twitter === 'text') {
-        tgt[idx] = {string: getTweetText(getCurTweet)};
+        tgt[idx] = {string: getTweetText(tweetBody)};
       }
       console.log(tgt[idx]);
     }

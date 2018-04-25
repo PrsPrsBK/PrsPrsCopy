@@ -7,14 +7,14 @@ const injected = {};
 
 const tweetTargets = [
   [
-    {string: '<dt><a href="'},
-    {tweet: 'url'},
+    {string: '<dt>y<a href="'},
+    {twitter: 'url'},
     {string: '">'},
-    {tweet: 'datetime'},
+    {twitter: 'datetime'},
     {string: ' '},
-    {tweet: 'username'},
+    {twitter: 'username'},
     {string: '</a>: '},
-    {tweet: 'text'},
+    {twitter: 'text'},
     {string: '</dt>'},
   ],
 ];
