@@ -1,4 +1,3 @@
-console.log('ppcopy');
 if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
@@ -65,7 +64,7 @@ const tellWhat = (tab) => {
 };
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
-  console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
+  //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
     if(tab.url.startsWith('https://twitter.com')) {
       //when move from twitter to twitter, content scripts remain loaded.
