@@ -17,7 +17,7 @@
   "commands": {
     "PrsPrsCopy": {
       "suggested_key": {
-        "default": "Ctrl+C"
+        "default": "Alt+C"
       },
       "description": "Addon's Copy key."
     }
