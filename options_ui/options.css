@@ -1,0 +1,36 @@
+.each_site {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.site_top {
+  grid-column-start: 1;
+  grid-column-end:   2;
+}
+.site_ope {
+  grid-column-start: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.each_template {
+  border: 1px solid black;
+  grid-column-start: 1;
+  grid-column-end:   4;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+.template_ope {
+  grid-column-start: 1;
+  grid-column-end:   2;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+.template_body {
+  grid-column-start: 3;
+  grid-column-end:   5;
+}
+.template_rows {
+}
+
