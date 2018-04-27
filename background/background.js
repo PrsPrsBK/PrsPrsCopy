@@ -4,18 +4,33 @@ if(typeof browser === 'undefined') {
 
 const injected = {};
 
-const tweetTargets = [
-  [
-    {string: '<dt><a href="'},
-    {twitter: 'url'},
-    {string: '">'},
-    {twitter: 'datetime'},
-    {string: ' '},
-    {twitter: 'username'},
-    {string: '</a>: '},
-    {twitter: 'text'},
-    {string: '</dt>'},
-  ],
+const registered = [
+  {
+    url: 'https://twitter.com',
+    templates: [
+      [
+        {string: '<dt><a href="'},
+        {twitter: 'url'},
+        {string: '">'},
+        {twitter: 'datetime'},
+        {string: ' '},
+        {twitter: 'username'},
+        {string: '</a>: '},
+        {twitter: 'text'},
+        {string: '</dt>'},
+      ],
+      [
+        {string: '('},
+        {twitter: 'datetime'},
+        {string: ' '},
+        {twitter: 'username'},
+        {string: ')'},
+        {string: '['},
+        {twitter: 'url'},
+        {string: ']'},
+      ],
+    ],
+  },
 ];
 
 const defaultTargets = [
@@ -33,23 +48,31 @@ const defaultTargets = [
     {plain: 'title'},
     {string: '</a>'},
   ],
+  [
+    {string: '('},
+    {plain: 'title'},
+    {string: ')'},
+    {string: '['},
+    {plain: 'url'},
+    {string: ']'},
+  ],
 ];
 
 const onError = (err) => {
   console.log(`${err}`);
 };
 
-const getTemplate = (tab) => {
-  if(tab.url.startsWith('https://twitter.com')) {
-    return tweetTargets;
+const getTemplates = (url) => {
+  for(const site of registered) {
+    if(url.startsWith(site.url) {
+      return site.templates;
+    }
   }
-  else {
-    return defaultTargets;
-  }
+  return defaultTargets;
 };
 
 const tellWhat = (tab) => {
-  const templateArr = getTemplate(tab);
+  const templateArr = getTemplates(tab.url);
   const curTgt = templateArr[injected[tab.id].index];
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
   browser.tabs.sendMessage(tab.id, {
