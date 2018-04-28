@@ -64,7 +64,7 @@ const onError = (err) => {
 
 const getTemplates = (url) => {
   for(const site of registered) {
-    if(url.startsWith(site.url) {
+    if(url.startsWith(site.url)) {
       return site.templates;
     }
   }
