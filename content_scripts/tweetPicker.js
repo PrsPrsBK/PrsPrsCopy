@@ -195,6 +195,22 @@ const textPick = (tgt) => {
   return tgt;
 };
 
+const resetTemplateIndex = () => {
+  browser.runtime.sendMessage({
+    task: 'resetTemplateIndex',
+  });
+};
+
+const handleKeydown = (evt) => {
+  switch(evt.key) {
+    case 'j':
+      resetTemplateIndex();
+      break;
+    case 'k':
+      resetTemplateIndex();
+      break;
+  }
+};
 const onCopy = (evt) => {
   console.log('onCopy start');
   if(window.getSelection().toString() === '') {
@@ -217,6 +233,8 @@ const onCopy = (evt) => {
 };
 
 console.debug(window.location.href);
+document.addEventListener('keydown', handleKeydown);
+
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'what') {
     console.log(`consc: ${window.location.href}`);

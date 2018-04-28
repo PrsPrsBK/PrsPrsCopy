@@ -163,6 +163,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'what') {
     tellWhat(sender.tab);
   }
+  else if(message.task === 'resetTemplateIndex') {
+    injected[sender.tab.id].index = 0;
+  }
   else if(message.task === 'copyEnd') {
     console.log(`copy end ${JSON.stringify(message.result)}`);
   }
