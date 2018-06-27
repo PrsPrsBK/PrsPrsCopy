@@ -49,6 +49,13 @@ const defaultTargets = [
     {string: '</a>'},
   ],
   [
+    {string: '`'},
+    {plain: 'title'},
+    {string: ' <'},
+    {plain: 'url'},
+    {string: '>`__'},
+  ],
+  [
     {string: '('},
     {plain: 'title'},
     {string: ')'},
