@@ -42,6 +42,38 @@ const registered = [
       ],
     ],
   },
+  //.timestamp > relative-time:nth-child(1)
+  {
+    url: 'https://foogithub.com/',
+    templates: [
+      [
+        {string: '<dt><a href="'},
+        {plain: 'url'},
+        {string: '">'},
+        {plain: 'title'},
+        {string: '</a></dt>'},
+      ],
+      [
+        {string: '<a href="'},
+        {plain: 'url'},
+        {string: '">'},
+        {plain: 'title'},
+        {string: '</a>'},
+      ],
+      /*
+       * <a href="#issue-197739209" class="timestamp">
+       * <relative-time datetime="2018-06-27T13:47:23Z" title="2018年6月27日 22:47 JST">8 minutes ago
+       * </relative-time></a>
+       */
+      [
+        {string: '`'},
+        {plain: 'title'},
+        {string: ' <'},
+        {plain: 'url'},
+        {string: '>`__'},
+      ],
+    ],
+  },
 ];
 
 const defaultTargets = [
