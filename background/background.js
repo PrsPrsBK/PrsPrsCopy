@@ -75,7 +75,7 @@ const updateIconOfTab = (tabId) => {
     tabId: tabId
   });
   browser.browserAction.setBadgeText({
-    path: `${injected[tabId].index}`,
+    text: `${injected[tabId].index}`,
     tabId: tabId
   });
 };
