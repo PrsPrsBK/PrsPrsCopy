@@ -163,7 +163,6 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
           twitter: true,
           index: 0,
         };
-        updateIconOfTab(tab.id);
       }
     }
     else {
@@ -177,9 +176,9 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
           twitter: false,
           index: 0,
         };
-        updateIconOfTab(tab.id);
       }
     }
+    updateIconOfTab(tab.id);
   }
 });
 
