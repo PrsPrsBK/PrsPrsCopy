@@ -69,6 +69,13 @@ const onError = (err) => {
   console.log(`${err}`);
 };
 
+const updateIconOfTab = (tabId) => {
+  browser.browserAction.setIcon({
+    path: `icons/icon-48_${injected[tabId].index % 2}.png`,
+    tabId: tabId
+  });
+};
+
 const getTemplates = (url) => {
   for(const site of registered) {
     if(url.startsWith(site.url)) {
@@ -82,6 +89,7 @@ const tellWhat = (tab) => {
   const templateArr = getTemplates(tab.url);
   const curTgt = templateArr[injected[tab.id].index];
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
+  updateIconOfTab(tab.id);
   browser.tabs.sendMessage(tab.id, {
     task: 'what',
     target: curTgt
@@ -94,11 +102,12 @@ const tellWhat = (tab) => {
 };
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
-  //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
+  console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
     if(tab.url.startsWith('https://twitter.com')) {
       //when move from twitter to twitter, content scripts remain loaded.
       if(injected[tab.id] && injected[tab.id].loaded && injected[tab.id].twitter) {
+        console.log('already injected twitter.')
         injected[tab.id].index = 0;
       }
       else {
@@ -107,14 +116,22 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
           twitter: true,
           index: 0,
         };
+        updateIconOfTab(tab.id);
       }
     }
     else {
-      injected[tab.id] = {
-        loaded: false,
-        twitter: false,
-        index: 0,
-      };
+      if(injected[tab.id] && injected[tab.id].loaded) {
+        console.log('already injected twitter.')
+        injected[tab.id].index = 0;
+      }
+      else {
+        injected[tab.id] = {
+          loaded: false,
+          twitter: false,
+          index: 0,
+        };
+        updateIconOfTab(tab.id);
+      }
     }
   }
 });
@@ -141,6 +158,7 @@ browser.commands.onCommand.addListener((cmd) => {
         console.log(`url: ${tab.url}`);
         if(tab.url.startsWith('https://twitter.com')) {
           if(injected[tab.id].loaded) {
+            console.log('loaded twitter');
             tellWhat(tab);
           }
           else {
@@ -152,6 +170,7 @@ browser.commands.onCommand.addListener((cmd) => {
         }
         else {
           if(injected[tab.id].loaded) {
+            console.log('loaded general');
             tellWhat(tab);
           }
           else {
@@ -172,6 +191,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if(message.task === 'resetTemplateIndex') {
     injected[sender.tab.id].index = 0;
+    updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
     console.log(`copy end ${JSON.stringify(message.result)}`);
@@ -179,4 +199,3 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
-

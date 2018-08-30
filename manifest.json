@@ -5,13 +5,20 @@
   "name": "prsprscopy",
   "version": "0.1.2",
   "icons": {
-    "48": "icons/icon-48.png"
+    "48": "icons/icon-48_0.png"
   },
 
   "background": {
     "scripts": [
       "background/background.js"
     ]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "48": "icons/icon-48_0.png"
+    },
+    "default_title": "PrsPrsCopy"
   },
 
   "commands": {
