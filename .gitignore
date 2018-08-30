@@ -3,3 +3,5 @@ web-ext-artifacts
 .web-extension-id
 note/*
 npm-debug.log
+package-lock.json
+yarn-lock.json
