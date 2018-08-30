@@ -74,6 +74,10 @@ const updateIconOfTab = (tabId) => {
     path: `icons/icon-48_${injected[tabId].index % 2}.png`,
     tabId: tabId
   });
+  browser.browserAction.setBadgeText({
+    path: `${injected[tabId].index}`,
+    tabId: tabId
+  });
 };
 
 const getTemplates = (url) => {
