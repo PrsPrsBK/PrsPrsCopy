@@ -20,6 +20,17 @@ const registered = [
         {string: '</dt>'},
       ],
       [
+        {string: '`'},
+        {twitter: 'datetime'},
+        {string: ' '},
+        {twitter: 'username'},
+        {string: ' <'},
+        {twitter: 'url'},
+        {string: '>`__\n'},
+        {string: '  : '},
+        {twitter: 'text'},
+      ],
+      [
         {string: '('},
         {twitter: 'datetime'},
         {string: ' '},
