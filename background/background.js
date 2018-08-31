@@ -112,9 +112,11 @@ const onError = (err) => {
   console.log(`${err}`);
 };
 
+let iconFlip = false;
+
 const updateIconOfTab = (tabId) => {
   browser.browserAction.setIcon({
-    path: `icons/icon-48_${injected[tabId].index % 2}.png`,
+    path: `icons/icon-48_${iconFlip ? 1 : 0}.png`,
     tabId: tabId
   });
   browser.browserAction.setBadgeText({
@@ -137,6 +139,7 @@ const tellWhat = (tab) => {
   console.log(`tellWhat: ${tab.url}`);
   const curTgt = templateArr[injected[tab.id].index];
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
+  iconFlip = !iconFlip;
   updateIconOfTab(tab.id);
   browser.tabs.sendMessage(tab.id, {
     picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
@@ -156,6 +159,7 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
     injected[tab.id] = {
       index: 0,
     };
+    iconFlip = false;
     updateIconOfTab(tab.id);
   }
 });
