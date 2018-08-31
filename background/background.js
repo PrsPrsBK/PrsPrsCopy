@@ -221,14 +221,15 @@ browser.commands.onCommand.addListener((cmd) => {
   }
 });
 
-browser.browserAction.onClicked.addListener((tab) => {
-  console.log('foo');
-  browser.browserAction.getPopup({
-    tabId: tab.id
-  }, (url) => {
-    console.log(url);
-  });
-});
+// Only Firefox has openPopup()...
+// browser.browserAction.onClicked.addListener((tab) => {
+//   console.log(`foo ${browser.extension.getURL('popup/menu.html')}`);
+//   browser.browserAction.setPopup({
+//     tabId: tab.id,
+//     popup: browser.extension.getURL('popup/menu.html'),
+//   });
+//   //browser.browserAction.openPopup();
+// });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'resetTemplateIndex') {
@@ -237,6 +238,18 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if(message.task === 'copyEnd') {
     console.log(`copy end ${JSON.stringify(message.result)}`);
+  }
+  else if(message.task === 'getCurTemplates') {
+    browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
+      for(const tab of tabs) {
+        console.log(`getCT url: ${tab.url}`);
+        const templateArr = getTemplates(tab.url);
+        browser.runtime.sendMessage({
+          task: 'getCurTemplates',
+          result: templateArr,
+        });
+      }
+    });
   }
 });
 
