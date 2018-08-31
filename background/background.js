@@ -8,104 +8,134 @@ const registered = [
   {
     url: 'https://twitter.com',
     templates: [
-      [
-        {string: '<dt><a href="'},
-        {twitter: 'url'},
-        {string: '">'},
-        {twitter: 'datetime'},
-        {string: ' '},
-        {twitter: 'username'},
-        {string: '</a>: '},
-        {twitter: 'text'},
-        {string: '</dt>'},
-      ],
-      [
-        {string: '`'},
-        {twitter: 'datetime'},
-        {string: ' '},
-        {twitter: 'username'},
-        {string: ' <'},
-        {twitter: 'url'},
-        {string: '>`__\n'},
-        {string: '  : '},
-        {twitter: 'text'},
-      ],
-      [
-        {string: '('},
-        {twitter: 'datetime'},
-        {string: ' '},
-        {twitter: 'username'},
-        {string: ')'},
-        {string: '['},
-        {twitter: 'url'},
-        {string: ']'},
-      ],
+      {
+        name: 'dt',
+        specArr: [
+          {string: '<dt><a href="'},
+          {twitter: 'url'},
+          {string: '">'},
+          {twitter: 'datetime'},
+          {string: ' '},
+          {twitter: 'username'},
+          {string: '</a>: '},
+          {twitter: 'text'},
+          {string: '</dt>'},
+        ]
+      },
+      {
+        name: 'reST',
+        specArr: [
+          {string: '`'},
+          {twitter: 'datetime'},
+          {string: ' '},
+          {twitter: 'username'},
+          {string: ' <'},
+          {twitter: 'url'},
+          {string: '>`__\n'},
+          {string: '  : '},
+          {twitter: 'text'},
+        ]
+      },
+      {
+        name: 'Markdown',
+        specArr: [
+          {string: '('},
+          {twitter: 'datetime'},
+          {string: ' '},
+          {twitter: 'username'},
+          {string: ')'},
+          {string: '['},
+          {twitter: 'url'},
+          {string: ']'},
+        ]
+      },
     ],
   },
   //.timestamp > relative-time:nth-child(1)
   {
     url: 'https://foogithub.com/',
     templates: [
-      [
-        {string: '<dt><a href="'},
-        {plain: 'url'},
-        {string: '">'},
-        {plain: 'title'},
-        {string: '</a></dt>'},
-      ],
-      [
-        {string: '<a href="'},
-        {plain: 'url'},
-        {string: '">'},
-        {plain: 'title'},
-        {string: '</a>'},
-      ],
+      {
+        name: 'dt',
+        specArr: [
+          {string: '<dt><a href="'},
+          {plain: 'url'},
+          {string: '">'},
+          {plain: 'title'},
+          {string: '</a></dt>'},
+        ]
+      },
+      {
+        name: 'ahref',
+        specArr: [
+          {string: '<a href="'},
+          {plain: 'url'},
+          {string: '">'},
+          {plain: 'title'},
+          {string: '</a>'},
+        ]
+      },
       /*
        * <a href="#issue-197739209" class="timestamp">
        * <relative-time datetime="2018-06-27T13:47:23Z" title="2018年6月27日 22:47 JST">8 minutes ago
        * </relative-time></a>
        */
-      [
-        {string: '`'},
-        {plain: 'title'},
-        {string: ' <'},
-        {plain: 'url'},
-        {string: '>`__'},
-      ],
+      {
+        name: 'some',
+        specArr: [
+          {string: '`'},
+          {plain: 'title'},
+          {string: ' <'},
+          {plain: 'url'},
+          {string: '>`__'},
+        ]
+      },
     ],
   },
 ];
 
 const defaultTargets = [
-  [
-    {string: '<dt><a href="'},
-    {plain: 'url'},
-    {string: '">'},
-    {plain: 'title'},
-    {string: '</a></dt>'},
-  ],
-  [
-    {string: '<a href="'},
-    {plain: 'url'},
-    {string: '">'},
-    {plain: 'title'},
-    {string: '</a>'},
-  ],
-  [
-    {string: '`'},
-    {plain: 'title'},
-    {string: ' <'},
-    {plain: 'url'},
-    {string: '>`__'},
-  ],
-  [
-    {string: '('},
-    {plain: 'title'},
-    {string: ')'},
-    {string: '['},
-    {plain: 'url'},
-    {string: ']'},
-  ],
+  {
+    name: 'dt',
+    specArr: [
+      {string: '<dt><a href="'},
+      {plain: 'url'},
+      {string: '">'},
+      {plain: 'title'},
+      {string: '</a></dt>'},
+    ]
+  },
+  {
+    name: 'ahref',
+    specArr: [
+      {string: '<a href="'},
+      {plain: 'url'},
+      {string: '">'},
+      {plain: 'title'},
+      {string: '</a>'},
+    ]
+  },
+  {
+    name: 'reST',
+    specArr: [
+      {string: '`'},
+      {plain: 'title'},
+      {string: ' <'},
+      {plain: 'url'},
+      {string: '>`__'},
+    ]
+  },
+  {
+    name: 'Markdown',
+    specArr: [
+      {string: '('},
+      {plain: 'title'},
+      {string: ')'},
+      {string: '['},
+      {plain: 'url'},
+      {string: ']'},
+    ]
+  },
 ];
 
 const onError = (err) => {
@@ -136,8 +166,8 @@ const getTemplates = (url) => {
 
 const tellWhat = (tab) => {
   const templateArr = getTemplates(tab.url);
-  console.log(`tellWhat: ${tab.url}`);
-  const curTgt = templateArr[injected[tab.id].index];
+  console.log(`tellWhat: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
+  const curTgt = templateArr[injected[tab.id].index].specArr;
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
   iconFlip = !iconFlip;
   updateIconOfTab(tab.id);
