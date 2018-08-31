@@ -3,62 +3,72 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
-let RESULT_ARR = [];
+const textPicker = {
+  RESULT_ARR : [],
 
-const escapeHtmlChar = (tgtText) => {
-  return tgtText.replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-};
+  escapeHtmlChar : (tgtText) => {
+    return tgtText.replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  },
 
-const textPick = (tgt) => {
-  tgt.forEach((val, idx) => {
-    if(val.hasOwnProperty('plain')) {
-      if(val.plain === 'url') {
-        tgt[idx] = {string: window.location.href};
+  init : () => {
+    browser.runtime.onMessage.addListener(textPicker.sayDamn);
+  },
+
+  onCopy : (evt) => {
+    console.log('onCopy start');
+    if(window.getSelection().toString() === '') {
+      const outputText = textPicker.RESULT_ARR.filter((pair) => pair.hasOwnProperty('string'))
+        .reduce((acm, val) => {
+          return acm + val.string;
+        }, '');
+      console.log(outputText);
+      if(outputText !== '') {
+        evt.preventDefault();
+        const transfer = evt.clipboardData;
+        transfer.setData('text/plain', outputText);
       }
-      else if(val.plain === 'title') {
-        tgt[idx] = {string: document.title};
-      }
-      console.log(tgt[idx]);
     }
-  });
-  return tgt;
+    document.removeEventListener('copy', textPicker.onCopy);
+    browser.runtime.sendMessage({
+      task: 'copyEnd',
+      result: textPicker.RESULT_ARR,
+    });
+  },
+  
+  textPick : (tgt) => {
+    textPicker.RESULT_ARR = [];
+    tgt.forEach((val, idx) => {
+      if(val.hasOwnProperty('plain')) {
+        if(val.plain === 'url') {
+          tgt[idx] = {string: window.location.href};
+        }
+        else if(val.plain === 'title') {
+          tgt[idx] = {string: document.title};
+        }
+        console.log(tgt[idx]);
+      }
+    });
+    return tgt;
+  },
+
+  sayDamn : function (message) {
+    console.log(`oh damn ${message.task}`);
+  },
 };
 
-const onCopy = (evt) => {
-  console.log('onCopy start');
-  if(window.getSelection().toString() === '') {
-    const outputText = RESULT_ARR.filter((pair) => pair.hasOwnProperty('string'))
-      .reduce((acm, val) => {
-        return acm + val.string;
-      }, '');
-    console.log(outputText);
-    if(outputText !== '') {
-      evt.preventDefault();
-      const transfer = evt.clipboardData;
-      transfer.setData('text/plain', outputText);
-    }
-  }
-  document.removeEventListener('copy', onCopy);
-  browser.runtime.sendMessage({
-    task: 'copyEnd',
-    result: RESULT_ARR,
-  });
-};
+textPicker.init();
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log(`${message.task} coming`);
   if(message.task === 'what') {
-    document.addEventListener('copy', onCopy);
-    RESULT_ARR = textPick(message.target);
+    document.addEventListener('copy', textPicker.onCopy);
+    console.log('what coming 59');
+    textPicker.RESULT_ARR = textPicker.textPick(message.target);
     document.execCommand('copy');
   }
+  return true;
 });
 
-browser.runtime.sendMessage({
-  task: 'what',
-});
-
-console.log('textPicker last line');
 // vim:expandtab ff=dos fenc=utf-8 sw=2
-

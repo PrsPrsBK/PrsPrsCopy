@@ -134,6 +134,7 @@ const getTemplates = (url) => {
 
 const tellWhat = (tab) => {
   const templateArr = getTemplates(tab.url);
+  console.log(`tellWhat: ${tab.url}`);
   const curTgt = templateArr[injected[tab.id].index];
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
   updateIconOfTab(tab.id);
@@ -154,7 +155,7 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
     if(tab.url.startsWith('https://twitter.com')) {
       //when move from twitter to twitter, content scripts remain loaded.
       if(injected[tab.id] && injected[tab.id].loaded && injected[tab.id].twitter) {
-        console.log('already injected twitter.')
+        console.log(`already injected twitter. ${injected[tab.id].index}`);
         injected[tab.id].index = 0;
       }
       else {
@@ -166,23 +167,17 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
       }
     }
     else {
-      if(injected[tab.id] && injected[tab.id].loaded) {
-        console.log('already injected twitter.')
-        injected[tab.id].index = 0;
-      }
-      else {
         injected[tab.id] = {
-          loaded: false,
           twitter: false,
           index: 0,
         };
       }
-    }
     updateIconOfTab(tab.id);
   }
 });
 
 browser.tabs.onRemoved.addListener((tabId, rmInfo) => {
+  console.log('tab removed');
   injected[tabId] = undefined;
 });
 
@@ -215,15 +210,10 @@ browser.commands.onCommand.addListener((cmd) => {
           }
         }
         else {
-          if(injected[tab.id].loaded) {
-            console.log('loaded general');
             tellWhat(tab);
           }
-          else {
-            browser.tabs.executeScript(tab.id, {
-              file: '/content_scripts/textPicker.js',
+      }
             });
-            injected[tab.id].loaded = true;
           }
         }
       }
@@ -232,10 +222,7 @@ browser.commands.onCommand.addListener((cmd) => {
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if(message.task === 'what') {
-    tellWhat(sender.tab);
-  }
-  else if(message.task === 'resetTemplateIndex') {
+  if(message.task === 'resetTemplateIndex') {
     injected[sender.tab.id].index = 0;
     updateIconOfTab(sender.tab.id);
   }

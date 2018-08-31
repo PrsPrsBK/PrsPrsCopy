@@ -30,6 +30,13 @@
     }
   },
 
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content_scripts/textPicker.js"]
+    }
+  ],
+  
   "options_ui": {
     "page": "options_ui/options.html"
   },
