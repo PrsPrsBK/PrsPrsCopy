@@ -12,10 +12,6 @@ const textPicker = {
       .replace(/>/g, '&gt;');
   },
 
-  init : () => {
-    browser.runtime.onMessage.addListener(textPicker.sayDamn);
-  },
-
   onCopy : (evt) => {
     console.log('onCopy start');
     if(window.getSelection().toString() === '') {
@@ -53,12 +49,7 @@ const textPicker = {
     return tgt;
   },
 
-  sayDamn : function (message) {
-    console.log(`oh damn ${message.task}`);
-  },
 };
-
-textPicker.init();
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log(`${message.task} coming`);
