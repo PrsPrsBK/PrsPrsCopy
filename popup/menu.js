@@ -14,9 +14,11 @@ const loadTemplates = (templatesArr) => {
   const rootElm = document.getElementById('menu_root');
   const docFragment = document.createDocumentFragment();
   let trElm, tdElm, tdTxt;
-  templatesArr.forEach((rec) => {
+  templatesArr.forEach((rec, idx) => {
     trElm = document.createElement('tr');
     tdElm = document.createElement('td');
+    tdElm.id = `template_${idx}`;
+    tdElm.classList.add('button');
     tdTxt = document.createTextNode(`${rec.name}`);
     tdElm.appendChild(tdTxt);
     trElm.appendChild(tdElm);
@@ -25,14 +27,15 @@ const loadTemplates = (templatesArr) => {
   rootElm.appendChild(docFragment);
 };
 
-const copy = (flag_nam) => {
-};
-
 document.addEventListener('click', (e) => {
-  if(e.target.id.indexOf('copy_') === 0) {
+  if(e.target.id.indexOf('template_') === 0) {
     console.log('let us copy ' + e.target.id);
-    const flag_nam = e.target.id.replace(/^copy_(.+)$/, '$1');
-    copy(flag_nam);
+    const clickedIdx = e.target.id.replace(/^template_(.+)$/, '$1');
+    browser.runtime.sendMessage({
+      task: 'copyFromPopup',
+      clickedIdx: parseInt(clickedIdx),
+    });
+    window.close();
   }
 });
 

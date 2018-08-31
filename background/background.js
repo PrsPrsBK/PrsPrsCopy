@@ -251,6 +251,25 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     });
   }
+  else if(message.task === 'copyFromPopup') {
+    browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
+      for(const tab of tabs) {
+        const templateArr = getTemplates(tab.url);
+        console.log(`getCT url: ${tab.url}`);
+        const curTgt = templateArr[message.clickedIdx].specArr;
+        /** not update index and icon
+         * injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
+         * iconFlip = !iconFlip;
+         * updateIconOfTab(tab.id);
+         */
+        browser.tabs.sendMessage(tab.id, {
+          picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
+          task: 'what',
+          target: curTgt
+        });
+      }
+    });
+  }
 });
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2

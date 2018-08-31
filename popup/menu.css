@@ -8,23 +8,12 @@ td {
   border: 1px solid;
 }
 
-td.on {
-  background-color: #55ee55;
-}
-
-td.off {
-  background-color: #ee5555;
-}
-
-td.onlyDisplay {
-  background-color: #7777ff;
-}
-
-td.linkToAddonPage {
-  background-color: #cc44cc;
-}
-
-.button {
+td.button {
   cursor: pointer;
 }
 
+td.button:hover {
+  background-color: #55ee55;
+}
+
+/* vim:expandtab ff=dos fenc=utf-8 sw=2 */
