@@ -15,10 +15,12 @@
   },
 
   "browser_action": {
+    "chrome_style": false,
     "default_icon": {
       "48": "icons/icon-48_0.png"
     },
-    "default_title": "PrsPrsCopy"
+    "default_title": "PrsPrsCopy",
+    "default_popup": "popup/menu.html"
   },
 
   "commands": {

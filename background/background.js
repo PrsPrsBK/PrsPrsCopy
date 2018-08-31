@@ -167,11 +167,11 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
       }
     }
     else {
-        injected[tab.id] = {
-          twitter: false,
-          index: 0,
-        };
-      }
+      injected[tab.id] = {
+        twitter: false,
+        index: 0,
+      };
+    }
     updateIconOfTab(tab.id);
   }
 });
@@ -210,15 +210,20 @@ browser.commands.onCommand.addListener((cmd) => {
           }
         }
         else {
-            tellWhat(tab);
-          }
-      }
-            });
-          }
+          tellWhat(tab);
         }
       }
     });
   }
+});
+
+browser.browserAction.onClicked.addListener((tab) => {
+  console.log('foo');
+  browser.browserAction.getPopup({
+    tabId: tab.id
+  }, (url) => {
+    console.log(url);
+  });
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
