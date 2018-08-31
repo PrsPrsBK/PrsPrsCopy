@@ -139,6 +139,7 @@ const tellWhat = (tab) => {
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
   updateIconOfTab(tab.id);
   browser.tabs.sendMessage(tab.id, {
+    picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
     task: 'what',
     target: curTgt
   });
@@ -152,26 +153,9 @@ const tellWhat = (tab) => {
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
   console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
-    if(tab.url.startsWith('https://twitter.com')) {
-      //when move from twitter to twitter, content scripts remain loaded.
-      if(injected[tab.id] && injected[tab.id].loaded && injected[tab.id].twitter) {
-        console.log(`already injected twitter. ${injected[tab.id].index}`);
-        injected[tab.id].index = 0;
-      }
-      else {
-        injected[tab.id] = {
-          loaded: false,
-          twitter: true,
-          index: 0,
-        };
-      }
-    }
-    else {
-      injected[tab.id] = {
-        twitter: false,
-        index: 0,
-      };
-    }
+    injected[tab.id] = {
+      index: 0,
+    };
     updateIconOfTab(tab.id);
   }
 });
@@ -197,21 +181,7 @@ browser.commands.onCommand.addListener((cmd) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         console.log(`url: ${tab.url}`);
-        if(tab.url.startsWith('https://twitter.com')) {
-          if(injected[tab.id].loaded) {
-            console.log('loaded twitter');
-            tellWhat(tab);
-          }
-          else {
-            browser.tabs.executeScript(tab.id, {
-              file: '/content_scripts/tweetPicker.js',
-            });
-            injected[tab.id].loaded = true;
-          }
-        }
-        else {
-          tellWhat(tab);
-        }
+        tellWhat(tab);
       }
     });
   }
