@@ -10,6 +10,7 @@ module.exports = {
     '*/js2flowchart/',
     'web-ext-config.js',
     'web-ext-artifacts/',
+    'yarn.lock',
   ],
   build: {
     overwriteDest: true,
