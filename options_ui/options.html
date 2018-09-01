@@ -13,7 +13,7 @@
     <div id="site_list">
       <div class="each_site">
         <div class="site_top">
-          https://twitter.com/
+          <input type="text" value="https://twitter.com/">
         </div>
         <div class="site_ope">
           <button>up</button>
@@ -29,27 +29,57 @@
           <div class="template_body">
             <table class="template_rows">
               <tr>
+                <th>delete</th>
                 <th>type</th>
                 <th>spec</th>
               </tr>
               <tr>
-                <td>string</td>
+                <td>
+                  <input type="checkbox" checked>
+                </td>
+                <td>
+                  <select name="" id="">
+                    <option value="string" selected>string</option>
+                    <option value="plain">plain</option>
+                  </select>
+                </td>
                 <td><input type="text" value="&lt;dt&gt;&lt;a href=&quot;"></td>
               </tr>
               <tr>
-                <td>plain</td>
+                <td>
+                  <input type="checkbox">
+                </td>
+                <td>
+                  <select name="" id="">
+                    <option value="string">string</option>
+                    <option value="plain" selected>plain</option>
+                  </select>
+                </td>
                 <td>
                   <select>
                     <option value="url" selected>url</option>
+                    <option value="url_nohs">url NO hash/search</option>
                     <option value="title">title</option>
+                    <option value="title_esc">title ESC</option>
                   </select>
                 </td>
               </tr>
               <tr>
-                <td>string</td>
+                <td>
+                  <input type="checkbox" checked>
+                </td>
+                <td>
+                  <select>
+                    <option value="string" selected>string</option>
+                    <option value="plain">plain</option>
+                  </select>
+                </td>
                 <td><input type="text" value="&quot;&gt;"></td>
               </tr>
               <tr>
+                <td>
+                  <input type="checkbox">
+                </td>
                 <td>plain</td>
                 <td>
                   <select>
@@ -59,8 +89,28 @@
                 </td>
               </tr>
               <tr>
-                <td>string</td>
-                <td><input type="text" value="&lt;/a&gt;&lt;/dt&gt;"></td>
+                <td>
+                  <input type="checkbox">
+                </td>
+                <td>
+                  <select>
+                    <option value="twitter" selected>twitter</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="url" selected>url</option>
+                    <option value="datetime">datetime</option>
+                    <option value="username_esc">username ESC</option>
+                    <option value="text">text</option>
+                    <option value="text_html">text HTML</option>
+                    <option value="nest_url" selected>url</option>
+                    <option value="nest_datetime">datetime</option>
+                    <option value="nest_username_esc">username ESC</option>
+                    <option value="nest_text">text</option>
+                    <option value="nest_text_html">text HTML</option>
+                  </select>
+                </td>
               </tr>
             </table>
           </div>

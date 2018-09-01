@@ -18,7 +18,7 @@
   grid-column-start: 1;
   grid-column-end:   4;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 20px 1fr 1fr 1fr;
 }
 .template_ope {
   grid-column-start: 1;
