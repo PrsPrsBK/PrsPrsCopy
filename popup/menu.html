@@ -5,8 +5,10 @@
     <link rel="stylesheet" href="./menu.css"/>
   </head>
 <body>
-  <table id="menu_root">
-  </table>
+  <div id="parent" style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1;">
+    <table id="menu_root" style="grid-column-start: 1;"></table>
+    <div id="spec_monitor" style="grid-column-start:2;"></div>
+  </div>
   <script src="./menu.js"></script>
 </body>
 </html>

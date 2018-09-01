@@ -10,7 +10,10 @@ const getCurTemplates = () => {
   });
 };
 
+let CUR_TEMPLATES;
+
 const loadTemplates = (templatesArr) => {
+  CUR_TEMPLATES = templatesArr;
   const rootElm = document.getElementById('menu_root');
   const docFragment = document.createDocumentFragment();
   let trElm, tdElm, tdTxt;
@@ -35,7 +38,27 @@ document.addEventListener('click', (e) => {
       task: 'copyFromPopup',
       clickedIdx: parseInt(clickedIdx),
     });
-    window.close();
+  }
+  window.close();
+});
+
+document.getElementById('menu_root').addEventListener('mouseover', (e) => {
+  if(e.target.id.indexOf('template_') === 0) {
+    const tgtIdx = e.target.id.replace(/^template_(.+)$/, '$1');
+    const monitorElm = document.getElementById('spec_monitor');
+    while(monitorElm.firstChild) {
+      monitorElm.removeChild(monitorElm.firstChild);
+    }
+    let descAcc = '';
+    CUR_TEMPLATES[tgtIdx].specArr.forEach((spec) => {
+      descAcc += Object.values(spec)[0];
+    });
+    const txtDiv = document.createElement('div');
+    const parElm = document.createElement('p');
+    const descTxt = document.createTextNode(descAcc);
+    parElm.appendChild(descTxt);
+    txtDiv.appendChild(parElm);
+    monitorElm.appendChild(txtDiv);
   }
 });
 
