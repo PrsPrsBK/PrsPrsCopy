@@ -9,6 +9,30 @@ const escapeHtmlChar = (tgtText) => {
     .replace(/>/g, '&gt;');
 };
 
+const commonSpecExtractor = (specRecord) => {
+  if(specRecord.hasOwnProperty('string')) {
+    return specRecord.string;
+  }
+  else if(specRecord.hasOwnProperty('plain')) {
+    if(specRecord.plain === 'url') {
+      return window.location.href;
+    }
+    else if(specRecord.plain === 'url_nohs') {
+      const wkURL = new URL(window.location.href);
+      // when url includes '#!' path, all things become 'hash' after that part.
+      // so, we cannot use very convenient properties like URL.hash, URL.search.
+      // if we can use, we assigning URL.hash = "" and URL.search = "" is enough.
+      return wkURL.protocol + wkURL.host + wkURL.pathname;
+    }
+    else if(specRecord.plain === 'title') {
+      return document.title;
+    }
+    else if(specRecord.plain === 'title_esc') {
+      return escapeHtmlChar(document.title);
+    }
+  }
+};
+
 /**
  * make and return Object contains each datetime infos as string, made from mill seconds string.
  * @param {string} milsec_txt - string
@@ -37,28 +61,7 @@ const textPicker = {
   build : (tgt) => {
     const result = [];
     tgt.forEach((val) => {
-      if(val.hasOwnProperty('string')) {
-        result.push(val.string);
-      }
-      else if(val.hasOwnProperty('plain')) {
-        if(val.plain === 'url') {
-          result.push(window.location.href);
-        }
-        else if(val.plain === 'url_nohs') {
-          const wkURL = new URL(window.location.href);
-          // when url includes '#!' path, all things become 'hash' after that part.
-          // so, we cannot use very convenient properties like URL.hash, URL.search.
-          result.push(
-            wkURL.protocol + wkURL.host + wkURL.pathname
-          );
-        }
-        else if(val.plain === 'title') {
-          result.push(document.title);
-        }
-        else if(val.plain === 'title_esc') {
-          result.push(escapeHtmlChar(document.title));
-        }
-      }
+      result.push(commonSpecExtractor(val));
     });
     textPicker.RESULT_ARR = result;
   },
@@ -89,7 +92,7 @@ const tweetPicker = {
 
   RESULT_ARR : [],
 
-  regexHref : /(https?:\/\/\S+)(\s…)?/g,
+  regexHref : /(https?:\/\/\S+)(\s…?)/g,
   
   activateHrefText : (tgtText) => {
     const resultTextArr = [];
@@ -101,35 +104,9 @@ const tweetPicker = {
       resultTextArr.push(`<a href="${wkMatchArr[1]}">URL</a>`);
       headIdx = tweetPicker.regexHref.lastIndex;
     }
-    resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx)));
+    resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx))); // may not be exact
 
     return resultTextArr.join('');
-  },
-  
-  getQuoteTweetText : (tgt_elm) => {
-    let ret = '';
-    let wk_elm;
-    wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-link');
-    if(wk_elm && wk_elm.length > 0) {
-      console.log('scrape1');
-      let wk = ` <div class="quotedTweet"><a href="${wk_elm[0].href}">`;
-      wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
-      if(wk_elm && wk_elm.length > 0) {
-        const fullname = escapeHtmlChar(wk_elm[0].textContent.trim());
-        wk += fullname + ':</a> ';
-      }
-      wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-text');
-      if(wk_elm && wk_elm.length > 0) {
-        let mainText = wk_elm[0].textContent.trim();
-        mainText = mainText.replace(/\r?\n/g, ' ');
-        if(tweetPicker.regexInnerHref.test(mainText)) {
-          mainText = tweetPicker.activateHrefText(mainText);
-        }
-        wk += mainText + '</div>';
-      }
-      ret += wk;
-    }
-    return ret;
   },
   
   getTweetUrl : (tgt_elm) => {
@@ -142,15 +119,21 @@ const tweetPicker = {
     }
   },
   
+  getQTUrl : (tgt_elm) => {
+    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-link');
+    if(wk_elm && wk_elm.length > 0) {
+      return wk_elm[0].href.trim();
+    }
+    else {
+      return '';
+    }
+  },
+  
   getTweetTimestamp : (tgt_elm) => {
     const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
     if(wk_elm && wk_elm.length > 0 && wk_elm[0].getAttribute('data-time-ms')) {
       const result = parseFromMillsec(wk_elm[0].getAttribute('data-time-ms').trim());
-      return result['year'] + '-'
-      + result['month'] + '-'
-      + result['day'] + ' '
-      + result['hour'] + ':'
-      + result['minute'];
+      return `${result['year']}-${result['month']}-${result['day']} ${result['hour']}:${result['minute']}`;
     }
     else {
       return '';
@@ -160,37 +143,54 @@ const tweetPicker = {
   getTweetUsername : (tgt_elm) => {
     const wk_elm = tgt_elm.getElementsByClassName('fullname');
     if(wk_elm && wk_elm.length > 0) {
-      return escapeHtmlChar(wk_elm[0].textContent.trim());
+      return wk_elm[0].textContent.trim();
     }
     else {
       return '';
     }
   },
   
-  getTweetText : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('tweet-text');
+  getQTUsername : (tgt_elm) => {
+    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
+    if(wk_elm && wk_elm.length > 0) {
+      return wk_elm[0].textContent.trim();
+    }
+    else {
+      return '';
+    }
+  },
+  
+  CUR_MAIN_TWEET : null,
+  CUR_HAS_QT : false,
+  CUR_MAIN_TEXT : '',
+  CUR_QT_TEXT : '',
+  
+  prepareCurText : (tgt_elm) => {
+    let wk_elm = tgt_elm.getElementsByClassName('tweet-text');
     if(wk_elm && wk_elm.length > 0) {
       let mainText = wk_elm[0].textContent.trim();
-      mainText = mainText.replace(/\r\n/g, ' ');
-      mainText = mainText.replace(/\n\r/g, ' ');
-      mainText = mainText.replace(/\n/g, ' ');
-      const quoteTweetText = tweetPicker.getQuoteTweetText(tgt_elm);
-      if(quoteTweetText !== '') {
-        console.log('add quote');
+      let qtText = '';
+      // anyway oneline
+      mainText = mainText.replace(/\r\n/g, ' ')
+        .replace(/\n\r/g, ' ')
+        .replace(/\n/g, ' ');
+      if(tweetPicker.CUR_HAS_QT) {
+        wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-text');
+        if(wk_elm && wk_elm.length > 0) {
+          qtText = wk_elm[0].textContent.trim();
+          qtText = qtText.replace(/\r\n/g, ' ')
+            .replace(/\n\r/g, ' ')
+            .replace(/\n/g, ' ');
+        }
         mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
       }
-      mainText = tweetPicker.activateHrefText(mainText);
-      mainText += quoteTweetText;
-      return mainText;
-    }
-    else {
-      return '';
+      tweetPicker.CUR_MAIN_TEXT = mainText;
+      tweetPicker.CUR_QT_TEXT = qtText;
     }
   },
   
-  CUR_MAIN_TWEET : undefined,
-  
   getCurTweet : () => {
+    // almost once in each request to copy-with-template
     if(!tweetPicker.CUR_MAIN_TWEET) {
       let wk_elm = document.getElementById('permalink-overlay');
       if(wk_elm) {
@@ -214,41 +214,82 @@ const tweetPicker = {
           tweetPicker.CUR_MAIN_TWEET = wk_elm[0];
         }
       }
+      if(tweetPicker.CUR_MAIN_TWEET !== null) {
+        wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
+        tweetPicker.CUR_HAS_QT = (wk_elm && wk_elm.length > 0) ? true : false;
+        console.log(`has QT? ${tweetPicker.CUR_HAS_QT}`);
+        tweetPicker.prepareCurText(tweetPicker.CUR_MAIN_TWEET);
+      }
     }
     return tweetPicker.CUR_MAIN_TWEET;
   },
   
   build : (tgt) => {
     const result = [];
-    tgt.forEach((val, idx) => {
-      if(val.hasOwnProperty('plain')) {
-        if(val.plain === 'url') {
-          tgt[idx] = {string: window.location.href};
-        }
-        else if(val.plain === 'title') {
-          tgt[idx] = {string: document.title};
-        }
-        console.log(tgt[idx]);
+    tgt.forEach((val) => {
+      if(val.hasOwnProperty('twitter') === false) {
+        result.push(commonSpecExtractor(val));
       }
-      else if(val.hasOwnProperty('twitter')) {
+      else {
         const tweetBody = tweetPicker.getCurTweet();
         if(val.twitter === 'url') {
-          tgt[idx] = {string: tweetPicker.getTweetUrl(tweetBody)};
+          result.push(tweetPicker.getTweetUrl(tweetBody));
         }
         else if(val.twitter === 'datetime') {
-          tgt[idx] = {string: tweetPicker.getTweetTimestamp(tweetBody)};
+          result.push(tweetPicker.getTweetTimestamp(tweetBody));
         }
         else if(val.twitter === 'username') {
-          tgt[idx] = {string: tweetPicker.getTweetUsername(tweetBody)};
+          result.push(tweetPicker.getTweetUsername(tweetBody));
+        }
+        else if(val.twitter === 'username_esc') {
+          result.push(escapeHtmlChar(tweetPicker.getTweetUsername(tweetBody)));
         }
         else if(val.twitter === 'text') {
-          tgt[idx] = {string: tweetPicker.getTweetText(tweetBody)};
+          result.push(tweetPicker.CUR_MAIN_TEXT);
         }
-        console.log(tgt[idx]);
+        else if(val.twitter === 'text_html') {
+          result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT));
+        }
+        else if(tweetPicker.CUR_HAS_QT) {
+          console.log(`has QT really? ${tweetPicker.CUR_HAS_QT}`);
+          if(val.twitter === 'qt_string' && val.hasOwnProperty('string')) {
+            result.push(val.string);
+          }
+          else if(val.twitter === 'qt_url') {
+            result.push(tweetPicker.getQTUrl(tweetBody));
+          }
+          else if(val.twitter === 'qt_username') {
+            result.push(tweetPicker.getQTUsername(tweetBody));
+          }
+          else if(val.twitter === 'qt_username_esc') {
+            result.push(escapeHtmlChar(tweetPicker.getQTUsername(tweetBody)));
+          }
+          else if(val.twitter === 'qt_text') {
+            result.push(tweetPicker.CUR_QT_TEXT);
+          }
+          else if(val.twitter === 'qt_text_html') {
+            result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT));
+          }
+          else if(val.twitter === 'qt_text_reST') {
+            result.push(tweetPicker.CUR_QT_TEXT);
+          }
+          else if(val.twitter === 'qt_text_md') {
+            result.push(tweetPicker.CUR_QT_TEXT);
+          }
+        }
       }
     });
     tweetPicker.RESULT_ARR = result;
+    // clear everytime for each request to copy-with-template, 
+    // because we need to search current tweet for tweet's URL is changed or not.
+    tweetPicker.clearCurTweet();
+  },
+
+  clearCurTweet : () => {
     tweetPicker.CUR_MAIN_TWEET = null;
+    tweetPicker.CUR_HAS_QT = false;
+    tweetPicker.CUR_MAIN_TEXT = '';
+    tweetPicker.CUR_QT_TEXT = '';
   },
   
   handleKeydown : (evt) => {
