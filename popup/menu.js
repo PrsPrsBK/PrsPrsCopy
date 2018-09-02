@@ -51,7 +51,8 @@ document.getElementById('menu_root').addEventListener('mouseover', (e) => {
     }
     let descAcc = '';
     CUR_TEMPLATES[tgtIdx].specArr.forEach((spec) => {
-      descAcc += Object.values(spec)[0];
+      const idx = Object.values(spec)[0] === 'qt_string' ? 1 : 0;
+      descAcc += Object.values(spec)[idx];
     });
     descAcc = descAcc.replace('\n', '|NL|').replace('\t', '|TAB|');
     const txtDiv = document.createElement('div');
