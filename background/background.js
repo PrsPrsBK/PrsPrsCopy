@@ -99,7 +99,7 @@ const defaultTargets = [
     name: 'dt',
     specArr: [
       {string: '<dt><a href="'},
-      {plain: 'url'},
+      {plain: 'url_nohs'},
       {string: '">'},
       {plain: 'title'},
       {string: '</a></dt>'},

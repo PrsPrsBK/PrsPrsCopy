@@ -3,21 +3,20 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
+const escapeHtmlChar = (tgtText) => {
+  return tgtText.replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+};
+
 const textPicker = {
   RESULT_ARR : [],
 
-  escapeHtmlChar : (tgtText) => {
-    return tgtText.replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  },
-
   onCopy : (evt) => {
-    console.log('onCopy start');
     if(window.getSelection().toString() === '') {
-      const outputText = textPicker.RESULT_ARR.filter((pair) => pair.hasOwnProperty('string'))
+      const outputText = textPicker.RESULT_ARR
         .reduce((acm, val) => {
-          return acm + val.string;
+          return acm + val;
         }, '');
       console.log(outputText);
       if(outputText !== '') {
@@ -33,20 +32,33 @@ const textPicker = {
     });
   },
   
-  textPick : (tgt) => {
-    textPicker.RESULT_ARR = [];
-    tgt.forEach((val, idx) => {
-      if(val.hasOwnProperty('plain')) {
+  build : (tgt) => {
+    const result = [];
+    tgt.forEach((val) => {
+      if(val.hasOwnProperty('string')) {
+        result.push(val.string);
+      }
+      else if(val.hasOwnProperty('plain')) {
         if(val.plain === 'url') {
-          tgt[idx] = {string: window.location.href};
+          result.push(window.location.href);
+        }
+        else if(val.plain === 'url_nohs') {
+          const wkURL = new URL(window.location.href);
+          // when url includes '#!' path, all things become 'hash' after that part.
+          // so, we cannot use very convenient properties like URL.hash, URL.search.
+          result.push(
+            wkURL.protocol + wkURL.host + wkURL.pathname
+          );
         }
         else if(val.plain === 'title') {
-          tgt[idx] = {string: document.title};
+          result.push(document.title);
         }
-        console.log(tgt[idx]);
+        else if(val.plain === 'title_esc') {
+          result.push(escapeHtmlChar(document.title));
+        }
       }
     });
-    return tgt;
+    textPicker.RESULT_ARR = result;
   },
 
 };
@@ -106,7 +118,7 @@ const tweetPicker = {
       let wk = ` <div class="quotedTweet"><a href="${wk_elm[0].href}">`;
       wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
       if(wk_elm && wk_elm.length > 0) {
-        const fullname = textPicker.escapeHtmlChar(wk_elm[0].textContent.trim());
+        const fullname = escapeHtmlChar(wk_elm[0].textContent.trim());
         wk += fullname + ':</a> ';
       }
       wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-text');
@@ -151,7 +163,7 @@ const tweetPicker = {
   getTweetUsername : (tgt_elm) => {
     const wk_elm = tgt_elm.getElementsByClassName('fullname');
     if(wk_elm && wk_elm.length > 0) {
-      return textPicker.escapeHtmlChar(wk_elm[0].textContent.trim());
+      return escapeHtmlChar(wk_elm[0].textContent.trim());
     }
     else {
       return '';
@@ -292,7 +304,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
     else {
       document.addEventListener('copy', textPicker.onCopy);
-      textPicker.RESULT_ARR = textPicker.textPick(message.target);
+      textPicker.build(message.target);
     }
     document.execCommand('copy');
   }
