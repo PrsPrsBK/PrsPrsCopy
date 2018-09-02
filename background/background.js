@@ -4,9 +4,56 @@ if(typeof browser === 'undefined') {
 
 const injected = {};
 
-const registered = [
+const initialStore = [
   {
-    url: 'https://twitter.com',
+    default: true,
+    templates: [
+      {
+        name: 'dt',
+        specArr: [
+          {string: '<dt><a href="'},
+          {plain: 'url_nohs'},
+          {string: '">'},
+          {plain: 'title'},
+          {string: '</a></dt>'},
+        ]
+      },
+      {
+        name: 'ahref',
+        specArr: [
+          {string: '<a href="'},
+          {plain: 'url'},
+          {string: '">'},
+          {plain: 'title'},
+          {string: '</a>'},
+        ]
+      },
+      {
+        name: 'reST',
+        specArr: [
+          {plain: 'today'},
+          {string: ' `'},
+          {plain: 'title'},
+          {string: ' <'},
+          {plain: 'url'},
+          {string: '>`__'},
+        ]
+      },
+      {
+        name: 'Markdown',
+        specArr: [
+          {string: '('},
+          {plain: 'title'},
+          {string: ')'},
+          {string: '['},
+          {plain: 'url'},
+          {string: ']'},
+        ]
+      },
+    ],
+  },
+  {
+    urlHead: 'https://twitter.com',
     templates: [
       {
         name: 'dt',
@@ -59,92 +106,6 @@ const registered = [
       },
     ],
   },
-  //.timestamp > relative-time:nth-child(1)
-  {
-    url: 'https://foogithub.com/',
-    templates: [
-      {
-        name: 'dt',
-        specArr: [
-          {string: '<dt><a href="'},
-          {plain: 'url'},
-          {string: '">'},
-          {plain: 'title'},
-          {string: '</a></dt>'},
-        ]
-      },
-      {
-        name: 'ahref',
-        specArr: [
-          {string: '<a href="'},
-          {plain: 'url'},
-          {string: '">'},
-          {plain: 'title'},
-          {string: '</a>'},
-        ]
-      },
-      /*
-       * <a href="#issue-197739209" class="timestamp">
-       * <relative-time datetime="2018-06-27T13:47:23Z" title="2018年6月27日 22:47 JST">8 minutes ago
-       * </relative-time></a>
-       */
-      {
-        name: 'some',
-        specArr: [
-          {string: '`'},
-          {plain: 'title'},
-          {string: ' <'},
-          {plain: 'url'},
-          {string: '>`__'},
-        ]
-      },
-    ],
-  },
-];
-
-const defaultTargets = [
-  {
-    name: 'dt',
-    specArr: [
-      {string: '<dt><a href="'},
-      {plain: 'url_nohs'},
-      {string: '">'},
-      {plain: 'title'},
-      {string: '</a></dt>'},
-    ]
-  },
-  {
-    name: 'ahref',
-    specArr: [
-      {string: '<a href="'},
-      {plain: 'url'},
-      {string: '">'},
-      {plain: 'title'},
-      {string: '</a>'},
-    ]
-  },
-  {
-    name: 'reST',
-    specArr: [
-      {plain: 'today'},
-      {string: ' `'},
-      {plain: 'title'},
-      {string: ' <'},
-      {plain: 'url'},
-      {string: '>`__'},
-    ]
-  },
-  {
-    name: 'Markdown',
-    specArr: [
-      {string: '('},
-      {plain: 'title'},
-      {string: ')'},
-      {string: '['},
-      {plain: 'url'},
-      {string: ']'},
-    ]
-  },
 ];
 
 const onError = (err) => {
@@ -152,6 +113,22 @@ const onError = (err) => {
 };
 
 let iconFlip = false;
+
+const restoreEmptyTemplate = () => {
+  console.log('health check');
+  browser.storage.local.get('arr_by_site', (store_obj) => {
+    const result = store_obj['arr_by_site'];
+    if(!result || result.length === 0) {
+      console.log('oh no let us restore');
+      browser.storage.local.set({
+        arr_by_site: initialStore,
+      });
+    }
+    else {
+      console.log(`${JSON.stringify(result)}`);
+    }
+  });
+};
 
 const updateIconOfTab = (tabId) => {
   browser.browserAction.setIcon({
@@ -164,18 +141,15 @@ const updateIconOfTab = (tabId) => {
   });
 };
 
-const getTemplates = (url) => {
-  for(const site of registered) {
-    if(url.startsWith(site.url)) {
-      return site.templates;
-    }
+const dearGreatestBrowserGoogleChrome = (tab, templateArr) => {
+  if(!templateArr || templateArr.length === 0) {
+    browser.browserAction.setBadgeText({
+      text: 'none',
+      tabId: tab.id,
+    });
+    return;
   }
-  return defaultTargets;
-};
-
-const tellWhat = (tab) => {
-  const templateArr = getTemplates(tab.url);
-  console.log(`tellWhat: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
+  console.log(`requestCopy: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
   const curTgt = templateArr[injected[tab.id].index].specArr;
   injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
   iconFlip = !iconFlip;
@@ -190,6 +164,34 @@ const tellWhat = (tab) => {
   //  task: 'what',
   //  target: curTgt
   //});
+};
+
+const getTemplates = (tab) => {
+  browser.storage.local.get('arr_by_site', (store_obj) => {
+    const result = store_obj['arr_by_site'];
+    let ret;
+    if(!result || result.length === 0) {
+      browser.browserAction.setBadgeText({
+        text: 'empty',
+        tabId: tab.id,
+      });
+      return;
+    }
+    const match1st = result.find((elm) => { return (!elm.urlHead && tab.url.startsWith(elm.urlHead)); });
+    if(match1st) {
+      console.log('wow url match');
+      ret = match1st.templates;
+    }
+    else {
+      console.log('use default');
+      ret = result.find((elm) => { return elm.default; }).templates;
+    }
+    dearGreatestBrowserGoogleChrome(tab, ret);
+  });
+};
+
+const requestCopy = (tab) => {
+  getTemplates(tab);
 };
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
@@ -224,7 +226,7 @@ browser.commands.onCommand.addListener((cmd) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         console.log(`url: ${tab.url}`);
-        tellWhat(tab);
+        requestCopy(tab);
       }
     });
   }
@@ -264,6 +266,13 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         const templateArr = getTemplates(tab.url);
+        if(!templateArr || templateArr.length === 0) {
+          browser.browserAction.setBadgeText({
+            text: 'NONE',
+            tabId: tab.id,
+          });
+          return;
+        }
         console.log(`getCT url: ${tab.url}`);
         const curTgt = templateArr[message.clickedIdx].specArr;
         /** not update index and icon
@@ -280,5 +289,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   }
 });
+
+restoreEmptyTemplate();
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
