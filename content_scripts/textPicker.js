@@ -9,6 +9,27 @@ const escapeHtmlChar = (tgtText) => {
     .replace(/>/g, '&gt;');
 };
 
+/**
+ * make and return Object contains each datetime infos as string, made from mill seconds string.
+ * @param {number} milsec_txt - string
+ * @returns {?result} - Object
+ */
+const parseFromMillsec = (milsec_int) => {
+  const wk = new Date(milsec_int);
+  return {
+    year : wk.getFullYear(),
+    month : ('00' + (wk.getMonth() + 1)).slice(-2),
+    day : ('00' + wk.getDate()).slice(-2),
+    hour : ('00' + wk.getHours()).slice(-2),
+    minute : ('00' + wk.getMinutes()).slice(-2),
+  };
+};
+
+const getDatetimeTextFromMillsec = (milsec_int) => {
+  const dtObj = parseFromMillsec(milsec_int);
+  return `${dtObj['year']}-${dtObj['month']}-${dtObj['day']} ${dtObj['hour']}:${dtObj['minute']}`;
+};
+
 const commonSpecExtractor = (specRecord) => {
   if(specRecord.hasOwnProperty('string')) {
     return specRecord.string;
@@ -30,23 +51,10 @@ const commonSpecExtractor = (specRecord) => {
     else if(specRecord.plain === 'title_esc') {
       return escapeHtmlChar(document.title);
     }
+    else if(specRecord.plain === 'today') {
+      return getDatetimeTextFromMillsec(Date.now());
+    }
   }
-};
-
-/**
- * make and return Object contains each datetime infos as string, made from mill seconds string.
- * @param {string} milsec_txt - string
- * @returns {?result} - Object
- */
-const parseFromMillsec = (milsec_txt) => {
-  const wk = new Date(parseInt(milsec_txt));
-  return {
-    year : wk.getFullYear(),
-    month : ('00' + (wk.getMonth() + 1)).slice(-2),
-    day : ('00' + wk.getDate()).slice(-2),
-    hour : ('00' + wk.getHours()).slice(-2),
-    minute : ('00' + wk.getMinutes()).slice(-2),
-  };
 };
   
 const resetTemplateIndex = () => {
@@ -150,8 +158,7 @@ const tweetPicker = {
   getTweetTimestamp : (tgt_elm) => {
     const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
     if(wk_elm && wk_elm.length > 0 && wk_elm[0].getAttribute('data-time-ms')) {
-      const result = parseFromMillsec(wk_elm[0].getAttribute('data-time-ms').trim());
-      return `${result['year']}-${result['month']}-${result['day']} ${result['hour']}:${result['minute']}`;
+      return getDatetimeTextFromMillsec(parseInt(wk_elm[0].getAttribute('data-time-ms').trim()));
     }
     else {
       return '';

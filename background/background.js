@@ -19,7 +19,7 @@ const registered = [
           {twitter: 'username_esc'},
           {string: '</a>: '},
           {twitter: 'text_html'},
-          {twitter: 'qt_string', string: ' <div class="quotedTweetyes"><a href="'},
+          {twitter: 'qt_string', string: ' <div class="quotedTweet"><a href="'},
           {twitter: 'qt_url'},
           {twitter: 'qt_string', string: '">'},
           {twitter: 'qt_username_esc'},
@@ -126,7 +126,8 @@ const defaultTargets = [
   {
     name: 'reST',
     specArr: [
-      {string: '`'},
+      {plain: 'today'},
+      {string: ' `'},
       {plain: 'title'},
       {string: ' <'},
       {plain: 'url'},
