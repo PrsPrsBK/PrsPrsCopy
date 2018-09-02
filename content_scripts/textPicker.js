@@ -74,16 +74,16 @@ const tweetPicker = {
    */
   parseTweetTime : (milsec_txt) => {
     const wk = new Date(parseInt(milsec_txt));
-    const result = {};
-    result.year = wk.getFullYear();
-    result.month = ('00' + (wk.getMonth() + 1)).slice(-2);
-    result.day = ('00' + wk.getDate()).slice(-2);
-    result.hour = ('00' + wk.getHours()).slice(-2);
-    result.minute = ('00' + wk.getMinutes()).slice(-2);
-    return result;
+    return {
+      year : wk.getFullYear(),
+      month : ('00' + (wk.getMonth() + 1)).slice(-2),
+      day : ('00' + wk.getDate()).slice(-2),
+      hour : ('00' + wk.getHours()).slice(-2),
+      minute : ('00' + wk.getMinutes()).slice(-2),
+    };
   },
   
-  regexInnerHref : /(.+)(https?:\/\/[^ ]+) …(.*)/,
+  regexInnerHref : /(.+)(https?:\/\/\S+)\s…(.*)/,
   
   activateHrefText : (tgtText) => {
     let headText = '';
