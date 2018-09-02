@@ -83,30 +83,21 @@ const tweetPicker = {
     };
   },
   
-  regexInnerHref : /(.+)(https?:\/\/\S+)\s…(.*)/,
+  regexHref : /(https?:\/\/\S+)(\s…)?/g,
   
   activateHrefText : (tgtText) => {
-    let headText = '';
-    let hrefText = '';
-    let tailText = '';
-    if(tweetPicker.regexInnerHref.test(tgtText)) {
-      headText = tgtText.replace(tweetPicker.regexInnerHref, '$1');
-      hrefText = tgtText.replace(tweetPicker.regexInnerHref, '<a href="$2">URL</a>');
-      tailText = tgtText.replace(tweetPicker.regexInnerHref, '$3');
+    const resultTextArr = [];
+    let headIdx = 0;
+    let wkMatchArr; // cannot declare in condition-clause
+    while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
+      console.log('MATCH');
+      resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx, wkMatchArr.index)));
+      resultTextArr.push(`<a href="${wkMatchArr[1]}">URL</a>`);
+      headIdx = tweetPicker.regexHref.lastIndex;
     }
-    else {
-      headText = tgtText;
-    }
-    console.log(`head==${headText}`);
-    console.log(`href==${hrefText}`);
-    console.log(`tail==${tailText}`);
-    headText = headText.replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-    tailText = tailText.replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-    return headText + hrefText + tailText;
+    resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx)));
+
+    return resultTextArr.join('');
   },
   
   getQuoteTweetText : (tgt_elm) => {
