@@ -9,28 +9,30 @@ const escapeHtmlChar = (tgtText) => {
     .replace(/>/g, '&gt;');
 };
 
+/**
+ * make and return Object contains each datetime infos as string, made from mill seconds string.
+ * @param {string} milsec_txt - string
+ * @returns {?result} - Object
+ */
+const parseFromMillsec = (milsec_txt) => {
+  const wk = new Date(parseInt(milsec_txt));
+  return {
+    year : wk.getFullYear(),
+    month : ('00' + (wk.getMonth() + 1)).slice(-2),
+    day : ('00' + wk.getDate()).slice(-2),
+    hour : ('00' + wk.getHours()).slice(-2),
+    minute : ('00' + wk.getMinutes()).slice(-2),
+  };
+};
+  
+const resetTemplateIndex = () => {
+  browser.runtime.sendMessage({
+    task: 'resetTemplateIndex',
+  });
+};
+
 const textPicker = {
   RESULT_ARR : [],
-
-  onCopy : (evt) => {
-    if(window.getSelection().toString() === '') {
-      const outputText = textPicker.RESULT_ARR
-        .reduce((acm, val) => {
-          return acm + val;
-        }, '');
-      console.log(outputText);
-      if(outputText !== '') {
-        evt.preventDefault();
-        const transfer = evt.clipboardData;
-        transfer.setData('text/plain', outputText);
-      }
-    }
-    document.removeEventListener('copy', textPicker.onCopy);
-    browser.runtime.sendMessage({
-      task: 'copyEnd',
-      result: textPicker.RESULT_ARR,
-    });
-  },
   
   build : (tgt) => {
     const result = [];
@@ -61,28 +63,32 @@ const textPicker = {
     textPicker.RESULT_ARR = result;
   },
 
+  onCopy : (evt) => {
+    if(window.getSelection().toString() === '') {
+      const outputText = textPicker.RESULT_ARR
+        .reduce((acm, val) => {
+          return acm + val;
+        }, '');
+      console.log(outputText);
+      if(outputText !== '') {
+        evt.preventDefault();
+        const transfer = evt.clipboardData;
+        transfer.setData('text/plain', outputText);
+      }
+    }
+    document.removeEventListener('copy', textPicker.onCopy);
+    browser.runtime.sendMessage({
+      task: 'copyEnd',
+      result: textPicker.RESULT_ARR,
+    });
+  },
+
 };
 
 const tweetPicker = {
 
   RESULT_ARR : [],
 
-  /**
-   * make and return Object contains each datetime infos as string, made from mill seconds string.
-   * @param {string} milsec_txt - string
-   * @returns {?result} - Object
-   */
-  parseTweetTime : (milsec_txt) => {
-    const wk = new Date(parseInt(milsec_txt));
-    return {
-      year : wk.getFullYear(),
-      month : ('00' + (wk.getMonth() + 1)).slice(-2),
-      day : ('00' + wk.getDate()).slice(-2),
-      hour : ('00' + wk.getHours()).slice(-2),
-      minute : ('00' + wk.getMinutes()).slice(-2),
-    };
-  },
-  
   regexHref : /(https?:\/\/\S+)(\s…)?/g,
   
   activateHrefText : (tgtText) => {
@@ -138,8 +144,8 @@ const tweetPicker = {
   
   getTweetTimestamp : (tgt_elm) => {
     const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
-    if(wk_elm && wk_elm.length > 0) {
-      const result = tweetPicker.parseTweetTime(wk_elm[0].getAttribute('data-time-ms').trim());
+    if(wk_elm && wk_elm.length > 0 && wk_elm[0].getAttribute('data-time-ms')) {
+      const result = parseFromMillsec(wk_elm[0].getAttribute('data-time-ms').trim());
       return result['year'] + '-'
       + result['month'] + '-'
       + result['day'] + ' '
@@ -165,7 +171,9 @@ const tweetPicker = {
     const wk_elm = tgt_elm.getElementsByClassName('tweet-text');
     if(wk_elm && wk_elm.length > 0) {
       let mainText = wk_elm[0].textContent.trim();
-      mainText = mainText.replace(/\r?\n/g, ' ');
+      mainText = mainText.replace(/\r\n/g, ' ');
+      mainText = mainText.replace(/\n\r/g, ' ');
+      mainText = mainText.replace(/\n/g, ' ');
       const quoteTweetText = tweetPicker.getQuoteTweetText(tgt_elm);
       if(quoteTweetText !== '') {
         console.log('add quote');
@@ -210,7 +218,8 @@ const tweetPicker = {
     return tweetPicker.CUR_MAIN_TWEET;
   },
   
-  textPick : (tgt) => {
+  build : (tgt) => {
+    const result = [];
     tgt.forEach((val, idx) => {
       if(val.hasOwnProperty('plain')) {
         if(val.plain === 'url') {
@@ -238,23 +247,17 @@ const tweetPicker = {
         console.log(tgt[idx]);
       }
     });
+    tweetPicker.RESULT_ARR = result;
     tweetPicker.CUR_MAIN_TWEET = null;
-    return tgt;
-  },
-  
-  resetTemplateIndex : () => {
-    browser.runtime.sendMessage({
-      task: 'resetTemplateIndex',
-    });
   },
   
   handleKeydown : (evt) => {
     switch(evt.key) {
       case 'j':
-        tweetPicker.resetTemplateIndex();
+        resetTemplateIndex();
         break;
       case 'k':
-        tweetPicker.resetTemplateIndex();
+        resetTemplateIndex();
         break;
     }
   },
@@ -262,9 +265,9 @@ const tweetPicker = {
   onCopy : (evt) => {
     console.log('onCopy start');
     if(window.getSelection().toString() === '') {
-      const outputText = tweetPicker.RESULT_ARR.filter((pair) => pair.hasOwnProperty('string'))
+      const outputText = tweetPicker.RESULT_ARR
         .reduce((acm, val) => {
-          return acm + val.string;
+          return acm + val;
         }, '');
       console.log(outputText);
       if(outputText !== '') {
@@ -291,7 +294,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.task === 'what') {
     if(message.picker === 'twitter') {
       document.addEventListener('copy', tweetPicker.onCopy);
-      tweetPicker.RESULT_ARR = tweetPicker.textPick(message.target);
+      tweetPicker.build(message.target);
     }
     else {
       document.addEventListener('copy', textPicker.onCopy);
