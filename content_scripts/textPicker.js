@@ -92,19 +92,37 @@ const tweetPicker = {
 
   RESULT_ARR : [],
 
-  regexHref : /(https?:\/\/\S+)(\s…?)/g,
+  regexHref : /(https?:\/\/\S+)(\s…?)?/g,
   
-  activateHrefText : (tgtText) => {
+  activateHrefText : (tgtText, opt) => {
     const resultTextArr = [];
     let headIdx = 0;
     let wkMatchArr; // cannot declare in condition-clause
-    while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
-      console.log('MATCH');
-      resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx, wkMatchArr.index)));
-      resultTextArr.push(`<a href="${wkMatchArr[1]}">URL</a>`);
-      headIdx = tweetPicker.regexHref.lastIndex;
+    if(opt.format === 'html') {
+      while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
+        resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx, wkMatchArr.index)));
+        resultTextArr.push(`<a href="${wkMatchArr[1]}">URL</a>`);
+        headIdx = tweetPicker.regexHref.lastIndex;
+      }
+      // may not be exact
+      resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx)));
     }
-    resultTextArr.push(escapeHtmlChar(tgtText.slice(headIdx))); // may not be exact
+    else if(opt.format === 'reST') {
+      while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
+        resultTextArr.push(tgtText.slice(headIdx, wkMatchArr.index));
+        resultTextArr.push(`\`URL <${wkMatchArr[1]}>\`__`);
+        headIdx = tweetPicker.regexHref.lastIndex;
+      }
+      resultTextArr.push(tgtText.slice(headIdx));
+    }
+    else if(opt.format === 'md') {
+      while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
+        resultTextArr.push(tgtText.slice(headIdx, wkMatchArr.index));
+        resultTextArr.push(`(URL)[${wkMatchArr[1]}]`);
+        headIdx = tweetPicker.regexHref.lastIndex;
+      }
+      resultTextArr.push(tgtText.slice(headIdx));
+    }
 
     return resultTextArr.join('');
   },
@@ -248,7 +266,13 @@ const tweetPicker = {
           result.push(tweetPicker.CUR_MAIN_TEXT);
         }
         else if(val.twitter === 'text_html') {
-          result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT));
+          result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'html'}));
+        }
+        else if(val.twitter === 'text_reST') {
+          result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'reST'}));
+        }
+        else if(val.twitter === 'text_md') {
+          result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'md'}));
         }
         else if(tweetPicker.CUR_HAS_QT) {
           console.log(`has QT really? ${tweetPicker.CUR_HAS_QT}`);
@@ -268,13 +292,13 @@ const tweetPicker = {
             result.push(tweetPicker.CUR_QT_TEXT);
           }
           else if(val.twitter === 'qt_text_html') {
-            result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT));
+            result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'html'}));
           }
           else if(val.twitter === 'qt_text_reST') {
-            result.push(tweetPicker.CUR_QT_TEXT);
+            result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'reST'}));
           }
           else if(val.twitter === 'qt_text_md') {
-            result.push(tweetPicker.CUR_QT_TEXT);
+            result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'md'}));
           }
         }
       }

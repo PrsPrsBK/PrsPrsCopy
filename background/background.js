@@ -40,7 +40,7 @@ const registered = [
           {twitter: 'url'},
           {string: '>`__\n'},
           {string: '  : '},
-          {twitter: 'text'},
+          {twitter: 'text_reST'},
         ]
       },
       {
@@ -54,6 +54,7 @@ const registered = [
           {string: '['},
           {twitter: 'url'},
           {string: ']'},
+          {twitter: 'text_md'},
         ]
       },
     ],
