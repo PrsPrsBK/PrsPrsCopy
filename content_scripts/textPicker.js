@@ -257,7 +257,10 @@ const tweetPicker = {
       }
       else {
         const tweetBody = tweetPicker.getCurTweet();
-        if(val.twitter === 'url') {
+        if(!tweetBody) {
+          console.debug('cannot copy for tweet');
+        }
+        else if(val.twitter === 'url') {
           result.push(tweetPicker.getTweetUrl(tweetBody));
         }
         else if(val.twitter === 'datetime') {
@@ -282,7 +285,6 @@ const tweetPicker = {
           result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'md'}));
         }
         else if(tweetPicker.CUR_HAS_QT) {
-          console.log(`has QT really? ${tweetPicker.CUR_HAS_QT}`);
           if(val.twitter === 'qt_string' && val.hasOwnProperty('string')) {
             result.push(val.string);
           }
@@ -362,15 +364,14 @@ if(window.location.href.startsWith('https://twitter.com')) {
 }
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log(`${message.task} coming`);
-  if(message.task === 'what') {
+  if(message.task === 'copyWithSpecArr') {
     if(message.picker === 'twitter') {
       document.addEventListener('copy', tweetPicker.onCopy);
-      tweetPicker.build(message.target);
+      tweetPicker.build(message.specArr);
     }
     else {
       document.addEventListener('copy', textPicker.onCopy);
-      textPicker.build(message.target);
+      textPicker.build(message.specArr);
     }
     document.execCommand('copy');
   }
