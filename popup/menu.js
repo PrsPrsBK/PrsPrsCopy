@@ -53,6 +53,7 @@ document.getElementById('menu_root').addEventListener('mouseover', (e) => {
     CUR_TEMPLATES[tgtIdx].specArr.forEach((spec) => {
       descAcc += Object.values(spec)[0];
     });
+    descAcc = descAcc.replace('\n', '|NL|').replace('\t', '|TAB|');
     const txtDiv = document.createElement('div');
     const parElm = document.createElement('p');
     const descTxt = document.createTextNode(descAcc);
