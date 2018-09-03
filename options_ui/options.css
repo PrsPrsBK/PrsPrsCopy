@@ -21,11 +21,14 @@ button.save {
 }
 .site_top {
   grid-column-start: 1;
-  grid-column-end:   2;
+  grid-column-end:   3;
 }
 .site_top label {
   font-weight: bold;
   font-size: 120%;
+  padding-left: 0.5em;
+  padding-bottom: 0.5ex;
+  padding-right: 0.5em;
   background-color: #E8B683;
 }
 input[type="text"] {
@@ -35,7 +38,7 @@ input[type='url'] {
   background-color: #DFE2F1;
 }
 .site_ope {
-  grid-column-start: 2;
+  grid-column-start: 3;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
@@ -64,6 +67,8 @@ input[type='url'] {
 }
 .template_rows label {
   font-weight: bold;
+  padding-top: 0.5ex;
+  padding-bottom: 0.5ex;
   background-color: #CCC739;
 }
 .template_rows label input {
