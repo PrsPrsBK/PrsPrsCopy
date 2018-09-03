@@ -22,6 +22,11 @@ button.save {
 .site_top {
   grid-column-start: 1;
   grid-column-end:   3;
+  height: 6ex;
+}
+.site_top label {
+  display: flex;
+  align-items: center;
 }
 .site_top label {
   font-weight: bold;
