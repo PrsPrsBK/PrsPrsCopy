@@ -104,18 +104,21 @@ const configUI = {
 
     wkTxtNode = document.createTextNode('up');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('site_up');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('down');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('site_down');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('add template');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('site_add');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
@@ -138,24 +141,28 @@ const configUI = {
 
     wkTxtNode = document.createTextNode('freeze');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('template_freeze');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('up');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('template_up');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('down');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('template_down');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('add spec');
     button = document.createElement('button');
+    button.type = 'button';
     button.classList.add('template_add');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
@@ -306,12 +313,12 @@ const configUI = {
   },
 
   saveEntries : () => {
+    console.log('yes save');
   },
 
 };
 
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
-configUI.restoreEntries();
 document.querySelector('#save').addEventListener('click', configUI.saveEntries);
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
