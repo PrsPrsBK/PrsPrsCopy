@@ -94,6 +94,9 @@ const configUI = {
     return siteTopDesc;
   },
 
+  /* this maybe does not need to be implemented. 
+   * so not called.
+   */
   makeSiteOpeMenu : () => {
     let button, wkTxtNode;
     const ret = document.createElement('div');
@@ -293,7 +296,7 @@ const configUI = {
       const eachSiteRoot = document.createElement('div');
       eachSiteRoot.classList.add('each_site');
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
-      eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
+      //eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
       site.templates.forEach((template) => {
         eachSiteRoot.appendChild(configUI.makeEachTemplate(template, siteType));
