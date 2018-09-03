@@ -7,7 +7,7 @@
 <body>
   <h1>PrsPrsCopy Settings</h1>
   <form>
-    <button class="save">Save</button>
+    <button id="save" class="save">Save All</button>
     <hr>
     <h2>List of Templates at each site.</h2>
     <div id="site_list">
@@ -161,18 +161,11 @@
     </div>
 
     <hr>
-    <h2>ひながた新規作成</h2>
-    <button id="add_template">追加</button>
+    <h2>NEW TEMPLATE</h2>
+    <button id="add_template">ADD</button>
     <p>description</p>
-    <table id="under_edit">
-      <tr>
-        <th>records</th>
-        <th>name</th>
-        <th>URL Pattern</th>
-        <th>details</th>
-      </tr>
-    </table>
-    <button id="regist_add">追加したものを登録</button>
+    <div id="under_add">
+    </div>
 
   </form>
   <script src="options.js"></script>

@@ -1,11 +1,16 @@
 html {
   background-color: #26232A;
 }
+h1 {
+  color: #F24D92;
+}
 h2 {
   background-color: #26232A;
   color: #CCC739;
 }
 button.save {
+  font-weight: bold;
+  font-size: 144%;
   width: 160px;
   height: 40px;
 }
@@ -57,4 +62,11 @@ input[type='url'] {
 .template_rows th {
   background-color: #E8B683;
 }
-
+.template_rows label {
+  font-weight: bold;
+  background-color: #CCC739;
+}
+.template_rows label input {
+  width: 160px;
+  padding-left: 1em;
+}

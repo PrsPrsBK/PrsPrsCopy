@@ -2,7 +2,6 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
-console.log('options.js2');
 const configUI = {
 
   onError : (error) => {
@@ -73,14 +72,12 @@ const configUI = {
 
       wkTxtNode = document.createTextNode('default');
       wkLabel = document.createElement('label');
-      wkLabel.htmlFor = 'default_site_mark';
       wkLabel.appendChild(wkTxtNode);
       siteTopDesc.appendChild(wkLabel);
     }
     else if(site.urlHead && site.urlHead !== '') {
       wkTxtNode = document.createTextNode('URL Starts WIth: ');
       wkLabel = document.createElement('label');
-      wkLabel.style.display = 'inline';
       wkLabel.appendChild(wkTxtNode);
 
       const siteRootUrlHead = document.createElement('input');
@@ -99,18 +96,21 @@ const configUI = {
     let button, wkTxtNode;
     const ret = document.createElement('div');
     ret.classList.add('site_ope');
-    button = document.createElement('button');
+
     wkTxtNode = document.createTextNode('up');
+    button = document.createElement('button');
+    button.classList.add('site_up');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
-    button = document.createElement('button');
     wkTxtNode = document.createTextNode('down');
-    button.appendChild(wkTxtNode);
+    button = document.createElement('button');
+    button.classList.add('site_down');
     ret.appendChild(button);
 
-    button = document.createElement('button');
     wkTxtNode = document.createTextNode('add template');
+    button = document.createElement('button');
+    button.classList.add('site_add');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -129,18 +129,21 @@ const configUI = {
     let button, wkTxtNode;
     const ret = document.createElement('div');
     ret.classList.add('template_ope');
-    button = document.createElement('button');
     wkTxtNode = document.createTextNode('up');
+    button = document.createElement('button');
+    button.classList.add('template_up');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
-    button = document.createElement('button');
     wkTxtNode = document.createTextNode('down');
+    button = document.createElement('button');
+    button.classList.add('template_down');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
-    button = document.createElement('button');
     wkTxtNode = document.createTextNode('add row');
+    button = document.createElement('button');
+    button.classList.add('template_add');
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -158,15 +161,15 @@ const configUI = {
   },
 
   makeEachTemplateRows : (template, siteType) => {
-    let trElm, thElm, tdElm, inpElm, selectElm, labelElm, wkTxtNode;
+    let trElm, thElm, tdElm, inpElm, selectElm, wkTxtNode;
     const docFragment = document.createDocumentFragment();
 
     // template name ------------------------------------------------
     trElm = document.createElement('tr');
     tdElm = document.createElement('td');
     tdElm.colSpan = '3';
-    labelElm = document.createElement('label');
     wkTxtNode = document.createTextNode('template name: ');
+    const labelElm = document.createElement('label');
     labelElm.appendChild(wkTxtNode);
     inpElm = document.createElement('input');
     inpElm.type = 'text';
@@ -306,6 +309,6 @@ const configUI = {
 
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 configUI.restoreEntries();
-//document.querySelector('#regist_add').addEventListener('click', configUI.saveEntries);
+document.querySelector('#save').addEventListener('click', configUI.saveEntries);
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
