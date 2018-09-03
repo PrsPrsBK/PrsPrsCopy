@@ -106,6 +106,7 @@ const configUI = {
     wkTxtNode = document.createTextNode('down');
     button = document.createElement('button');
     button.classList.add('site_down');
+    button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     wkTxtNode = document.createTextNode('add template');
@@ -129,6 +130,13 @@ const configUI = {
     let button, wkTxtNode;
     const ret = document.createElement('div');
     ret.classList.add('template_ope');
+
+    wkTxtNode = document.createTextNode('freeze');
+    button = document.createElement('button');
+    button.classList.add('template_freeze');
+    button.appendChild(wkTxtNode);
+    ret.appendChild(button);
+
     wkTxtNode = document.createTextNode('up');
     button = document.createElement('button');
     button.classList.add('template_up');

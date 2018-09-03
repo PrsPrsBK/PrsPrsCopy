@@ -53,7 +53,7 @@ input[type='url'] {
   grid-column-end:   2;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 .template_body {
   grid-column-start: 3;
