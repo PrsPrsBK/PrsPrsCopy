@@ -24,29 +24,29 @@ const configUI = {
 
   specItemMap : {
     plain : [
-      'url',
-      'url_nohs',
-      'title',
-      'title_esc',
-      'today',
+      ['url', 'url'],
+      ['url_nohs', 'url NO hash/search'],
+      ['title', 'title'],
+      ['title_esc', 'title ESC'],
+      ['today', 'today'],
     ],
     twitter : [
-      'url',
-      'datetime',
-      'username',
-      'username_esc',
-      'text',
-      'text_html',
-      'text_reST',
-      'text_md',
-      'qt_string',
-      'qt_url',
-      'qt_username',
-      'qt_username_esc',
-      'qt_text',
-      'qt_text_html',
-      'qt_text_reST',
-      'qt_text_md',
+      ['url', 'url'],
+      ['datetime', 'datetime'],
+      ['username', 'username'],
+      ['username_esc', 'username ESC'],
+      ['text', 'text'],
+      ['text_html', 'text_html'],
+      ['text_reST', 'text reST'],
+      ['text_md', 'text md'],
+      ['qt_string', 'QT string'],
+      ['qt_url', 'QT url'],
+      ['qt_username', 'QT username'],
+      ['qt_username_esc', 'QT username ESC'],
+      ['qt_text', 'QT text'],
+      ['qt_text_html', 'QT text html'],
+      ['qt_text_reST', 'QT text reST'],
+      ['qt_text_md', 'QT text md'],
     ],
   },
 
@@ -151,7 +151,7 @@ const configUI = {
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
-    wkTxtNode = document.createTextNode('add row');
+    wkTxtNode = document.createTextNode('add spec');
     button = document.createElement('button');
     button.classList.add('template_add');
     button.appendChild(wkTxtNode);
@@ -237,12 +237,12 @@ const configUI = {
       }
       else if(curSpecType === 'plain') {
         selectElm = document.createElement('select');
-        configUI.specItemMap[curSpecType].forEach((elm) => {
+        configUI.specItemMap[curSpecType].forEach((pair) => {
           optionElm = document.createElement('option');
-          optionElm.value = elm;
-          wkTxtNode = document.createTextNode(elm);
+          optionElm.value = pair[0];
+          wkTxtNode = document.createTextNode(pair[1]);
           optionElm.appendChild(wkTxtNode);
-          if(elm === spec[curSpecType]) {
+          if(pair[0] === spec[curSpecType]) {
             optionElm.selected = true;
           }
           selectElm.appendChild(optionElm);
@@ -252,14 +252,14 @@ const configUI = {
       else if(curSpecType === 'twitter') {
         selectElm = document.createElement('select');
         let has3rdInput = false;
-        configUI.specItemMap[curSpecType].forEach((elm) => {
+        configUI.specItemMap[curSpecType].forEach((pair) => {
           optionElm = document.createElement('option');
-          optionElm.value = elm;
-          wkTxtNode = document.createTextNode(elm);
+          optionElm.value = pair[0];
+          wkTxtNode = document.createTextNode(pair[1]);
           optionElm.appendChild(wkTxtNode);
-          if(elm === spec[curSpecType]) {
+          if(pair[0] === spec[curSpecType]) {
             optionElm.selected = true;
-            if(elm === 'qt_string') {
+            if(pair[0] === 'qt_string') {
               has3rdInput = true;
               inpElm = document.createElement('input');
               inpElm.type = 'text';
