@@ -10,10 +10,12 @@ const configUI = {
 
   specTypeList : {
     'common' : [
+      'delete',
       'string',
       'plain',
     ],
     'twitter' : [
+      'delete',
       'string',
       'plain',
       'twitter',
@@ -192,11 +194,6 @@ const configUI = {
     trElm = document.createElement('tr');
 
     thElm = document.createElement('th');
-    wkTxtNode = document.createTextNode('delete');
-    thElm.appendChild(wkTxtNode);
-    trElm.appendChild(thElm);
-
-    thElm = document.createElement('th');
     wkTxtNode = document.createTextNode('type');
     thElm.appendChild(wkTxtNode);
     trElm.appendChild(thElm);
@@ -213,11 +210,6 @@ const configUI = {
     template.specArr.forEach((spec) => {
       trElm = document.createElement('tr');
 
-      tdElm = document.createElement('td');
-      inpElm = document.createElement('input');
-      inpElm.type = 'checkbox';
-      tdElm.appendChild(inpElm);
-      trElm.appendChild(tdElm);
       // ------------------------------------------------------------
       let curSpecType = '';
       selectElm = document.createElement('select');
