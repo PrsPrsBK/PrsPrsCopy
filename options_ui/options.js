@@ -534,19 +534,21 @@ const configUI = {
   },
 
   extractWhole : () => {
+    const ret = [];
     const siteListRoot = document.getElementById('site_list');
     const siteList = siteListRoot.getElementsByClassName('each_site');
     const siteCnt = siteList.length;
-    const ret = [];
     for(let i = 0; i < siteCnt; i++) {
       ret.push(configUI.extractEachSite(i));
     }
-    console.log(`${JSON.stringify(ret)}`);
+    console.log(`${JSON.stringify(ret, null, '  ')}`);
   },
 
   extractEachSite : (siteOrd) => {
     const ret = {};
     const siteRoot = document.getElementById(`si_${siteOrd}_root`);
+    const templateList = siteRoot.getElementsByClassName('each_template');
+    const templateCnt = templateList.length;
     let wkElm;
     wkElm = document.getElementById(`si_${siteOrd}_default`);
     if(wkElm && wkElm.value === 'true') {
@@ -562,6 +564,11 @@ const configUI = {
     wkElm = document.getElementById(`si_${siteOrd}_urlhead`);
     if(wkElm) {
       ret.urlHead = wkElm.value;
+    }
+
+    ret.templates = [];
+    for(let i = 0; i < templateCnt; i++) {
+      ret.templates.push(configUI.extractTemplate(siteOrd, i));
     }
     return ret;
   },
