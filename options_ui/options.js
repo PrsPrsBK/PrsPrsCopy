@@ -417,6 +417,9 @@ const configUI = {
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
       eachSiteRoot.appendChild(configUI.makeSiteOpeMenu(site));
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
+      if(siteType === 'twitter') {
+        eachSiteRoot.classList.add('twitter');
+      }
       site.templates.forEach((template, teIdx) => {
         template.ord = teIdx;
         eachSiteRoot.appendChild(configUI.makeEachTemplate(template, {type:siteType, ord:site.ord}));

@@ -45,6 +45,9 @@ input:valid+span:after {
   content: '✓';
   padding-left: 5px;
 }
+div.twitter th {
+  background-color: #1DA1F2;
+}
 
 .each_site {
   display: grid;
