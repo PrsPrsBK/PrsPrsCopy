@@ -157,9 +157,58 @@ const configUI = {
     const ret = document.createElement('div');
     ret.classList.add('template_preview');
     ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
-    if(template.ord === 0) {
+    if(siteOpt.ord === 0 && template.ord === 0) {
       ret.classList.add('loud');
-      ret.innerHTML = '<p>How to use: if we click left outside part from this zone, we get plain preview, for each template.</p>';
+      ret.innerHTML = `
+        <p>How to use: if we click left outside part from this zone, we get plain concatenated-form, for each template.<br>
+        ⇦⇦⇦⇦</p>`;
+    }
+    else if(siteOpt.ord === 0 && template.ord === 1) {
+      ret.classList.add('loud');
+      ret.innerHTML = `<p>
+        There is no menu to remove unneccessary template. 
+        If we wanna do that now, use 'delete' to all spec-type. 
+        But DO NOT try to remove all template of site.</p>`;
+    }
+    else if(siteOpt.ord === 0 && template.ord === 2) {
+      ret.classList.add('loud');
+      ret.innerHTML = `<p>
+        Anyway until we click 'Save All' button, old settings remain.</p>`;
+    }
+    else if(siteOpt.ord === 0 && template.ord === 3) {
+      ret.classList.add('loud');
+      const wk = new Date();
+      ret.innerHTML = `<p>
+        'today' is just only 
+        ${wk.getFullYear()}-${('00' + (wk.getMonth() + 1)).slice(-2)}-${('00' + wk.getDate()).slice(-2)}
+        ${('00' + wk.getHours()).slice(-2)}:${('00' + wk.getMinutes()).slice(-2)}.
+        Let's give up other important for you but too many formats.
+        </p>`;
+    }
+    else if(siteOpt.ord === 1 && template.ord === 0) {
+      ret.classList.add('loud');
+      ret.innerHTML = `<p>
+        [twitter] copy from current-choice (with j/k key), or overlayed tweet.
+        But I know only japanese edition, this may not work in other region.
+        Version-up for the region I don't know never happen, excuse me.
+        And any changes in twitter pages or alpha-beta test may happen, maybe I cannot respond to them.
+        </p>`;
+    }
+    else if(siteOpt.ord === 1 && template.ord === 1) {
+      ret.classList.add('loud');
+      ret.innerHTML = `<p>
+        [twitter] 'text html' escapes '&amp; &lt; &gt;' to '&amp;amp; ...', 
+        and transform each link in text to '&lt;a href...&gt;URL(⇦fixed)&lt;/a&gt;'.
+        'reST' and 'md' transforms links in tweet, to each format.
+        'QT' means copying from only 1 nested quoted tweet, if exists.
+        </p>`;
+    }
+    else if(siteOpt.ord === 1 && template.ord === 2) {
+      ret.classList.add('loud');
+      ret.innerHTML = `<p>
+        As for CSS Selector, which is useful and I want to use in template, 
+        but I don't wanna empower negative or not-interesting behavior, 
+        so may not be implemented.</p>`;
     }
     return ret;
   },
@@ -564,6 +613,9 @@ document.getElementById('site_list').addEventListener('click', (e) => {
     else if(wkMatchArr[3] === 'down') {
       configUI.downTemplate(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
+  }
+  else if(e.target.classList.contains('template_body')) {
+    console.log(`body clicked: ${e.target.id}`);
   }
 });
 
