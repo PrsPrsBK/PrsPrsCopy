@@ -157,6 +157,10 @@ const configUI = {
     const ret = document.createElement('div');
     ret.classList.add('template_preview');
     ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
+    if(template.ord === 0) {
+      ret.classList.add('loud');
+      ret.innerHTML = '<p>How to use: if we click left outside part from this zone, we get plain preview, for each template.</p>';
+    }
     return ret;
   },
 

@@ -26,6 +26,9 @@ button {
 button:hover {
   background-color: #55ee55;
 }
+div.loud {
+  font-size: 200%;
+}
 
 .each_site {
   display: grid;
