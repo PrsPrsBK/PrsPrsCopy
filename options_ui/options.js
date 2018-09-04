@@ -416,18 +416,21 @@ const configUI = {
       specIdx++;
     }
   
-    const menuElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_freeze`);
+    const freezeBtn = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_freeze`);
+    const addSpecBtn = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_add`);
     if(goDisabled) {
-      menuElm.textContent = 'thaw back';
-      if(!menuElm.classList.contains('goHot')) {
-        menuElm.classList.add('goHot');
+      freezeBtn.textContent = 'thaw back';
+      if(!freezeBtn.classList.contains('goHot')) {
+        freezeBtn.classList.add('goHot');
       }
+      addSpecBtn.disabled = true;
     }
     else {
-      menuElm.textContent = 'freeze';
-      if(menuElm.classList.contains('goHot')) {
-        menuElm.classList.remove('goHot');
+      freezeBtn.textContent = 'freeze';
+      if(freezeBtn.classList.contains('goHot')) {
+        freezeBtn.classList.remove('goHot');
       }
+      addSpecBtn.disabled = false;
     }
   },
 
