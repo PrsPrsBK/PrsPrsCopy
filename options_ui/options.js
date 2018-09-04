@@ -643,9 +643,87 @@ const configUI = {
 
 const regexSiteMenuId = /^si_(\d+)_menu_([^_]+)$/;
 const regexTMenuId = /^si_(\d+)_te_(\d+)_menu_([^_]+)$/;
+const regexSpecTypeId = /^si_(\d+)_te_(\d+)_sp_(\d+)_type$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
 document.getElementById('discard').addEventListener('click', configUI.discardEntries);
+document.getElementById('site_list').addEventListener('change', (e) => {
+  let wkMatchArr;
+  if((wkMatchArr = regexSpecTypeId.exec(e.target.id)) !== null) {
+    console.log(`change - site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} spec: ${wkMatchArr[3]} 
+      value: ${e.target.value}`);
+    const newSpecType = e.target.value;
+    const urlHead = document.getElementById(`si_${wkMatchArr[1]}_urlhead`);
+    const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
+
+    let oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`);
+    const oldSpecVal0 = oldInput.value;
+    const val0ParentElm = oldInput.parentElement;
+
+    let oldSpecVal1;
+    oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`);
+    if(oldInput) {
+      oldSpecVal1 = oldInput.value;
+      console.log(`oldval1 ${oldSpecVal1}`);
+    }
+    while(val0ParentElm.firstChild) {
+      val0ParentElm.removeChild(val0ParentElm.firstChild);
+    }
+
+    let inpElm, selectElm, optionElm, wkTxtNode;
+    if(newSpecType === 'delete') {
+      inpElm = document.createElement('input');
+      inpElm.type = 'text';
+      inpElm.value = oldSpecVal0; // only display
+      inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
+      val0ParentElm.appendChild(inpElm);
+    }
+    else if(newSpecType === 'string') {
+      inpElm = document.createElement('input');
+      inpElm.type = 'text';
+      inpElm.value = oldSpecVal0;
+      inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
+      val0ParentElm.appendChild(inpElm);
+    }
+    else if(newSpecType === 'plain') {
+      selectElm = document.createElement('select');
+      selectElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
+      configUI.specItemMap[newSpecType].forEach((pair) => {
+        optionElm = document.createElement('option');
+        optionElm.value = pair[0];
+        wkTxtNode = document.createTextNode(pair[1]);
+        optionElm.appendChild(wkTxtNode);
+        if(pair[0] === oldSpecVal0) {
+          optionElm.selected = true;
+        }
+        selectElm.appendChild(optionElm);
+      });
+      val0ParentElm.appendChild(selectElm);
+    }
+    else if(newSpecType === 'twitter') {
+      selectElm = document.createElement('select');
+      selectElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
+      configUI.specItemMap[newSpecType].forEach((pair) => {
+        optionElm = document.createElement('option');
+        optionElm.value = pair[0];
+        wkTxtNode = document.createTextNode(pair[1]);
+        optionElm.appendChild(wkTxtNode);
+        if(pair[0] === oldSpecVal0) {
+          optionElm.selected = true;
+        }
+        selectElm.appendChild(optionElm);
+      });
+      val0ParentElm.appendChild(selectElm);
+    }
+    if(oldSpecVal1) {
+      inpElm = document.createElement('input');
+      inpElm.type = 'text';
+      inpElm.value = oldSpecVal1;
+      inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
+      val0ParentElm.appendChild(inpElm);
+    }
+  }
+});
 document.getElementById('site_list').addEventListener('click', (e) => {
   let wkMatchArr;
   if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
