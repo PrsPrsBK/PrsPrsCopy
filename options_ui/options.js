@@ -611,9 +611,29 @@ const configUI = {
         {string: '</a>'},
       ]
     };
+    const plainTwTemplate = {
+      name: `NEW ${nextTemplateOrd}`,
+      frozen: false,
+      specArr: [
+        {string: '<a href="'},
+        {twitter: 'url'},
+        {string: '">'},
+        {twitter: 'datetime'},
+        {string: ' '},
+        {twitter: 'username_esc'},
+        {string: '</a>: '},
+        {twitter: 'text_html'},
+      ]
+    };
 
-    plainTemplate.ord = nextTemplateOrd;
-    eachSiteRoot.appendChild(configUI.makeEachTemplate(plainTemplate, {type:siteType, ord:siteOrd}));
+    if(siteType === 'twitter') {
+      plainTwTemplate.ord = nextTemplateOrd;
+      eachSiteRoot.appendChild(configUI.makeEachTemplate(plainTwTemplate, {type:siteType, ord:siteOrd}));
+    }
+    else {
+      plainTemplate.ord = nextTemplateOrd;
+      eachSiteRoot.appendChild(configUI.makeEachTemplate(plainTemplate, {type:siteType, ord:siteOrd}));
+    }
     const added = document.getElementById(`si_${siteOrd}_te_${nextTemplateOrd}`);
     added.classList.add('new_template');
     added.scrollIntoView();
