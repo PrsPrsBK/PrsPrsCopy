@@ -7,6 +7,7 @@ const injected = {};
 const initialStore = [
   {
     default: true,
+    name: 'default',
     templates: [
       {
         name: 'dt',
@@ -54,6 +55,7 @@ const initialStore = [
   },
   {
     urlHead: 'https://twitter.com',
+    name: 'twitter',
     templates: [
       {
         name: 'dt',

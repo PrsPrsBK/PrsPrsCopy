@@ -62,79 +62,105 @@ const configUI = {
   },
 
   makeSiteTop : (site) => {
-    let wkTxtNode, wkLabel;
-    const siteTopDesc = document.createElement('div');
-    siteTopDesc.classList.add('site_top');
+    let wkTxtNode, wkLabel, inpElm, markSpan;
+    const siteTopDiv = document.createElement('div');
+    siteTopDiv.classList.add('site_top');
+    //siteTopDiv.id = `si_${0}`;
     if(site.default) {
-      const siteRootDefault = document.createElement('input');
-      siteRootDefault.type = 'hidden';
-      siteRootDefault.value = 'true';
-      siteRootDefault.id = 'default_site_mark';
-      siteTopDesc.appendChild(siteRootDefault);
+      inpElm = document.createElement('input');
+      inpElm.type = 'hidden';
+      inpElm.value = 'true';
+      inpElm.id = 'default_mark';
+      siteTopDiv.appendChild(inpElm);
 
-      wkTxtNode = document.createTextNode('default');
+      wkTxtNode = document.createTextNode(`${site.name}`);
       wkLabel = document.createElement('label');
       wkLabel.appendChild(wkTxtNode);
-      siteTopDesc.appendChild(wkLabel);
+      siteTopDiv.appendChild(wkLabel);
     }
-    else if(site.urlHead && site.urlHead !== '') {
-      wkTxtNode = document.createTextNode('URL Starts WIth: ');
+    else {
+      wkTxtNode = document.createTextNode('Name: ');
       wkLabel = document.createElement('label');
       wkLabel.appendChild(wkTxtNode);
+      inpElm = document.createElement('input');
+      inpElm.type = 'text';
+      inpElm.required = true;
+      inpElm.value = site.name;
+      inpElm.id = `si_${site.ord}_name`;
+      wkLabel.appendChild(inpElm);
+      // do not change this order to append
+      markSpan = document.createElement('span');
+      wkLabel.appendChild(markSpan);
+      siteTopDiv.appendChild(wkLabel);
 
-      const siteRootUrlHead = document.createElement('input');
-      siteRootUrlHead.type = 'url';
-      siteRootUrlHead.value = site.urlHead;
-      siteRootUrlHead.id = 'site_url_head';
-      siteRootUrlHead.style.display = 'inline';
-      wkLabel.appendChild(siteRootUrlHead);
-
-      siteTopDesc.appendChild(wkLabel);
+      wkTxtNode = document.createTextNode('URL Starts: ');
+      wkLabel = document.createElement('label');
+      wkLabel.appendChild(wkTxtNode);
+      inpElm = document.createElement('input');
+      inpElm.type = 'url';
+      inpElm.required = true;
+      inpElm.pattern = 'https?://.+';
+      inpElm.value = site.urlHead;
+      inpElm.id = `si_${site.ord}_urlhead`;
+      wkLabel.appendChild(inpElm);
+      // do not change this order to append
+      markSpan = document.createElement('span');
+      wkLabel.appendChild(markSpan);
+      siteTopDiv.appendChild(wkLabel);
     }
-    return siteTopDesc;
+    return siteTopDiv;
   },
 
   /* this maybe does not need to be implemented. 
    * so not called.
    */
-  makeSiteOpeMenu : () => {
-    let button, wkTxtNode;
-    const ret = document.createElement('div');
-    ret.classList.add('site_ope');
+  // makeSiteOpeMenu : () => {
+  //   let button, wkTxtNode;
+  //   const ret = document.createElement('div');
+  //   ret.classList.add('site_ope');
 
-    wkTxtNode = document.createTextNode('up');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('site_up');
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
+  //   wkTxtNode = document.createTextNode('up');
+  //   button = document.createElement('button');
+  //   button.type = 'button';
+  //   button.classList.add('site_up');
+  //   button.appendChild(wkTxtNode);
+  //   ret.appendChild(button);
 
-    wkTxtNode = document.createTextNode('down');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('site_down');
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
+  //   wkTxtNode = document.createTextNode('down');
+  //   button = document.createElement('button');
+  //   button.type = 'button';
+  //   button.classList.add('site_down');
+  //   button.appendChild(wkTxtNode);
+  //   ret.appendChild(button);
 
-    wkTxtNode = document.createTextNode('add template');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('site_add');
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
+  //   wkTxtNode = document.createTextNode('add template');
+  //   button = document.createElement('button');
+  //   button.type = 'button';
+  //   button.classList.add('site_add');
+  //   button.appendChild(wkTxtNode);
+  //   ret.appendChild(button);
 
-    return ret;
-  },
+  //   return ret;
+  // },
 
-  makeEachTemplate : (template, siteType) => {
+  makeEachTemplate : (template, siteOpt) => {
     const ret = document.createElement('div');
     ret.classList.add('each_template');
-    ret.appendChild(configUI.makeEachTemplateOpeMenu());
-    ret.appendChild(configUI.makeEachTemplateBody(template, siteType));
+    ret.id = `si_${siteOpt.ord}_te_${template.ord}`;
+    ret.appendChild(configUI.makeEachTemplateOpeMenu(template, siteOpt));
+    ret.appendChild(configUI.makeEachTemplateBody(template, siteOpt));
+    ret.appendChild(configUI.makeEachTemplatePreview(template, siteOpt));
     return ret;
   },
 
-  makeEachTemplateOpeMenu : () => {
+  makeEachTemplatePreview : (template, siteOpt) => {
+    const ret = document.createElement('div');
+    ret.classList.add('template_preview');
+    ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
+    return ret;
+  },
+
+  makeEachTemplateOpeMenu : (template, siteOpt) => {
     let button, wkTxtNode;
     const ret = document.createElement('div');
     ret.classList.add('template_ope');
@@ -143,6 +169,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_freeze');
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_freeze`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -150,6 +177,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_up');
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_up`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -157,6 +185,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_down');
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_down`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -164,23 +193,26 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_add');
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_add`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
     return ret;
   },
 
-  makeEachTemplateBody : (template, siteType) => {
+  makeEachTemplateBody : (template, siteOpt) => {
     const ret = document.createElement('div');
     ret.classList.add('template_body');
+    ret.id = `si_${siteOpt.ord}_te_${template.ord}_body`;
     const tableElm = document.createElement('table');
     tableElm.classList.add('template_rows');
-    tableElm.appendChild(configUI.makeEachTemplateRows(template, siteType));
+    tableElm.id = `si_${siteOpt.ord}_te_${template.ord}_table`;
+    tableElm.appendChild(configUI.makeEachTemplateRows(template, siteOpt));
     ret.appendChild(tableElm);
     return ret;
   },
 
-  makeEachTemplateRows : (template, siteType) => {
+  makeEachTemplateRows : (template, siteOpt) => {
     let trElm, thElm, tdElm, inpElm, selectElm, wkTxtNode;
     const docFragment = document.createDocumentFragment();
 
@@ -194,6 +226,7 @@ const configUI = {
     inpElm = document.createElement('input');
     inpElm.type = 'text';
     inpElm.value = template.name;
+    inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_name`;
     labelElm.appendChild(inpElm);
     tdElm.appendChild(labelElm);
     trElm.appendChild(tdElm);
@@ -217,13 +250,14 @@ const configUI = {
 
     // each spec ----------------------------------------------------
     let optionElm;
-    template.specArr.forEach((spec) => {
+    template.specArr.forEach((spec, idx) => {
       trElm = document.createElement('tr');
 
       // ------------------------------------------------------------
-      let curSpecType = '';
+      let curSpecType = ''; //string, plain, twitter...
       selectElm = document.createElement('select');
-      configUI.specTypeList[siteType].forEach((elm) => {
+      selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_type`;
+      configUI.specTypeList[siteOpt.type].forEach((elm) => {
         optionElm = document.createElement('option');
         optionElm.value = elm;
         wkTxtNode = document.createTextNode(elm);
@@ -243,10 +277,12 @@ const configUI = {
         inpElm = document.createElement('input');
         inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
+        inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         tdElm.appendChild(inpElm);
       }
       else if(curSpecType === 'plain') {
         selectElm = document.createElement('select');
+        selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         configUI.specItemMap[curSpecType].forEach((pair) => {
           optionElm = document.createElement('option');
           optionElm.value = pair[0];
@@ -261,6 +297,7 @@ const configUI = {
       }
       else if(curSpecType === 'twitter') {
         selectElm = document.createElement('select');
+        selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         let has3rdInput = false;
         configUI.specItemMap[curSpecType].forEach((pair) => {
           optionElm = document.createElement('option');
@@ -274,6 +311,7 @@ const configUI = {
               inpElm = document.createElement('input');
               inpElm.type = 'text';
               inpElm.value = spec['string'];
+              inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_1`;
             }
           }
           selectElm.appendChild(optionElm);
@@ -293,20 +331,21 @@ const configUI = {
   },
 
   reloadHtml : (siteArr) => {
-    console.log('lets reload');
     const siteListRoot = document.getElementById('site_list');
     while(siteListRoot.firstChild) {
       siteListRoot.removeChild(siteListRoot.firstChild);
     }
     console.log('go-----------------------');
-    siteArr.forEach((site) => {
+    siteArr.forEach((site, idx) => {
+      site.ord = idx;
       const eachSiteRoot = document.createElement('div');
       eachSiteRoot.classList.add('each_site');
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
       //eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
-      site.templates.forEach((template) => {
-        eachSiteRoot.appendChild(configUI.makeEachTemplate(template, siteType));
+      site.templates.forEach((template, teIdx) => {
+        template.ord = teIdx;
+        eachSiteRoot.appendChild(configUI.makeEachTemplate(template, {type:siteType, ord:site.ord}));
       });
       siteListRoot.appendChild(eachSiteRoot);
     });
@@ -316,9 +355,24 @@ const configUI = {
     console.log('yes save');
   },
 
+  discardEntries : () => {
+    console.log('yes destroy');
+    browser.storage.local.set({
+      'arr_by_site': [],
+    });
+  },
+
 };
 
+const regexTMenuId = /^si_(\d+)_te_(\d+)_([^_]+)$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
-document.querySelector('#save').addEventListener('click', configUI.saveEntries);
+document.getElementById('save').addEventListener('click', configUI.saveEntries);
+document.getElementById('discard').addEventListener('click', configUI.discardEntries);
+document.getElementById('site_list').addEventListener('click', (e) => {
+  let wkMatchArr;
+  if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
+    console.log(`site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} menu: ${wkMatchArr[3]}`);
+  }
+});
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
