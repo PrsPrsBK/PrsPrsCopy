@@ -388,6 +388,42 @@ const configUI = {
     }
   },
 
+  addSpec : (siteOrd, templateOrd) => {
+    const urlHead = document.getElementById(`si_${siteOrd}_urlhead`);
+    const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
+    const tableElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_table`);
+    const trList = tableElm.getElementsByTagName('tr');
+    const nextIdx = (trList.length - 2); // we need n, s.t. template-name(1) + header(1) + td(n:0--n-1)
+    const trElm = document.createElement('tr');
+
+    let tdElm, optionElm, wkTxtNode;
+    const selectElm = document.createElement('select');
+    selectElm.id = `si_${siteOrd}_te_${templateOrd}_sp_${nextIdx}_type`;
+    configUI.specTypeList[siteType].forEach((elm) => {
+      optionElm = document.createElement('option');
+      optionElm.value = elm;
+      wkTxtNode = document.createTextNode(elm);
+      optionElm.appendChild(wkTxtNode);
+      if(elm === 'string') {
+        optionElm.selected = true;
+      }
+      selectElm.appendChild(optionElm);
+    });
+    tdElm = document.createElement('td');
+    tdElm.appendChild(selectElm);
+    trElm.appendChild(tdElm);
+    // ------------------------------------------------------------
+    tdElm = document.createElement('td');
+    const inpElm = document.createElement('input');
+    inpElm.type = 'text';
+    inpElm.value = '';
+    inpElm.id = `si_${siteOrd}_te_${templateOrd}_sp_${nextIdx}_val_0`;
+    tdElm.appendChild(inpElm);
+    trElm.appendChild(tdElm);
+    // ------------------------------------------------------------
+    tableElm.appendChild(trElm);
+  },
+
 };
 
 const regexTMenuId = /^si_(\d+)_te_(\d+)_([^_]+)$/;
@@ -400,6 +436,9 @@ document.getElementById('site_list').addEventListener('click', (e) => {
     console.log(`site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} menu: ${wkMatchArr[3]}`);
     if(wkMatchArr[3] === 'freeze') {
       configUI.toggleFreeze(wkMatchArr[1], wkMatchArr[2]);
+    }
+    else if(wkMatchArr[3] === 'add') {
+      configUI.addSpec(wkMatchArr[1], wkMatchArr[2]);
     }
   }
 });
