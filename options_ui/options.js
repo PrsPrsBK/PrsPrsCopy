@@ -114,34 +114,34 @@ const configUI = {
   /* this maybe does not need to be implemented. 
    * so not called.
    */
-  // makeSiteOpeMenu : () => {
-  //   let button, wkTxtNode;
-  //   const ret = document.createElement('div');
-  //   ret.classList.add('site_ope');
+  makeSiteOpeMenu : () => {
+    //let button, wkTxtNode;
+    const ret = document.createElement('div');
+    ret.classList.add('site_ope');
 
-  //   wkTxtNode = document.createTextNode('up');
-  //   button = document.createElement('button');
-  //   button.type = 'button';
-  //   button.classList.add('site_up');
-  //   button.appendChild(wkTxtNode);
-  //   ret.appendChild(button);
+    //  wkTxtNode = document.createTextNode('up');
+    //  button = document.createElement('button');
+    //  button.type = 'button';
+    //  button.classList.add('site_up');
+    //  button.appendChild(wkTxtNode);
+    //  ret.appendChild(button);
 
-  //   wkTxtNode = document.createTextNode('down');
-  //   button = document.createElement('button');
-  //   button.type = 'button';
-  //   button.classList.add('site_down');
-  //   button.appendChild(wkTxtNode);
-  //   ret.appendChild(button);
+    //  wkTxtNode = document.createTextNode('down');
+    //  button = document.createElement('button');
+    //  button.type = 'button';
+    //  button.classList.add('site_down');
+    //  button.appendChild(wkTxtNode);
+    //  ret.appendChild(button);
 
-  //   wkTxtNode = document.createTextNode('add template');
-  //   button = document.createElement('button');
-  //   button.type = 'button';
-  //   button.classList.add('site_add');
-  //   button.appendChild(wkTxtNode);
-  //   ret.appendChild(button);
+    const wkTxtNode = document.createTextNode('add template');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('site_add');
+    button.appendChild(wkTxtNode);
+    ret.appendChild(button);
 
-  //   return ret;
-  // },
+    return ret;
+  },
 
   makeEachTemplate : (template, siteOpt) => {
     const ret = document.createElement('div');
@@ -415,7 +415,7 @@ const configUI = {
       eachSiteRoot.classList.add('each_site');
       eachSiteRoot.id = `si_${site.ord}_root`;
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
-      //eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
+      eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
       site.templates.forEach((template, teIdx) => {
         template.ord = teIdx;
