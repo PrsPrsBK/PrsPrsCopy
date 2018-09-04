@@ -158,8 +158,9 @@ const configUI = {
     ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
     if(siteOpt.ord === 0 && template.ord === 0) {
       ret.classList.add('loud');
-      ret.innerHTML = `
-        <p>How to use: if we click left outside part from this zone, we get plain concatenated-form, for each template.<br>
+      ret.innerHTML = `<p>
+        How to use: if we click left near-outside part from this zone, we get plain concatenated-form, 
+        for each template.<br>
         ⇦⇦⇦⇦</p>`;
     }
     else if(siteOpt.ord === 0 && template.ord === 1) {
@@ -167,12 +168,14 @@ const configUI = {
       ret.innerHTML = `<p>
         There is no menu to remove unneccessary template. 
         If we wanna do that now, use 'delete' to all spec-type. 
-        But DO NOT try to remove all template of site.</p>`;
+        But DO NOT try to remove all template of any site.</p>`;
     }
     else if(siteOpt.ord === 0 && template.ord === 2) {
       ret.classList.add('loud');
       ret.innerHTML = `<p>
-        Anyway until we click 'Save All' button, old settings remain.</p>`;
+        Anyway until we click 'Save All' button, old settings remain.
+        If 'delete' is miss-selected and the value partially remains here, 
+        we may recover by pulling back 'type' setting.</p>`;
     }
     else if(siteOpt.ord === 0 && template.ord === 3) {
       ret.classList.add('loud');
