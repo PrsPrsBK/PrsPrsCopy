@@ -20,6 +20,13 @@ button.goHot {
   border-width: 4px;
   background-color: #E8B683;
 }
+button {
+  cursor: pointer;
+}
+button:hover {
+  background-color: #55ee55;
+}
+
 .each_site {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
