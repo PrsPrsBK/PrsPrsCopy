@@ -169,7 +169,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_freeze');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_freeze`;
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_freeze`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -177,7 +177,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_up');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_up`;
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_up`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -185,7 +185,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_down');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_down`;
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_down`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -193,7 +193,7 @@ const configUI = {
     button = document.createElement('button');
     button.type = 'button';
     button.classList.add('template_add');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_add`;
+    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_add`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -204,6 +204,13 @@ const configUI = {
     const ret = document.createElement('div');
     ret.classList.add('template_body');
     ret.id = `si_${siteOpt.ord}_te_${template.ord}_body`;
+
+    const inpElm = document.createElement('input');
+    inpElm.type = 'hidden';
+    inpElm.value = template.frozen;
+    inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_frozen`;
+    ret.appendChild(inpElm);
+
     const tableElm = document.createElement('table');
     tableElm.classList.add('template_rows');
     tableElm.id = `si_${siteOpt.ord}_te_${template.ord}_table`;
@@ -340,6 +347,7 @@ const configUI = {
       site.ord = idx;
       const eachSiteRoot = document.createElement('div');
       eachSiteRoot.classList.add('each_site');
+      eachSiteRoot.id = `si_${site.ord}_root`;
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
       //eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
@@ -368,9 +376,6 @@ const configUI = {
     let tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_name`);
     tgtElm.disabled = !tgtElm.disabled;
     const goDisabled = tgtElm.disabled;
-    const menuElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_freeze`);
-    menuElm.textContent = goDisabled ? 'thaw back' : 'freeze';
-    menuElm.classList.toggle('goHot');
     let specIdx = 0;
     while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
       tgtElm.disabled = !tgtElm.disabled;
@@ -386,6 +391,12 @@ const configUI = {
       tgtElm.disabled = !tgtElm.disabled;
       specIdx++;
     }
+  
+    const menuElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_freeze`);
+    menuElm.textContent = goDisabled ? 'thaw back' : 'freeze';
+    menuElm.classList.toggle('goHot');
+    const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
+    frozenInp.value = goDisabled;
   },
 
   addSpec : (siteOrd, templateOrd) => {
@@ -424,9 +435,23 @@ const configUI = {
     tableElm.appendChild(trElm);
   },
 
+  upTemplate : (siteOrd, templateOrd) => {
+    if(templateOrd === '0') {
+      return;
+    }
+  },
+
+  downTemplate : (siteOrd, templateOrd) => {
+    const eachSiteRoot = document.getElementById(`si_${siteOrd}_root`);
+    const templateCnt = eachSiteRoot.getElementsByClassName('each_template').length;
+    if(templateOrd === `${(templateCnt - 1)}`){
+      return;
+    }
+  },
+
 };
 
-const regexTMenuId = /^si_(\d+)_te_(\d+)_([^_]+)$/;
+const regexTMenuId = /^si_(\d+)_te_(\d+)_menu_([^_]+)$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
 document.getElementById('discard').addEventListener('click', configUI.discardEntries);
@@ -439,6 +464,12 @@ document.getElementById('site_list').addEventListener('click', (e) => {
     }
     else if(wkMatchArr[3] === 'add') {
       configUI.addSpec(wkMatchArr[1], wkMatchArr[2]);
+    }
+    else if(wkMatchArr[3] === 'up') {
+      configUI.upTemplate(wkMatchArr[1], wkMatchArr[2]);
+    }
+    else if(wkMatchArr[3] === 'down') {
+      configUI.downTemplate(wkMatchArr[1], wkMatchArr[2]);
     }
   }
 });
