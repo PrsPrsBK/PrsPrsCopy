@@ -54,7 +54,6 @@ const configUI = {
     browser.storage.local.get('arr_by_site', (store_obj) => {
       const result = store_obj['arr_by_site'];
       if(!result || result.length === 0) {
-        console.log('no result!');
         return;
       }
       configUI.reloadHtml(result);
@@ -408,7 +407,6 @@ const configUI = {
     while(siteListRoot.firstChild) {
       siteListRoot.removeChild(siteListRoot.firstChild);
     }
-    console.log('go-----------------------');
     siteArr.forEach((site, idx) => {
       site.ord = idx;
       const eachSiteRoot = document.createElement('div');
@@ -452,7 +450,6 @@ const configUI = {
   updateFrozen : (siteOrd, templateOrd) => {
     const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
     const goDisabled = (frozenInp.value === 'true') ? true : false;
-    console.log(`goDisabled: ${goDisabled}`);
     const root = document.getElementById(`si_${siteOrd}_te_${templateOrd}`);
     let tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_name`);
     tgtElm.disabled = goDisabled;
@@ -559,9 +556,7 @@ const configUI = {
     const urlHead = document.getElementById(`si_${siteOrd}_urlhead`);
     const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
     const curTemplate = configUI.extractTemplate(siteOrd, templateOrd);
-    console.log(`${JSON.stringify(curTemplate)}`);
     const anoTemplate = configUI.extractTemplate(siteOrd, templateOrd - 1);
-    console.log(`${JSON.stringify(anoTemplate)}`);
 
     const curPosBody = document.getElementById(`si_${siteOrd}_te_${templateOrd}_body`);
     while(curPosBody.firstChild) {
@@ -650,12 +645,7 @@ document.getElementById('discard').addEventListener('click', configUI.discardEnt
 document.getElementById('site_list').addEventListener('change', (e) => {
   let wkMatchArr;
   if((wkMatchArr = regexSpecTypeId.exec(e.target.id)) !== null) {
-    console.log(`change - site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} spec: ${wkMatchArr[3]} 
-      value: ${e.target.value}`);
     const newSpecType = e.target.value;
-    const urlHead = document.getElementById(`si_${wkMatchArr[1]}_urlhead`);
-    const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
-
     let oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`);
     const oldSpecVal0 = oldInput.value;
     const val0ParentElm = oldInput.parentElement;
@@ -664,7 +654,6 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`);
     if(oldInput) {
       oldSpecVal1 = oldInput.value;
-      console.log(`oldval1 ${oldSpecVal1}`);
     }
     while(val0ParentElm.firstChild) {
       val0ParentElm.removeChild(val0ParentElm.firstChild);
@@ -727,7 +716,6 @@ document.getElementById('site_list').addEventListener('change', (e) => {
 document.getElementById('site_list').addEventListener('click', (e) => {
   let wkMatchArr;
   if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
-    console.log(`site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} menu: ${wkMatchArr[3]}`);
     if(wkMatchArr[3] === 'freeze') {
       configUI.toggleFrozen(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
