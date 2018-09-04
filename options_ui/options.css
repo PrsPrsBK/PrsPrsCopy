@@ -15,6 +15,11 @@ button.save {
   width: 160px;
   height: 40px;
 }
+button.goHot {
+  border-color: brown;
+  border-width: 4px;
+  background-color: #E8B683;
+}
 .each_site {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;

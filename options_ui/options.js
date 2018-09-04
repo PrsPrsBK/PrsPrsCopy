@@ -362,6 +362,32 @@ const configUI = {
     });
   },
 
+  toggleFreeze : (siteOrd, templateOrd) => {
+    console.log(`si_${siteOrd}_te_${templateOrd}`);
+    const root = document.getElementById(`si_${siteOrd}_te_${templateOrd}`);
+    let tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_name`);
+    tgtElm.disabled = !tgtElm.disabled;
+    const goDisabled = tgtElm.disabled;
+    const menuElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_freeze`);
+    menuElm.textContent = goDisabled ? 'thaw back' : 'freeze';
+    menuElm.classList.toggle('goHot');
+    let specIdx = 0;
+    while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
+      tgtElm.disabled = !tgtElm.disabled;
+      specIdx++;
+    }
+    specIdx = 0;
+    while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`)) !== null) {
+      tgtElm.disabled = !tgtElm.disabled;
+      specIdx++;
+    }
+    specIdx = 0;
+    while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
+      tgtElm.disabled = !tgtElm.disabled;
+      specIdx++;
+    }
+  },
+
 };
 
 const regexTMenuId = /^si_(\d+)_te_(\d+)_([^_]+)$/;
@@ -372,6 +398,9 @@ document.getElementById('site_list').addEventListener('click', (e) => {
   let wkMatchArr;
   if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
     console.log(`site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} menu: ${wkMatchArr[3]}`);
+    if(wkMatchArr[3] === 'freeze') {
+      configUI.toggleFreeze(wkMatchArr[1], wkMatchArr[2]);
+    }
   }
 });
 
