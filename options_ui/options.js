@@ -69,7 +69,13 @@ const configUI = {
       inpElm = document.createElement('input');
       inpElm.type = 'hidden';
       inpElm.value = 'true';
-      inpElm.id = 'default_mark';
+      inpElm.id = `si_${site.ord}_default`;
+      siteTopDiv.appendChild(inpElm);
+
+      inpElm = document.createElement('input');
+      inpElm.type = 'hidden';
+      inpElm.value = site.name;
+      inpElm.id = `si_${site.ord}_name`;
       siteTopDiv.appendChild(inpElm);
 
       wkTxtNode = document.createTextNode(`${site.name}`);
@@ -435,6 +441,7 @@ const configUI = {
 
   saveEntries : () => {
     console.log('yes save');
+    configUI.extractWhole();
   },
 
   discardEntries : () => {
@@ -524,6 +531,39 @@ const configUI = {
     trElm.appendChild(tdElm);
     // ------------------------------------------------------------
     tableElm.appendChild(trElm);
+  },
+
+  extractWhole : () => {
+    const siteListRoot = document.getElementById('site_list');
+    const siteList = siteListRoot.getElementsByClassName('each_site');
+    const siteCnt = siteList.length;
+    const ret = [];
+    for(let i = 0; i < siteCnt; i++) {
+      ret.push(configUI.extractEachSite(i));
+    }
+    console.log(`${JSON.stringify(ret)}`);
+  },
+
+  extractEachSite : (siteOrd) => {
+    const ret = {};
+    const siteRoot = document.getElementById(`si_${siteOrd}_root`);
+    let wkElm;
+    wkElm = document.getElementById(`si_${siteOrd}_default`);
+    if(wkElm && wkElm.value === 'true') {
+      ret.default = true;
+    }
+    else {
+      ret.default = false;
+    }
+    wkElm = document.getElementById(`si_${siteOrd}_name`);
+    if(wkElm) {
+      ret.name = wkElm.value;
+    }
+    wkElm = document.getElementById(`si_${siteOrd}_urlhead`);
+    if(wkElm) {
+      ret.urlHead = wkElm.value;
+    }
+    return ret;
   },
 
   extractTemplate : (siteOrd, templateOrd) => {

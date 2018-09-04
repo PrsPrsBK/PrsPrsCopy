@@ -58,6 +58,7 @@ const initialStore = [
     ],
   },
   {
+    default: false,
     urlHead: 'https://twitter.com',
     name: 'twitter',
     templates: [
