@@ -204,10 +204,15 @@ const configUI = {
     const ret = document.createElement('div');
     ret.classList.add('template_body');
     ret.id = `si_${siteOpt.ord}_te_${template.ord}_body`;
+    ret.appendChild(configUI.makeEachTemplateBodyContent(template, siteOpt));
+    return ret;
+  },
 
+  makeEachTemplateBodyContent : (template, siteOpt) => {
+    const ret = document.createDocumentFragment();
     const inpElm = document.createElement('input');
     inpElm.type = 'hidden';
-    inpElm.value = template.frozen;
+    inpElm.value = !!template.frozen;
     inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_frozen`;
     ret.appendChild(inpElm);
 
@@ -356,6 +361,10 @@ const configUI = {
         eachSiteRoot.appendChild(configUI.makeEachTemplate(template, {type:siteType, ord:site.ord}));
       });
       siteListRoot.appendChild(eachSiteRoot);
+      // oh need to update
+      site.templates.forEach((template, teIdx) => {
+        configUI.updateFrozen(site.ord, teIdx);
+      });
     });
   },
 
@@ -370,33 +379,48 @@ const configUI = {
     });
   },
 
-  toggleFreeze : (siteOrd, templateOrd) => {
-    console.log(`si_${siteOrd}_te_${templateOrd}`);
+  toggleFrozen : (siteOrd, templateOrd) => {
+    const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
+    frozenInp.value = (frozenInp.value === 'true') ? 'false' : 'true';
+    configUI.updateFrozen(siteOrd, templateOrd);
+  },
+
+  updateFrozen : (siteOrd, templateOrd) => {
+    const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
+    const goDisabled = (frozenInp.value === 'true') ? true : false;
+    console.log(`goDisabled: ${goDisabled}`);
     const root = document.getElementById(`si_${siteOrd}_te_${templateOrd}`);
     let tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_name`);
-    tgtElm.disabled = !tgtElm.disabled;
-    const goDisabled = tgtElm.disabled;
+    tgtElm.disabled = goDisabled;
     let specIdx = 0;
     while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
-      tgtElm.disabled = !tgtElm.disabled;
+      tgtElm.disabled = goDisabled;
       specIdx++;
     }
     specIdx = 0;
     while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`)) !== null) {
-      tgtElm.disabled = !tgtElm.disabled;
+      tgtElm.disabled = goDisabled;
       specIdx++;
     }
     specIdx = 0;
     while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
-      tgtElm.disabled = !tgtElm.disabled;
+      tgtElm.disabled = goDisabled;
       specIdx++;
     }
   
     const menuElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_freeze`);
-    menuElm.textContent = goDisabled ? 'thaw back' : 'freeze';
-    menuElm.classList.toggle('goHot');
-    const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
-    frozenInp.value = goDisabled;
+    if(goDisabled) {
+      menuElm.textContent = 'thaw back';
+      if(!menuElm.classList.contains('goHot')) {
+        menuElm.classList.add('goHot');
+      }
+    }
+    else {
+      menuElm.textContent = 'freeze';
+      if(menuElm.classList.contains('goHot')) {
+        menuElm.classList.remove('goHot');
+      }
+    }
   },
 
   addSpec : (siteOrd, templateOrd) => {
@@ -435,17 +459,71 @@ const configUI = {
     tableElm.appendChild(trElm);
   },
 
+  extractTemplate : (siteOrd, templateOrd) => {
+    const ret = { specArr: [] };
+    let wkElm;
+    wkElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
+    ret.frozen = (wkElm.value === 'true') ? true : false;
+    wkElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_name`);
+    ret.name = wkElm.value;
+
+    let specIdx = 0, tgtElm;
+    while((tgtElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
+      const specType = tgtElm.value;
+      let valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`);
+      const curSpec = {
+        [specType] : valElm.value,
+      };
+      if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
+        curSpec['string'] = valElm.value;
+      }
+      ret.specArr.push(curSpec);
+      specIdx++;
+    }
+
+    return ret;
+  },
+
   upTemplate : (siteOrd, templateOrd) => {
-    if(templateOrd === '0') {
+    if(templateOrd === 0) {
       return;
     }
+
+    const urlHead = document.getElementById(`si_${siteOrd}_urlhead`);
+    const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
+    const curTemplate = configUI.extractTemplate(siteOrd, templateOrd);
+    console.log(`${JSON.stringify(curTemplate)}`);
+    const anoTemplate = configUI.extractTemplate(siteOrd, templateOrd - 1);
+    console.log(`${JSON.stringify(anoTemplate)}`);
+
+    const curPosBody = document.getElementById(`si_${siteOrd}_te_${templateOrd}_body`);
+    while(curPosBody.firstChild) {
+      curPosBody.removeChild(curPosBody.firstChild);
+    }
+    const anoPosBody = document.getElementById(`si_${siteOrd}_te_${templateOrd - 1}_body`);
+    while(anoPosBody.firstChild) {
+      anoPosBody.removeChild(anoPosBody.firstChild);
+    }
+
+    // EXCHANGE !!!
+    curTemplate.ord = templateOrd - 1;
+    anoTemplate.ord = templateOrd;
+    const newCurPosBody = configUI.makeEachTemplateBodyContent(anoTemplate, {type:siteType, ord:siteOrd});
+    const newAnoPosBody = configUI.makeEachTemplateBodyContent(curTemplate, {type:siteType, ord:siteOrd});
+    curPosBody.appendChild(newCurPosBody);
+    anoPosBody.appendChild(newAnoPosBody);
+    configUI.updateFrozen(siteOrd, curTemplate.ord);
+    configUI.updateFrozen(siteOrd, anoTemplate.ord);
   },
 
   downTemplate : (siteOrd, templateOrd) => {
     const eachSiteRoot = document.getElementById(`si_${siteOrd}_root`);
     const templateCnt = eachSiteRoot.getElementsByClassName('each_template').length;
-    if(templateOrd === `${(templateCnt - 1)}`){
+    if(templateOrd === (templateCnt - 1)){
       return;
+    }
+    else if(templateCnt > 1) {
+      configUI.upTemplate(siteOrd, templateOrd + 1);
     }
   },
 
@@ -460,16 +538,16 @@ document.getElementById('site_list').addEventListener('click', (e) => {
   if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
     console.log(`site: ${wkMatchArr[1]} te: ${wkMatchArr[2]} menu: ${wkMatchArr[3]}`);
     if(wkMatchArr[3] === 'freeze') {
-      configUI.toggleFreeze(wkMatchArr[1], wkMatchArr[2]);
+      configUI.toggleFrozen(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
     else if(wkMatchArr[3] === 'add') {
-      configUI.addSpec(wkMatchArr[1], wkMatchArr[2]);
+      configUI.addSpec(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
     else if(wkMatchArr[3] === 'up') {
-      configUI.upTemplate(wkMatchArr[1], wkMatchArr[2]);
+      configUI.upTemplate(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
     else if(wkMatchArr[3] === 'down') {
-      configUI.downTemplate(wkMatchArr[1], wkMatchArr[2]);
+      configUI.downTemplate(parseInt(wkMatchArr[1]), parseInt(wkMatchArr[2]));
     }
   }
 });

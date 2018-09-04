@@ -11,6 +11,7 @@ const initialStore = [
     templates: [
       {
         name: 'dt',
+        frozen: false,
         specArr: [
           {string: '<dt><a href="'},
           {plain: 'url_nohs'},
@@ -21,6 +22,7 @@ const initialStore = [
       },
       {
         name: 'ahref',
+        frozen: false,
         specArr: [
           {string: '<a href="'},
           {plain: 'url'},
@@ -31,6 +33,7 @@ const initialStore = [
       },
       {
         name: 'reST',
+        frozen: false,
         specArr: [
           {plain: 'today'},
           {string: ' `'},
@@ -42,6 +45,7 @@ const initialStore = [
       },
       {
         name: 'Markdown',
+        frozen: false,
         specArr: [
           {string: '('},
           {plain: 'title'},
@@ -59,6 +63,7 @@ const initialStore = [
     templates: [
       {
         name: 'dt',
+        frozen: false,
         specArr: [
           {string: '<dt><a href="'},
           {twitter: 'url'},
@@ -80,6 +85,7 @@ const initialStore = [
       },
       {
         name: 'reST',
+        frozen: false,
         specArr: [
           {string: '`'},
           {twitter: 'datetime'},
@@ -94,6 +100,7 @@ const initialStore = [
       },
       {
         name: 'Markdown',
+        frozen: false,
         specArr: [
           {string: '('},
           {twitter: 'datetime'},
