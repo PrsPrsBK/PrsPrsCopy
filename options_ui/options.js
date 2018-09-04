@@ -266,7 +266,7 @@ const configUI = {
       trElm = document.createElement('tr');
 
       // ------------------------------------------------------------
-      let curSpecType = ''; //string, plain, twitter...
+      let curSpecType = ''; // delete, string, plain, twitter...
       selectElm = document.createElement('select');
       selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_type`;
       configUI.specTypeList[siteOpt.type].forEach((elm) => {
@@ -274,7 +274,8 @@ const configUI = {
         optionElm.value = elm;
         wkTxtNode = document.createTextNode(elm);
         optionElm.appendChild(wkTxtNode);
-        if(spec[elm]) {
+        // when add-spec and soon up-down, empty string comes (and become false here...)
+        if(spec[elm] || (elm === 'string' && spec[elm] === '')) {
           optionElm.selected = true;
           curSpecType = elm;
         }
@@ -285,7 +286,14 @@ const configUI = {
       trElm.appendChild(tdElm);
       // ------------------------------------------------------------
       tdElm = document.createElement('td');
-      if(curSpecType === 'string') {
+      if(curSpecType === 'delete') {
+        inpElm = document.createElement('input');
+        inpElm.type = 'text';
+        inpElm.value = spec[curSpecType];
+        inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
+        tdElm.appendChild(inpElm);
+      }
+      else if(curSpecType === 'string') {
         inpElm = document.createElement('input');
         inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
