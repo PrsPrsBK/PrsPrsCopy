@@ -111,14 +111,13 @@ const configUI = {
     return siteTopDiv;
   },
 
-  /* this maybe does not need to be implemented. 
-   * so not called.
-   */
-  makeSiteOpeMenu : () => {
-    //let button, wkTxtNode;
+  makeSiteOpeMenu : (site) => {
     const ret = document.createElement('div');
     ret.classList.add('site_ope');
 
+    /* this maybe does not need to be implemented. 
+    * so not called.
+    */
     //  wkTxtNode = document.createTextNode('up');
     //  button = document.createElement('button');
     //  button.type = 'button';
@@ -137,6 +136,7 @@ const configUI = {
     const button = document.createElement('button');
     button.type = 'button';
     button.classList.add('site_add');
+    button.id = `si_${site.ord}_menu_add`;
     button.appendChild(wkTxtNode);
     ret.appendChild(button);
 
@@ -415,7 +415,7 @@ const configUI = {
       eachSiteRoot.classList.add('each_site');
       eachSiteRoot.id = `si_${site.ord}_root`;
       eachSiteRoot.appendChild(configUI.makeSiteTop(site));
-      eachSiteRoot.appendChild(configUI.makeSiteOpeMenu());
+      eachSiteRoot.appendChild(configUI.makeSiteOpeMenu(site));
       const siteType = (site.urlHead && site.urlHead.startsWith('https://twitter.com')) ? 'twitter' : 'common';
       site.templates.forEach((template, teIdx) => {
         template.ord = teIdx;
@@ -591,8 +591,34 @@ const configUI = {
     }
   },
 
+  addTemplate : (siteOrd) => {
+    const eachSiteRoot = document.getElementById(`si_${siteOrd}_root`);
+    const templateCnt = eachSiteRoot.getElementsByClassName('each_template').length;
+    const nextTemplateOrd = templateCnt;
+    const urlHead = document.getElementById(`si_${siteOrd}_urlhead`);
+    const siteType = (urlHead && urlHead.value.startsWith('https://twitter.com')) ? 'twitter' : 'common';
+    const plainTemplate = {
+      name: `NEW ${nextTemplateOrd}`,
+      frozen: false,
+      specArr: [
+        {string: '<a href="'},
+        {plain: 'url_nohs'},
+        {string: '">'},
+        {plain: 'title_esc'},
+        {string: '</a>'},
+      ]
+    };
+
+    plainTemplate.ord = nextTemplateOrd;
+    eachSiteRoot.appendChild(configUI.makeEachTemplate(plainTemplate, {type:siteType, ord:siteOrd}));
+    const added = document.getElementById(`si_${siteOrd}_te_${nextTemplateOrd}`);
+    added.classList.add('new_template');
+    added.scrollIntoView();
+  },
+
 };
 
+const regexSiteMenuId = /^si_(\d+)_menu_([^_]+)$/;
 const regexTMenuId = /^si_(\d+)_te_(\d+)_menu_([^_]+)$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
@@ -616,6 +642,11 @@ document.getElementById('site_list').addEventListener('click', (e) => {
   }
   else if(e.target.classList.contains('template_body')) {
     console.log(`body clicked: ${e.target.id}`);
+  }
+  else if((wkMatchArr = regexSiteMenuId.exec(e.target.id)) !== null) {
+    if(wkMatchArr[2] === 'add') {
+      configUI.addTemplate(parseInt(wkMatchArr[1]));
+    }
   }
 });
 

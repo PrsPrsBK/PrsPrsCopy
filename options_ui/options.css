@@ -85,6 +85,9 @@ input:valid+span:after {
   display: grid;
   grid-template-columns: 80px 20px 1fr 1fr 1fr 1fr;
 }
+.new_template {
+  background-color: #1FAD83;
+}
 .template_ope {
   grid-column-start: 1;
   grid-column-end:   2;
