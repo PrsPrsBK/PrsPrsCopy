@@ -330,14 +330,12 @@ const configUI = {
       tdElm = document.createElement('td');
       if(curSpecType === 'delete') {
         inpElm = document.createElement('textarea');
-        // inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
         inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         tdElm.appendChild(inpElm);
       }
       else if(curSpecType === 'string') {
         inpElm = document.createElement('textarea');
-        // inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
         inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         tdElm.appendChild(inpElm);
@@ -371,7 +369,6 @@ const configUI = {
             if(pair[0] === 'qt_string') {
               has3rdInput = true;
               inpElm = document.createElement('textarea');
-              // inpElm.type = 'text';
               inpElm.value = spec['string'];
               inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_1`;
             }
@@ -510,7 +507,6 @@ const configUI = {
     // ------------------------------------------------------------
     tdElm = document.createElement('td');
     const inpElm = document.createElement('textarea');
-    // inpElm.type = 'text';
     inpElm.value = '';
     inpElm.id = `si_${siteOrd}_te_${templateOrd}_sp_${nextIdx}_val_0`;
     tdElm.appendChild(inpElm);
@@ -660,7 +656,7 @@ const configUI = {
   downTemplate : (siteOrd, templateOrd) => {
     const eachSiteRoot = document.getElementById(`si_${siteOrd}_root`);
     const templateCnt = eachSiteRoot.getElementsByClassName('each_template').length;
-    if(templateOrd === (templateCnt - 1)){
+    if(templateOrd === (templateCnt - 1)) {
       return;
     }
     else if(templateCnt > 1) {
@@ -734,7 +730,6 @@ document.getElementById('site_list').addEventListener('change', (e) => {
       }
       else {
         specValElm_1 = document.createElement('textarea');
-        // specValElm_1.type = 'text';
         specValElm_1.value = '';
         specValElm_1.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
         e.target.parentElement.appendChild(specValElm_1);
@@ -764,14 +759,12 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     let inpElm, selectElm, optionElm, wkTxtNode;
     if(newSpecType === 'delete') {
       inpElm = document.createElement('textarea');
-      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_0; // only display
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
       valParentElm_0.appendChild(inpElm);
     }
     else if(newSpecType === 'string') {
       inpElm = document.createElement('textarea');
-      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_0;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
       valParentElm_0.appendChild(inpElm);
@@ -808,7 +801,6 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     }
     if(oldSpecVal_1) {
       inpElm = document.createElement('textarea');
-      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_1;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
       valParentElm_0.appendChild(inpElm);
