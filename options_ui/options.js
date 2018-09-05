@@ -568,33 +568,57 @@ const configUI = {
 
     ret.templates = [];
     for(let i = 0; i < templateCnt; i++) {
-      ret.templates.push(configUI.extractTemplate(siteOrd, i));
+      const teObj = configUI.extractTemplate(siteOrd, i, true);
+      if(teObj.specArr.length > 0) {
+        ret.templates.push(teObj);
+      }
     }
     return ret;
   },
 
-  extractTemplate : (siteOrd, templateOrd) => {
-    const ret = { specArr: [] };
+  extractTemplate : (siteOrd, templateOrd, goEliminate) => {
+    console.log(`${goEliminate ? 'GO---------' : 'gentle gentle'}`);
+    const ret = {};
     let wkElm;
     wkElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
     ret.frozen = (wkElm.value === 'true') ? true : false;
     wkElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_name`);
     ret.name = wkElm.value;
 
+    ret.specArr = [];
     let specIdx = 0, tgtElm;
-    while((tgtElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
-      const specType = tgtElm.value;
-      let valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`);
-      const curSpec = {
-        [specType] : valElm.value,
-      };
-      if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
-        curSpec['string'] = valElm.value;
+    if(goEliminate) {
+      while((tgtElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
+        const specType = tgtElm.value;
+        if(specType !== 'delete') {
+          let valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`);
+          const specVal_0 = valElm.value;
+          const curSpec = {
+            [specType] : specVal_0,
+          };
+          if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null
+            && specVal_0 === 'qt_string') {
+            curSpec.string = valElm.value;
+          }
+          ret.specArr.push(curSpec);
+        }
+        specIdx++;
       }
-      ret.specArr.push(curSpec);
-      specIdx++;
     }
-
+    else {
+      while((tgtElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_type`)) !== null) {
+        const specType = tgtElm.value;
+        let valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_0`);
+        const curSpec = {
+          [specType] : valElm.value,
+        };
+        if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
+          curSpec.string = valElm.value;
+        }
+        ret.specArr.push(curSpec);
+        specIdx++;
+      }
+    }
     return ret;
   },
 
