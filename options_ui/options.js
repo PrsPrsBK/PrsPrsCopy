@@ -367,15 +367,15 @@ const configUI = {
       // ------------------------------------------------------------
       tdElm = document.createElement('td');
       if(curSpecType === 'delete') {
-        inpElm = document.createElement('input');
-        inpElm.type = 'text';
+        inpElm = document.createElement('textarea');
+        // inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
         inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         tdElm.appendChild(inpElm);
       }
       else if(curSpecType === 'string') {
-        inpElm = document.createElement('input');
-        inpElm.type = 'text';
+        inpElm = document.createElement('textarea');
+        // inpElm.type = 'text';
         inpElm.value = spec[curSpecType];
         inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         tdElm.appendChild(inpElm);
@@ -408,8 +408,8 @@ const configUI = {
             optionElm.selected = true;
             if(pair[0] === 'qt_string') {
               has3rdInput = true;
-              inpElm = document.createElement('input');
-              inpElm.type = 'text';
+              inpElm = document.createElement('textarea');
+              // inpElm.type = 'text';
               inpElm.value = spec['string'];
               inpElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_1`;
             }
@@ -556,8 +556,8 @@ const configUI = {
     trElm.appendChild(tdElm);
     // ------------------------------------------------------------
     tdElm = document.createElement('td');
-    const inpElm = document.createElement('input');
-    inpElm.type = 'text';
+    const inpElm = document.createElement('textarea');
+    // inpElm.type = 'text';
     inpElm.value = '';
     inpElm.id = `si_${siteOrd}_te_${templateOrd}_sp_${nextIdx}_val_0`;
     tdElm.appendChild(inpElm);
@@ -784,8 +784,8 @@ document.getElementById('site_list').addEventListener('change', (e) => {
         specValElm_1.disabled = false;
       }
       else {
-        specValElm_1 = document.createElement('input');
-        specValElm_1.type = 'text';
+        specValElm_1 = document.createElement('textarea');
+        // specValElm_1.type = 'text';
         specValElm_1.value = '';
         specValElm_1.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
         e.target.parentElement.appendChild(specValElm_1);
@@ -814,15 +814,15 @@ document.getElementById('site_list').addEventListener('change', (e) => {
 
     let inpElm, selectElm, optionElm, wkTxtNode;
     if(newSpecType === 'delete') {
-      inpElm = document.createElement('input');
-      inpElm.type = 'text';
+      inpElm = document.createElement('textarea');
+      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_0; // only display
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
       valParentElm_0.appendChild(inpElm);
     }
     else if(newSpecType === 'string') {
-      inpElm = document.createElement('input');
-      inpElm.type = 'text';
+      inpElm = document.createElement('textarea');
+      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_0;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
       valParentElm_0.appendChild(inpElm);
@@ -858,8 +858,8 @@ document.getElementById('site_list').addEventListener('change', (e) => {
       valParentElm_0.appendChild(selectElm);
     }
     if(oldSpecVal_1) {
-      inpElm = document.createElement('input');
-      inpElm.type = 'text';
+      inpElm = document.createElement('textarea');
+      // inpElm.type = 'text';
       inpElm.value = oldSpecVal_1;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
       valParentElm_0.appendChild(inpElm);
