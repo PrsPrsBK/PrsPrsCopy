@@ -21,3 +21,19 @@ And after Alt-c key, choice of template is shift to next. Next Alt-c means 'copy
 Toolbar icon tell 'copy is fired' and 'next index of template'.
 Also, clicking toolbar icon shows the list of template, and clicking template-name button go 'start copying'.
 
+  
+.. image:: ../images/2018-09-06_ss01.jpg
+
+Settings. There are site, and each site may have some templates.
+Alt-c key starts 'copy' and shift to next template for the site.
+  
+.. image:: ../images/2018-09-06_ss02.jpg
+
+Tool has site-specialized spec. Currenly only for twitter.com.
+username, datetime, and we can copy from 1-level nested QuotedTweet.
+  
+.. image:: ../images/2018-09-06_ss03.jpg
+
+From toolbar icon, templates for the site are shown.
+And we can do copy by simply clicking button.
+

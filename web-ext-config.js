@@ -7,6 +7,7 @@ module.exports = {
     '.tern-project',
     'note/',
     'test/',
+    'images/',
     '*/js2flowchart/',
     '*/*.js.svg',
     'jsconfig.json',
