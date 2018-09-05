@@ -33,6 +33,9 @@ document.addEventListener('click', (e) => {
       clickedIdx: parseInt(clickedIdx),
     });
   }
+  else if(e.target.id === 'go_addon_page') {
+    browser.runtime.openOptionsPage();
+  }
   window.close();
 });
 
