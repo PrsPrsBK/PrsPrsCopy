@@ -465,9 +465,10 @@ const configUI = {
       configUI.displayErrorMessage(mess);
     }
     else {
-      // browser.storage.local.set({
-      //   arr_by_site: maybeSiteArr,
-      // });
+      console.log('just send to storage');
+      browser.storage.local.set({
+        arr_by_site: maybeSiteArr,
+      });
     }
   },
 
