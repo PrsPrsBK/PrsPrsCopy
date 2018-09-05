@@ -158,6 +158,21 @@ const configUI = {
     return ret;
   },
 
+  displayErrorMessage : (message) => {
+    const previewDivList = document.querySelectorAll('.template_preview');
+    console.log(`prev length: ${previewDivList.length}`);
+    previewDivList.forEach((elm) => {
+      while(elm.firstChild) {
+        elm.removeChild(elm.firstChild);
+      }
+      const wkTxtNode = document.createTextNode(message);
+      const parElm = document.createElement('p');
+      parElm.classList.add('show_error');
+      parElm.appendChild(wkTxtNode);
+      elm.appendChild(parElm);
+    });
+  },
+
   makeEachTemplatePreview : (template, siteOpt) => {
     const ret = document.createElement('div');
     ret.classList.add('template_preview');
@@ -441,7 +456,19 @@ const configUI = {
 
   saveEntries : () => {
     console.log('yes save');
-    configUI.extractWhole();
+    const maybeSiteArr = configUI.extractWhole();
+    if(Array.isArray(maybeSiteArr) === false && maybeSiteArr.error) {
+      const mess = `
+        ${maybeSiteArr.name} has wrong settings.
+        Templates counts ${maybeSiteArr.templates.length}.
+        Nothing was registerd.`;
+      configUI.displayErrorMessage(mess);
+    }
+    else {
+      // browser.storage.local.set({
+      //   arr_by_site: maybeSiteArr,
+      // });
+    }
   },
 
   discardEntries : () => {
@@ -534,14 +561,23 @@ const configUI = {
   },
 
   extractWhole : () => {
-    const ret = [];
+    let ret = [];
     const siteListRoot = document.getElementById('site_list');
     const siteList = siteListRoot.getElementsByClassName('each_site');
     const siteCnt = siteList.length;
     for(let i = 0; i < siteCnt; i++) {
-      ret.push(configUI.extractEachSite(i));
+      const siObj = configUI.extractEachSite(i);
+      if(siObj.templates.length > 0) {
+        ret.push(siObj);
+      }
+      else {
+        siObj.error = true;
+        ret = siObj;
+        break;
+      }
     }
     console.log(`${JSON.stringify(ret, null, '  ')}`);
+    return ret;
   },
 
   extractEachSite : (siteOrd) => {
@@ -572,12 +608,14 @@ const configUI = {
       if(teObj.specArr.length > 0) {
         ret.templates.push(teObj);
       }
+      else {
+        console.log(`err site ${ret.name}`);
+      }
     }
     return ret;
   },
 
   extractTemplate : (siteOrd, templateOrd, goEliminate) => {
-    console.log(`${goEliminate ? 'GO---------' : 'gentle gentle'}`);
     const ret = {};
     let wkElm;
     wkElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
@@ -596,11 +634,21 @@ const configUI = {
           const curSpec = {
             [specType] : specVal_0,
           };
-          if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null
-            && specVal_0 === 'qt_string') {
-            curSpec.string = valElm.value;
+          if(specVal_0 !== 'qt_string') {
+            if(specType !== 'string') {
+              ret.specArr.push(curSpec);
+            }
+            else if(specVal_0 !== '') {
+              ret.specArr.push(curSpec);
+            }
           }
-          ret.specArr.push(curSpec);
+          else {
+            if((valElm = document.getElementById(`si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null
+              && valElm.value !== '') {
+              curSpec.string = valElm.value;
+              ret.specArr.push(curSpec);
+            }
+          }
         }
         specIdx++;
       }
@@ -619,6 +667,7 @@ const configUI = {
         specIdx++;
       }
     }
+
     return ret;
   },
 

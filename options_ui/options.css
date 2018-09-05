@@ -29,6 +29,11 @@ button:hover {
 div.loud {
   font-size: 200%;
 }
+.show_error {
+  font-size: 300%;
+  font-weight: bold;
+  color: red;
+}
 input[type="text"] {
   background-color: #DFE2F1;
 }
