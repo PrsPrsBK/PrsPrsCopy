@@ -713,41 +713,64 @@ const configUI = {
 const regexSiteMenuId = /^si_(\d+)_menu_([^_]+)$/;
 const regexTMenuId = /^si_(\d+)_te_(\d+)_menu_([^_]+)$/;
 const regexSpecTypeId = /^si_(\d+)_te_(\d+)_sp_(\d+)_type$/;
+const regexSpecValId_0 = /^si_(\d+)_te_(\d+)_sp_(\d+)_val_0$/;
 const regexTBodyId = /^si_(\d+)_te_(\d+)_body$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
 document.getElementById('discard').addEventListener('click', configUI.discardEntries);
 document.getElementById('site_list').addEventListener('change', (e) => {
   let wkMatchArr;
-  if((wkMatchArr = regexSpecTypeId.exec(e.target.id)) !== null) {
+  if((wkMatchArr = regexSpecValId_0.exec(e.target.id)) !== null
+    && e.target.tagName && e.target.tagName.toLowerCase() === 'select') {
+    const specVal_0 = e.target.value;
+    let specValElm_1 = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`);
+    if(specVal_0 === 'qt_string') {
+      if(specValElm_1) {
+        specValElm_1.disabled = false;
+      }
+      else {
+        specValElm_1 = document.createElement('input');
+        specValElm_1.type = 'text';
+        specValElm_1.value = '';
+        specValElm_1.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
+        e.target.parentElement.appendChild(specValElm_1);
+      }
+    }
+    else {
+      if(specValElm_1) {
+        specValElm_1.disabled = true;
+      }
+    }
+  }
+  else if((wkMatchArr = regexSpecTypeId.exec(e.target.id)) !== null) {
     const newSpecType = e.target.value;
     let oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`);
-    const oldSpecVal0 = oldInput.value;
-    const val0ParentElm = oldInput.parentElement;
+    const oldSpecVal_0 = oldInput.value;
+    const valParentElm_0 = oldInput.parentElement;
 
-    let oldSpecVal1;
+    let oldSpecVal_1;
     oldInput = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`);
     if(oldInput) {
-      oldSpecVal1 = oldInput.value;
+      oldSpecVal_1 = oldInput.value;
     }
-    while(val0ParentElm.firstChild) {
-      val0ParentElm.removeChild(val0ParentElm.firstChild);
+    while(valParentElm_0.firstChild) {
+      valParentElm_0.removeChild(valParentElm_0.firstChild);
     }
 
     let inpElm, selectElm, optionElm, wkTxtNode;
     if(newSpecType === 'delete') {
       inpElm = document.createElement('input');
       inpElm.type = 'text';
-      inpElm.value = oldSpecVal0; // only display
+      inpElm.value = oldSpecVal_0; // only display
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
-      val0ParentElm.appendChild(inpElm);
+      valParentElm_0.appendChild(inpElm);
     }
     else if(newSpecType === 'string') {
       inpElm = document.createElement('input');
       inpElm.type = 'text';
-      inpElm.value = oldSpecVal0;
+      inpElm.value = oldSpecVal_0;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
-      val0ParentElm.appendChild(inpElm);
+      valParentElm_0.appendChild(inpElm);
     }
     else if(newSpecType === 'plain') {
       selectElm = document.createElement('select');
@@ -757,12 +780,12 @@ document.getElementById('site_list').addEventListener('change', (e) => {
         optionElm.value = pair[0];
         wkTxtNode = document.createTextNode(pair[1]);
         optionElm.appendChild(wkTxtNode);
-        if(pair[0] === oldSpecVal0) {
+        if(pair[0] === oldSpecVal_0) {
           optionElm.selected = true;
         }
         selectElm.appendChild(optionElm);
       });
-      val0ParentElm.appendChild(selectElm);
+      valParentElm_0.appendChild(selectElm);
     }
     else if(newSpecType === 'twitter') {
       selectElm = document.createElement('select');
@@ -772,19 +795,19 @@ document.getElementById('site_list').addEventListener('change', (e) => {
         optionElm.value = pair[0];
         wkTxtNode = document.createTextNode(pair[1]);
         optionElm.appendChild(wkTxtNode);
-        if(pair[0] === oldSpecVal0) {
+        if(pair[0] === oldSpecVal_0) {
           optionElm.selected = true;
         }
         selectElm.appendChild(optionElm);
       });
-      val0ParentElm.appendChild(selectElm);
+      valParentElm_0.appendChild(selectElm);
     }
-    if(oldSpecVal1) {
+    if(oldSpecVal_1) {
       inpElm = document.createElement('input');
       inpElm.type = 'text';
-      inpElm.value = oldSpecVal1;
+      inpElm.value = oldSpecVal_1;
       inpElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_1`;
-      val0ParentElm.appendChild(inpElm);
+      valParentElm_0.appendChild(inpElm);
     }
   }
 });
@@ -812,16 +835,16 @@ document.getElementById('site_list').addEventListener('click', (e) => {
         previewDiv.removeChild(previewDiv.firstChild);
       }
       const previewTextArr = [];
-      let specIdx = 0, specType, specVal0, specVal1;
+      let specIdx = 0, specType, specVal_0, specVal_1;
       while((specType = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${specIdx}_type`)) !== null) {
         if(specType.value !== 'delete') {
-          specVal0 = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${specIdx}_val_0`);
-          if(specVal0.value === 'qt_string') {
-            specVal1 = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${specIdx}_val_1`);
-            previewTextArr.push(specVal1.value);
+          specVal_0 = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${specIdx}_val_0`);
+          if(specVal_0.value === 'qt_string') {
+            specVal_1 = document.getElementById(`si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${specIdx}_val_1`);
+            previewTextArr.push(specVal_1.value);
           }
           else {
-            previewTextArr.push(specVal0.value);
+            previewTextArr.push(specVal_0.value);
           }
         }
         specIdx++;
