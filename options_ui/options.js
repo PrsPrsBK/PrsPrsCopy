@@ -170,69 +170,74 @@ const configUI = {
     });
   },
 
-  makeEachTemplatePreview : (template, siteOpt) => {
-    const ret = document.createElement('div');
-    ret.classList.add('template_preview');
-    ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
-    if(siteOpt.ord === 0 && template.ord === 0) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+  getHelptextContent : (siteOrd, templateOrd) => {
+    if(siteOrd === 0 && templateOrd === 0) {
+      return `
         How to use: if we click left near-outside part from this zone, we get plain concatenated-form, 
-        for each template.<br>
-        ⇦⇦⇦⇦<br>
-        'xxx ESC' means (only) '&amp; &lt; &gt;' to '&amp;amp; &amp;lt; &amp;gt;'</p>`;
+        for each template.\n
+        ⇦⇦⇦⇦\n
+        'xxx ESC' means (only) '&amp; &lt; &gt;' to '&amp;amp; &amp;lt; &amp;gt;'
+        `;
     }
-    else if(siteOpt.ord === 0 && template.ord === 1) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+    else if(siteOrd === 0 && templateOrd === 1) {
+      return `
         There is no menu to remove unneccessary template. 
         If we wanna do that now, use 'delete' to all spec-type. 
-        But DO NOT try to remove all template of any site.</p>`;
+        But DO NOT try to remove all template of any site.
+        `;
     }
-    else if(siteOpt.ord === 0 && template.ord === 2) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+    else if(siteOrd === 0 && templateOrd === 2) {
+      return `
         Anyway until we click 'Save All' button and manually reload, 
         old settings remain on screen.
         If 'delete' is miss-selected and the value partially remains here, 
-        we may recover by pulling back 'type' setting.</p>`;
+        we may recover by pulling back 'type' setting.
+        `;
     }
-    else if(siteOpt.ord === 0 && template.ord === 3) {
-      ret.classList.add('loud');
+    else if(siteOrd === 0 && templateOrd === 3) {
       const wk = new Date();
-      ret.innerHTML = `<p>
+      return `
         'today' is just only 
         ${wk.getFullYear()}-${('00' + (wk.getMonth() + 1)).slice(-2)}-${('00' + wk.getDate()).slice(-2)}
         ${('00' + wk.getHours()).slice(-2)}:${('00' + wk.getMinutes()).slice(-2)}.
         Let's give up other important but too many formats.
-        </p>`;
+        `;
     }
-    else if(siteOpt.ord === 1 && template.ord === 0) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+    else if(siteOrd === 1 && templateOrd === 0) {
+      return `
         [twitter] copy from current-choice (with j/k key), or overlayed tweet.
         But I know only japanese edition, this may not work in other region.
         Version-up for the region I don't know never happen, excuse me.
         And any changes in twitter pages or alpha-beta test may happen, maybe I cannot respond to them.
-        </p>`;
+        `;
     }
-    else if(siteOpt.ord === 1 && template.ord === 1) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+    else if(siteOrd === 1 && templateOrd === 1) {
+      return `
         [twitter] 'text html' escapes '&amp; &lt; &gt;' to '&amp;amp; ...', 
         and transform each link in tweet to '&lt;a href...&gt;URL(⇦fixed)&lt;/a&gt;'.
         'reST' and 'md' transforms links in tweet, to each format, \`URL <..>\`__, [URL](..),
         and does not escape.
         'QT' means copying from only 1 nested quoted tweet, if exists.
-        </p>`;
+        `;
     }
-    else if(siteOpt.ord === 1 && template.ord === 2) {
-      ret.classList.add('loud');
-      ret.innerHTML = `<p>
+    else if(siteOrd === 1 && templateOrd === 2) {
+      return `
         As for CSS Selector, which is useful and I want to use in template, 
         but I don't wanna empower negative or not-interesting behavior, 
-        so may not be implemented.</p>`;
+        so may not be implemented.
+        `;
     }
+  },
+
+  makeEachTemplatePreview : (template, siteOpt) => {
+    const ret = document.createElement('div');
+    ret.classList.add('template_preview');
+    ret.id = `si_${siteOpt.ord}_te_${template.ord}_preview`;
+    ret.classList.add('loud');
+    const wkTxtNode = document.createTextNode(configUI.getHelptextContent(siteOpt.ord, template.ord));
+    const parElm = document.createElement('par');
+    parElm.appendChild(wkTxtNode);
+    ret.appendChild(parElm);
     return ret;
   },
 
