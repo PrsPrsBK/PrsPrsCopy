@@ -183,7 +183,8 @@ const configUI = {
       ret.innerHTML = `<p>
         How to use: if we click left near-outside part from this zone, we get plain concatenated-form, 
         for each template.<br>
-        ⇦⇦⇦⇦</p>`;
+        ⇦⇦⇦⇦<br>
+        'xxx ESC' means (only) '&amp; &lt; &gt;' to '&amp;amp; &amp;lt; &amp;gt;'</p>`;
     }
     else if(siteOpt.ord === 0 && template.ord === 1) {
       ret.classList.add('loud');
@@ -195,7 +196,8 @@ const configUI = {
     else if(siteOpt.ord === 0 && template.ord === 2) {
       ret.classList.add('loud');
       ret.innerHTML = `<p>
-        Anyway until we click 'Save All' button, old settings remain.
+        Anyway until we click 'Save All' button and manually reload, 
+        old settings remain on screen.
         If 'delete' is miss-selected and the value partially remains here, 
         we may recover by pulling back 'type' setting.</p>`;
     }
@@ -206,7 +208,7 @@ const configUI = {
         'today' is just only 
         ${wk.getFullYear()}-${('00' + (wk.getMonth() + 1)).slice(-2)}-${('00' + wk.getDate()).slice(-2)}
         ${('00' + wk.getHours()).slice(-2)}:${('00' + wk.getMinutes()).slice(-2)}.
-        Let's give up other important for you but too many formats.
+        Let's give up other important but too many formats.
         </p>`;
     }
     else if(siteOpt.ord === 1 && template.ord === 0) {
@@ -222,8 +224,9 @@ const configUI = {
       ret.classList.add('loud');
       ret.innerHTML = `<p>
         [twitter] 'text html' escapes '&amp; &lt; &gt;' to '&amp;amp; ...', 
-        and transform each link in text to '&lt;a href...&gt;URL(⇦fixed)&lt;/a&gt;'.
-        'reST' and 'md' transforms links in tweet, to each format.
+        and transform each link in tweet to '&lt;a href...&gt;URL(⇦fixed)&lt;/a&gt;'.
+        'reST' and 'md' transforms links in tweet, to each format, \`URL <..>\`__, [URL](..),
+        and does not escape.
         'QT' means copying from only 1 nested quoted tweet, if exists.
         </p>`;
     }
