@@ -80,7 +80,7 @@ const textPicker = {
         .reduce((acm, val) => {
           return acm + val;
         }, '');
-      console.log(outputText);
+      //console.log(outputText);
       if(outputText !== '') {
         evt.preventDefault();
         const transfer = evt.clipboardData;
@@ -224,10 +224,8 @@ const tweetPicker = {
           || computedStyle.display === undefined
           || computedStyle.display === 'block'
           || computedStyle.opacity === 1) {
-          console.log('may be modal overlay');
           wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
           if(wk_elm && wk_elm.length > 0) {
-            console.log(`overlay ${wk_elm.length}`);
             tweetPicker.CUR_MAIN_TWEET = wk_elm[0];
           }
         }
@@ -235,14 +233,12 @@ const tweetPicker = {
       if(!tweetPicker.CUR_MAIN_TWEET) {
         wk_elm = document.getElementsByClassName('selected-stream-item');
         if(wk_elm && wk_elm.length > 0) {
-          console.log(`may be selected one ${wk_elm.length}`);
           tweetPicker.CUR_MAIN_TWEET = wk_elm[0];
         }
       }
       if(tweetPicker.CUR_MAIN_TWEET !== null) {
         wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
         tweetPicker.CUR_HAS_QT = (wk_elm && wk_elm.length > 0) ? true : false;
-        console.log(`has QT? ${tweetPicker.CUR_HAS_QT}`);
         tweetPicker.prepareCurText(tweetPicker.CUR_MAIN_TWEET);
       }
     }
@@ -337,13 +333,11 @@ const tweetPicker = {
   },
 
   onCopy : (evt) => {
-    console.log('onCopy start');
     if(window.getSelection().toString() === '') {
       const outputText = tweetPicker.RESULT_ARR
         .reduce((acm, val) => {
           return acm + val;
         }, '');
-      console.log(outputText);
       if(outputText !== '') {
         evt.preventDefault();
         const transfer = evt.clipboardData;

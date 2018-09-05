@@ -53,11 +53,9 @@ const configUI = {
   },
 
   restoreEntries : () => {
-    console.log(`restore ${STORE_NAME}`);
     browser.storage.local.get(STORE_NAME, (store_obj) => {
       const result = store_obj[STORE_NAME];
       if(!result || result.length === 0) {
-        console.log('no storage');
         return;
       }
       configUI.reloadHtml(result);
@@ -164,7 +162,6 @@ const configUI = {
 
   displayErrorMessage : (message) => {
     const previewDivList = document.querySelectorAll('.template_preview');
-    console.log(`prev length: ${previewDivList.length}`);
     previewDivList.forEach((elm) => {
       while(elm.firstChild) {
         elm.removeChild(elm.firstChild);
@@ -459,7 +456,6 @@ const configUI = {
   },
 
   saveEntries : () => {
-    console.log('yes save');
     const maybeSiteArr = configUI.extractWhole();
     if(Array.isArray(maybeSiteArr) === false && maybeSiteArr.error) {
       const mess = `
@@ -469,7 +465,6 @@ const configUI = {
       configUI.displayErrorMessage(mess);
     }
     else {
-      console.log('just send to storage');
       browser.storage.local.set({
         [STORE_NAME]: maybeSiteArr,
       });
@@ -477,7 +472,6 @@ const configUI = {
   },
 
   discardEntries : () => {
-    console.log('yes destroy');
     browser.storage.local.set({
       [STORE_NAME]: [],
     });
@@ -582,7 +576,7 @@ const configUI = {
         break;
       }
     }
-    console.log(`${JSON.stringify(ret, null, '  ')}`);
+    //console.log(`${JSON.stringify(ret, null, '  ')}`);
     return ret;
   },
 
@@ -613,9 +607,6 @@ const configUI = {
       const teObj = configUI.extractTemplate(siteOrd, i, true);
       if(teObj.specArr.length > 0) {
         ret.templates.push(teObj);
-      }
-      else {
-        console.log(`err site ${ret.name}`);
       }
     }
     return ret;

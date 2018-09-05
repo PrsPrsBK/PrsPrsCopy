@@ -128,17 +128,12 @@ let iconFlip = false;
 let CUR_POPUP_TEMPLATES = [];
 
 const restoreEmptyTemplate = () => {
-  console.log('health check');
   browser.storage.local.get(STORE_NAME, (store_obj) => {
     const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
-      console.log('oh no let us restore');
       browser.storage.local.set({
         [STORE_NAME]: initialStore,
       });
-    }
-    else {
-      console.log(`${JSON.stringify(result)}`);
     }
   });
 };
@@ -251,7 +246,6 @@ const requestCopyFromMenu = (tab, clickedIdx) => {
     return;
   }
   const curTgt = CUR_POPUP_TEMPLATES[clickedIdx].specArr;
-  console.log(`${tab.url} ${clickedIdx} ${curTgt.length}`);
   /** not update index and icon
    * injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
    * iconFlip = !iconFlip;
@@ -273,11 +267,9 @@ const getTemplates = (tab) => {
     }
     const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
     if(match1st) {
-      console.log('wow url match');
       ret = match1st.templates;
     }
     else {
-      console.log('use default');
       ret = result.find((elm) => { return elm.default; }).templates;
     }
     return new Promise((resolve, reject) => {
@@ -296,7 +288,6 @@ const getTemplates = (tab) => {
 
 const requestCopy = (tab) => {
   getTemplates(tab).then((templateArr) => {
-    console.log(`requestCopy: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
     const curTgt = templateArr[injected[tab.id].index].specArr;
     injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
     iconFlip = !iconFlip;
@@ -320,7 +311,7 @@ const requestCopy = (tab) => {
 };
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
-  console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
+  //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
     injected[tab.id] = {
       index: 0,
@@ -331,7 +322,7 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
 });
 
 browser.tabs.onRemoved.addListener((tabId, rmInfo) => {
-  console.log('tab removed');
+  //console.log('tab removed');
   injected[tabId] = undefined;
 });
 
@@ -350,7 +341,6 @@ browser.commands.onCommand.addListener((cmd) => {
     //}, onError);
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        console.log(`url: ${tab.url}`);
         beginRequestCopyDevotedToGoogleChrome(tab);
       }
     });
@@ -373,7 +363,8 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
-    console.log(`copy end ${JSON.stringify(message.result)}`);
+    // nothing to do... change the color of badgetext to green?
+    //console.debug(`copy end ${JSON.stringify(message.result)}`);
   }
   else if(message.task === 'getCurTemplates') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
