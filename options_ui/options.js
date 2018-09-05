@@ -474,12 +474,6 @@ const configUI = {
     }
   },
 
-  discardEntries : () => {
-    browser.storage.local.set({
-      [STORE_NAME]: [],
-    });
-  },
-
   toggleFrozen : (siteOrd, templateOrd) => {
     const frozenInp = document.getElementById(`si_${siteOrd}_te_${templateOrd}_frozen`);
     frozenInp.value = (frozenInp.value === 'true') ? 'false' : 'true';
@@ -766,7 +760,6 @@ const regexSpecValId_0 = /^si_(\d+)_te_(\d+)_sp_(\d+)_val_0$/;
 const regexTBodyId = /^si_(\d+)_te_(\d+)_body$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
-document.getElementById('discard').addEventListener('click', configUI.discardEntries);
 document.getElementById('site_list').addEventListener('change', (e) => {
   let wkMatchArr;
   if((wkMatchArr = regexSpecValId_0.exec(e.target.id)) !== null
