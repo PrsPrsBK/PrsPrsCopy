@@ -500,10 +500,11 @@ const configUI = {
       tgtElm.disabled = goDisabled;
       specIdx++;
     }
-    specIdx = 0;
-    while((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${specIdx}_val_1`)) !== null) {
-      tgtElm.disabled = goDisabled;
-      specIdx++;
+    // cannot use while
+    for(let i = 0; i < specIdx; i++) {
+      if((tgtElm = root.querySelector(`#si_${siteOrd}_te_${templateOrd}_sp_${i}_val_1`)) !== null) {
+        tgtElm.disabled = goDisabled;
+      }
     }
   
     const freezeBtn = document.getElementById(`si_${siteOrd}_te_${templateOrd}_menu_freeze`);
