@@ -134,7 +134,7 @@ const restoreEmptyTemplate = () => {
     if(!result || result.length === 0) {
       console.log('oh no let us restore');
       browser.storage.local.set({
-        arr_by_site: initialStore,
+        [STORE_NAME]: initialStore,
       });
     }
     else {

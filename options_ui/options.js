@@ -53,9 +53,11 @@ const configUI = {
   },
 
   restoreEntries : () => {
+    console.log(`restore ${STORE_NAME}`);
     browser.storage.local.get(STORE_NAME, (store_obj) => {
       const result = store_obj[STORE_NAME];
       if(!result || result.length === 0) {
+        console.log('no storage');
         return;
       }
       configUI.reloadHtml(result);
@@ -477,7 +479,7 @@ const configUI = {
   discardEntries : () => {
     console.log('yes destroy');
     browser.storage.local.set({
-      STORE_NAME: [],
+      [STORE_NAME]: [],
     });
   },
 
