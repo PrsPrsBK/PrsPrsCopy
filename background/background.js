@@ -2,6 +2,7 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
+const STORE_NAME = 'site_arr';
 const injected = {};
 
 const initialStore = [
@@ -128,8 +129,8 @@ let CUR_POPUP_TEMPLATES = [];
 
 const restoreEmptyTemplate = () => {
   console.log('health check');
-  browser.storage.local.get('arr_by_site', (store_obj) => {
-    const result = store_obj['arr_by_site'];
+  browser.storage.local.get(STORE_NAME, (store_obj) => {
+    const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
       console.log('oh no let us restore');
       browser.storage.local.set({
@@ -179,8 +180,8 @@ const endRequestCopyDevotedToGoogleChrome = (tab, templateArr) => {
 };
 
 const getTemplatesDevotedToGoogleChrome = (tab) => {
-  browser.storage.local.get('arr_by_site', (store_obj) => {
-    const result = store_obj['arr_by_site'];
+  browser.storage.local.get(STORE_NAME, (store_obj) => {
+    const result = store_obj[STORE_NAME];
     let ret;
     if(!result || result.length === 0) {
       browser.browserAction.setBadgeText({
@@ -210,8 +211,8 @@ const beginRequestCopyDevotedToGoogleChrome = (tab) => {
 };
 
 const getTemplatesFromMenuDevotedToGoogleChrome = (tab) => {
-  browser.storage.local.get('arr_by_site', (store_obj) => {
-    const result = store_obj['arr_by_site'];
+  browser.storage.local.get(STORE_NAME, (store_obj) => {
+    const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
       browser.browserAction.setBadgeText({
         text: 'empty',
@@ -264,8 +265,8 @@ const requestCopyFromMenu = (tab, clickedIdx) => {
 };
 
 const getTemplates = (tab) => {
-  browser.storage.local.get('arr_by_site', (store_obj) => {
-    const result = store_obj['arr_by_site'];
+  browser.storage.local.get(STORE_NAME, (store_obj) => {
+    const result = store_obj[STORE_NAME];
     let ret;
     if(!result || result.length === 0) {
       ret = undefined;

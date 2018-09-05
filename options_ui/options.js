@@ -2,6 +2,8 @@ if(typeof browser === 'undefined') {
   window.browser = window.chrome;
 }
 
+const STORE_NAME = 'site_arr';
+
 const configUI = {
 
   onError : (error) => {
@@ -51,8 +53,8 @@ const configUI = {
   },
 
   restoreEntries : () => {
-    browser.storage.local.get('arr_by_site', (store_obj) => {
-      const result = store_obj['arr_by_site'];
+    browser.storage.local.get(STORE_NAME, (store_obj) => {
+      const result = store_obj[STORE_NAME];
       if(!result || result.length === 0) {
         return;
       }
@@ -475,7 +477,7 @@ const configUI = {
   discardEntries : () => {
     console.log('yes destroy');
     browser.storage.local.set({
-      'arr_by_site': [],
+      STORE_NAME: [],
     });
   },
 
