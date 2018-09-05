@@ -1,9 +1,3 @@
-if(typeof browser === 'undefined') {
-  window.browser = window.chrome;
-}
-
-console.log('here popup');
-
 const getCurTemplates = () => {
   browser.runtime.sendMessage({
     task: 'getCurTemplates',

@@ -1,8 +1,3 @@
-
-if(typeof browser === 'undefined') {
-  window.browser = window.chrome;
-}
-
 const escapeHtmlChar = (tgtText) => {
   return tgtText.replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

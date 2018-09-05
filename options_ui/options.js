@@ -1,7 +1,3 @@
-if(typeof browser === 'undefined') {
-  window.browser = window.chrome;
-}
-
 const STORE_NAME = 'site_arr';
 
 const configUI = {
