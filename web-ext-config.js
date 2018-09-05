@@ -9,6 +9,7 @@ module.exports = {
     'test/',
     '*/js2flowchart/',
     '*/*.js.svg',
+    'jsconfig.json',
     'web-ext-config.js',
     'web-ext-artifacts/',
     'yarn.lock',
