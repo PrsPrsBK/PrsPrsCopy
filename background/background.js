@@ -74,7 +74,7 @@ const initialStore = [
           {twitter: 'username_esc'},
           {string: '</a>: '},
           {twitter: 'text_html'},
-          {twitter: 'qt_string', string: ' <div class="quotedTweet"><a href="'},
+          {twitter: 'qt_string', string: ' <div class="yourClass"><a href="'},
           {twitter: 'qt_url'},
           {twitter: 'qt_string', string: '">'},
           {twitter: 'qt_username_esc'},
