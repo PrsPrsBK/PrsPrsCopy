@@ -118,23 +118,6 @@ const configUI = {
     const ret = document.createElement('div');
     ret.classList.add('site_ope');
 
-    /* this maybe does not need to be implemented. 
-    * so not called.
-    */
-    //  wkTxtNode = document.createTextNode('up');
-    //  button = document.createElement('button');
-    //  button.type = 'button';
-    //  button.classList.add('site_up');
-    //  button.appendChild(wkTxtNode);
-    //  ret.appendChild(button);
-
-    //  wkTxtNode = document.createTextNode('down');
-    //  button = document.createElement('button');
-    //  button.type = 'button';
-    //  button.classList.add('site_down');
-    //  button.appendChild(wkTxtNode);
-    //  ret.appendChild(button);
-
     const wkTxtNode = document.createTextNode('add template');
     const button = document.createElement('button');
     button.type = 'button';
@@ -242,42 +225,20 @@ const configUI = {
   },
 
   makeEachTemplateOpeMenu : (template, siteOpt) => {
-    let button, wkTxtNode;
+    const makeOpeButton = (menuName) => {
+      const wkTxtNode = document.createTextNode(menuName);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_${menuName}`;
+      button.appendChild(wkTxtNode);
+      return button;
+    };
     const ret = document.createElement('div');
     ret.classList.add('template_ope');
-
-    wkTxtNode = document.createTextNode('freeze');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('template_freeze');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_freeze`;
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
-
-    wkTxtNode = document.createTextNode('up');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('template_up');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_up`;
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
-
-    wkTxtNode = document.createTextNode('down');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('template_down');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_down`;
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
-
-    wkTxtNode = document.createTextNode('add spec');
-    button = document.createElement('button');
-    button.type = 'button';
-    button.classList.add('template_add');
-    button.id = `si_${siteOpt.ord}_te_${template.ord}_menu_add`;
-    button.appendChild(wkTxtNode);
-    ret.appendChild(button);
-
+    ret.appendChild(makeOpeButton('freeze'));
+    ret.appendChild(makeOpeButton('up'));
+    ret.appendChild(makeOpeButton('down'));
+    ret.appendChild(makeOpeButton('add'));
     return ret;
   },
 
