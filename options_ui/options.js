@@ -471,7 +471,7 @@ const configUI = {
     else {
       console.log('just send to storage');
       browser.storage.local.set({
-        arr_by_site: maybeSiteArr,
+        [STORE_NAME]: maybeSiteArr,
       });
     }
   },
