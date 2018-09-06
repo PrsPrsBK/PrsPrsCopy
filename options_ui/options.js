@@ -26,6 +26,7 @@ const configUI = {
       ['url_nohs', 'url NO hash/search'],
       ['title', 'title'],
       ['title_esc', 'title ESC'],
+      ['title_reST', 'title reST'],
       ['today', 'today'],
     ],
     twitter : [

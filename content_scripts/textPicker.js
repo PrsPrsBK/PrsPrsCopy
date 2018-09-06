@@ -46,6 +46,9 @@ const commonSpecExtractor = (specRecord) => {
     else if(specRecord.plain === 'title_esc') {
       return escapeHtmlChar(document.title);
     }
+    else if(specRecord.plain === 'title_reST') {
+      return document.title.replace(/`/g, '\\`');
+    }
     else if(specRecord.plain === 'today') {
       return getDatetimeTextFromMillsec(Date.now());
     }
