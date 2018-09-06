@@ -27,6 +27,7 @@ const configUI = {
       ['title', 'title'],
       ['title_esc', 'title ESC'],
       ['title_reST', 'title reST'],
+      ['title_md', 'title md'],
       ['today', 'today'],
     ],
     twitter : [

@@ -49,6 +49,10 @@ const commonSpecExtractor = (specRecord) => {
     else if(specRecord.plain === 'title_reST') {
       return document.title.replace(/`/g, '\\`');
     }
+    else if(specRecord.plain === 'title_md') {
+      return document.title.replace(/\[/g, '\\[')
+        .replace(/]/g, '\\]');
+    }
     else if(specRecord.plain === 'today') {
       return getDatetimeTextFromMillsec(Date.now());
     }
