@@ -115,8 +115,11 @@ const initialStore = [
   },
 ];
 
-const onError = (err) => {
-  console.log(`${err}`);
+const onError = (errObj) => {
+  browser.browserAction.setBadgeText({
+    text: errObj.message,
+    tabId: errObj.tabId,
+  });
 };
 
 let iconFlip = false;
@@ -152,10 +155,10 @@ const getTemplates = (tab) => {
       const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
       const curTempateArr = match1st ? match1st.templates : result.find((elm) => { return elm.default; }).templates;
       if(!curTempateArr || !Array.isArray(curTempateArr)) {
-        reject('none');
+        reject({message: 'none', tabId: tab.id, });
       }
       if(curTempateArr.length === 0) {
-        reject('empty');
+        reject({message: 'empty', tabId: tab.id, });
       }
       else {
         resolve(curTempateArr);
@@ -218,12 +221,7 @@ browser.commands.onCommand.addListener((cmd) => {
             task: 'copyWithSpecArr',
             specArr: curSpecArr
           });
-        }, (errStr) => {
-          browser.browserAction.setBadgeText({
-            text: errStr,
-            tabId: tab.id,
-          });
-        });
+        }, onError);
       }
     });
   }
@@ -241,18 +239,13 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   else if(message.task === 'getCurTemplates') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        getTemplates(tab).then((arr) => {
-          CUR_POPUP_TEMPLATES = arr;
+        getTemplates(tab).then((templateArr) => {
+          CUR_POPUP_TEMPLATES = templateArr;
           browser.runtime.sendMessage({
             task: 'getCurTemplates',
             result: CUR_POPUP_TEMPLATES,
           });
-        }, (errStr) => {
-          browser.browserAction.setBadgeText({
-            text: errStr,
-            tabId: tab.id,
-          });
-        });
+        }, onError);
       }
     });
   }
@@ -267,10 +260,7 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         if(errStr !== '') {
-          browser.browserAction.setBadgeText({
-            text: errStr,
-            tabId: tab.id,
-          });
+          onError({message: errStr, tabId: tab.id, });
         }
         else {
           const curSpecArr = CUR_POPUP_TEMPLATES[message.clickedIdx].specArr;
