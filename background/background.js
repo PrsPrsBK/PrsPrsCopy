@@ -201,30 +201,6 @@ const beginRequestCopyDevotedToGoogleChrome = (tab) => {
   getTemplatesDevotedToGoogleChrome(tab);
 };
 
-const getTemplatesFromMenu = (tab) => {
-  browser.storage.local.get(STORE_NAME, (store_obj) => {
-    const result = store_obj[STORE_NAME];
-    if(!result || result.length === 0) {
-      browser.browserAction.setBadgeText({
-        text: 'empty',
-        tabId: tab.id,
-      });
-      return;
-    }
-    const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
-    if(match1st) {
-      CUR_POPUP_TEMPLATES = match1st.templates;
-    }
-    else {
-      CUR_POPUP_TEMPLATES = result.find((elm) => { return elm.default; }).templates;
-    }
-    browser.runtime.sendMessage({
-      task: 'getCurTemplates',
-      result: CUR_POPUP_TEMPLATES,
-    });
-  });
-};
-
 /* ---------- UNTIL THIS LINE : SHOULD REMOVED AND Chrome Edition NEVER UPDATED -------------- */
 
 
