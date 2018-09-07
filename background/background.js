@@ -145,65 +145,6 @@ const updateIconOfTab = (tabId) => {
   });
 };
 
-/* ---------- FROM THIS LINE : SHOULD REMOVED AND Chrome Edition NEVER UPDATED --------------
- * anyway I'm not feel like devising not-so-bad code for Google Chrome.
- * I would rather choice copy-and-pasting no-brain code.
- */
-
-const endRequestCopyDevotedToGoogleChrome = (tab, templateArr) => {
-  if(!templateArr || templateArr.length === 0) {
-    browser.browserAction.setBadgeText({
-      text: 'none',
-      tabId: tab.id,
-    });
-    return;
-  }
-  console.log(`requestCopy: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
-  const curTgt = templateArr[injected[tab.id].index].specArr;
-  injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
-  iconFlip = !iconFlip;
-  updateIconOfTab(tab.id);
-  browser.tabs.sendMessage(tab.id, {
-    picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
-    task: 'copyWithSpecArr',
-    specArr: curTgt
-  });
-};
-
-const getTemplatesDevotedToGoogleChrome = (tab) => {
-  browser.storage.local.get(STORE_NAME, (store_obj) => {
-    const result = store_obj[STORE_NAME];
-    let ret;
-    if(!result || result.length === 0) {
-      browser.browserAction.setBadgeText({
-        text: 'empty',
-        tabId: tab.id,
-      });
-      return;
-    }
-    result.forEach((elm) => {
-      console.log(`--${elm.urlHead}`);
-    });
-    const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
-    if(match1st) {
-      console.log('--match1st');
-      ret = match1st.templates;
-    }
-    else {
-      console.log('--default');
-      ret = result.find((elm) => { return elm.default; }).templates;
-    }
-    endRequestCopyDevotedToGoogleChrome(tab, ret);
-  });
-};
-
-const beginRequestCopyDevotedToGoogleChrome = (tab) => {
-  getTemplatesDevotedToGoogleChrome(tab);
-};
-
-/* ---------- UNTIL THIS LINE : SHOULD REMOVED AND Chrome Edition NEVER UPDATED -------------- */
-
-
 const getTemplates = (tab) => {
   return new Promise((resolve, reject) => {
     browser.storage.local.get(STORE_NAME, (store_obj) => {
@@ -266,7 +207,23 @@ browser.commands.onCommand.addListener((cmd) => {
   if(cmd === 'PrsPrsCopy') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        beginRequestCopyDevotedToGoogleChrome(tab);
+        getTemplates(tab).then((templateArr) => {
+          console.log(`requestCopy: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
+          const curSpecArr = templateArr[injected[tab.id].index].specArr;
+          injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
+          iconFlip = !iconFlip;
+          updateIconOfTab(tab.id);
+          browser.tabs.sendMessage(tab.id, {
+            picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
+            task: 'copyWithSpecArr',
+            specArr: curSpecArr
+          });
+        }, (errStr) => {
+          browser.browserAction.setBadgeText({
+            text: errStr,
+            tabId: tab.id,
+          });
+        });
       }
     });
   }
@@ -300,16 +257,15 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     });
   }
   else if(message.task === 'copyFromPopup') {
+    let errStr = '';
+    if(!CUR_POPUP_TEMPLATES || !Array.isArray(CUR_POPUP_TEMPLATES)) {
+      errStr = 'none';
+    }
+    else if(CUR_POPUP_TEMPLATES.length === 0) {
+      errStr = 'empty';
+    }
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        let errStr = '';
-        if(!CUR_POPUP_TEMPLATES || !Array.isArray(CUR_POPUP_TEMPLATES)) {
-          errStr = 'none';
-        }
-        else if(CUR_POPUP_TEMPLATES.length === 0) {
-          errStr = 'empty';
-        }
-        console.log(`errStr: ${errStr}`);
         if(errStr !== '') {
           browser.browserAction.setBadgeText({
             text: errStr,
