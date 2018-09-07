@@ -1,7 +1,7 @@
 const STORE_NAME = 'site_arr';
-const injected = {};
+const INJECTED = {};
 
-const initialStore = [
+const INITIAL_STORE = [
   {
     default: true,
     name: 'default',
@@ -115,6 +115,9 @@ const initialStore = [
   },
 ];
 
+let IS_ICON_FLIP = false;
+let CUR_POPUP_TEMPLATES = [];
+
 const onError = (errObj) => {
   browser.browserAction.setBadgeText({
     text: errObj.message,
@@ -122,16 +125,12 @@ const onError = (errObj) => {
   });
 };
 
-let iconFlip = false;
-
-let CUR_POPUP_TEMPLATES = [];
-
 const restoreEmptyTemplate = () => {
   browser.storage.local.get(STORE_NAME, (store_obj) => {
     const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
       browser.storage.local.set({
-        [STORE_NAME]: initialStore,
+        [STORE_NAME]: INITIAL_STORE,
       });
     }
   });
@@ -139,11 +138,11 @@ const restoreEmptyTemplate = () => {
 
 const updateIconOfTab = (tabId) => {
   browser.browserAction.setIcon({
-    path: `icons/icon-48_${iconFlip ? 1 : 0}.png`,
+    path: `icons/icon-48_${IS_ICON_FLIP ? 1 : 0}.png`,
     tabId: tabId
   });
   browser.browserAction.setBadgeText({
-    text: `${injected[tabId].index}`,
+    text: `${INJECTED[tabId].index}`,
     tabId: tabId
   });
 };
@@ -170,16 +169,16 @@ const getTemplates = (tab) => {
 browser.tabs.onUpdated.addListener((tabId, chgInfo, _tab) => {
   //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
-    injected[tabId] = {
+    INJECTED[tabId] = {
       index: 0,
     };
-    iconFlip = false;
+    IS_ICON_FLIP = false;
     updateIconOfTab(tabId);
   }
 });
 
 browser.tabs.onRemoved.addListener((tabId, _rmInfo) => {
-  injected[tabId] = undefined;
+  INJECTED[tabId] = undefined;
 });
 
 browser.commands.onCommand.addListener((cmd) => {
@@ -187,10 +186,10 @@ browser.commands.onCommand.addListener((cmd) => {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         getTemplates(tab).then((templateArr) => {
-          console.log(`requestCopy: ${tab.url} with ${templateArr[injected[tab.id].index].name}`);
-          const curSpecArr = templateArr[injected[tab.id].index].specArr;
-          injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
-          iconFlip = !iconFlip;
+          // console.log(`requestCopy: ${tab.url} with ${templateArr[INJECTED[tab.id].index].name}`);
+          const curSpecArr = templateArr[INJECTED[tab.id].index].specArr;
+          INJECTED[tab.id].index = ++INJECTED[tab.id].index % templateArr.length;
+          IS_ICON_FLIP = !IS_ICON_FLIP;
           updateIconOfTab(tab.id);
           browser.tabs.sendMessage(tab.id, {
             picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
@@ -205,13 +204,13 @@ browser.commands.onCommand.addListener((cmd) => {
 
 browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   if(message.task === 'resetTemplateIndex') {
-    injected[sender.tab.id].index = 0;
-    iconFlip = false;
+    INJECTED[sender.tab.id].index = 0;
+    IS_ICON_FLIP = false;
     updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
     // nothing to do... change the color of badgetext to green?
-    console.log(`copy end ${JSON.stringify(message.result)}`);
+    // console.log(`copy end ${JSON.stringify(message.result)}`);
   }
   else if(message.task === 'getCurTemplates') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
