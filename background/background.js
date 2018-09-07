@@ -201,7 +201,7 @@ const beginRequestCopyDevotedToGoogleChrome = (tab) => {
   getTemplatesDevotedToGoogleChrome(tab);
 };
 
-const getTemplatesFromMenuDevotedToGoogleChrome = (tab) => {
+const getTemplatesFromMenu = (tab) => {
   browser.storage.local.get(STORE_NAME, (store_obj) => {
     const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
@@ -211,16 +211,11 @@ const getTemplatesFromMenuDevotedToGoogleChrome = (tab) => {
       });
       return;
     }
-    result.forEach((elm) => {
-      console.log(`${elm.urlHead}`);
-    });
     const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
     if(match1st) {
-      console.log('match1st');
       CUR_POPUP_TEMPLATES = match1st.templates;
     }
     else {
-      console.log('default');
       CUR_POPUP_TEMPLATES = result.find((elm) => { return elm.default; }).templates;
     }
     browser.runtime.sendMessage({
@@ -233,50 +228,20 @@ const getTemplatesFromMenuDevotedToGoogleChrome = (tab) => {
 /* ---------- UNTIL THIS LINE : SHOULD REMOVED AND Chrome Edition NEVER UPDATED -------------- */
 
 
-const requestCopyFromMenu = (tab, clickedIdx) => {
-  if(!CUR_POPUP_TEMPLATES || CUR_POPUP_TEMPLATES.length === 0) {
-    browser.browserAction.setBadgeText({
-      text: 'NONE',
-      tabId: tab.id,
-    });
-    return;
-  }
-  const curTgt = CUR_POPUP_TEMPLATES[clickedIdx].specArr;
-  /** not update index and icon
-   * injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
-   * iconFlip = !iconFlip;
-   * updateIconOfTab(tab.id);
-   */
-  browser.tabs.sendMessage(tab.id, {
-    picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
-    task: 'copyWithSpecArr',
-    specArr: curTgt
-  });
-};
-
 const getTemplates = (tab) => {
-  browser.storage.local.get(STORE_NAME, (store_obj) => {
-    const result = store_obj[STORE_NAME];
-    let ret;
-    if(!result || result.length === 0) {
-      ret = undefined;
-    }
-    const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
-    if(match1st) {
-      ret = match1st.templates;
-    }
-    else {
-      ret = result.find((elm) => { return elm.default; }).templates;
-    }
-    return new Promise((resolve, reject) => {
-      if(!ret || !Array.isArray(ret)) {
+  return new Promise((resolve, reject) => {
+    browser.storage.local.get(STORE_NAME, (store_obj) => {
+      const result = store_obj[STORE_NAME];
+      const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
+      const curTempateArr = match1st ? match1st.templates : result.find((elm) => { return elm.default; }).templates;
+      if(!curTempateArr || !Array.isArray(curTempateArr)) {
         reject('none');
       }
-      else if(ret.length === 0) {
+      if(curTempateArr.length === 0) {
         reject('empty');
       }
       else {
-        resolve(ret);
+        resolve(curTempateArr);
       }
     });
   });
@@ -318,23 +283,11 @@ browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
 });
 
 browser.tabs.onRemoved.addListener((tabId, rmInfo) => {
-  //console.log('tab removed');
   injected[tabId] = undefined;
 });
 
 browser.commands.onCommand.addListener((cmd) => {
   if(cmd === 'PrsPrsCopy') {
-    //Google Chrome, Promise not work.
-    //const querying = browser.tabs.query({currentWindow: true, active: true});
-    //querying.then((tabs) => {
-    //  for(const tab of tabs) {
-    //    if(!tab.url.startsWith('https://twitter.com')) {
-    //      browser.tabs.executeScript(tab.id, {
-    //        file: '/content_scripts/textPicker.js',
-    //      });
-    //    }
-    //  }
-    //}, onError);
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
         beginRequestCopyDevotedToGoogleChrome(tab);
@@ -343,36 +296,61 @@ browser.commands.onCommand.addListener((cmd) => {
   }
 });
 
-// Only Firefox has openPopup()...
-// browser.browserAction.onClicked.addListener((tab) => {
-//   console.log(`foo ${browser.extension.getURL('popup/menu.html')}`);
-//   browser.browserAction.setPopup({
-//     tabId: tab.id,
-//     popup: browser.extension.getURL('popup/menu.html'),
-//   });
-//   //browser.browserAction.openPopup();
-// });
-
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   if(message.task === 'resetTemplateIndex') {
     injected[sender.tab.id].index = 0;
     updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
     // nothing to do... change the color of badgetext to green?
-    //console.debug(`copy end ${JSON.stringify(message.result)}`);
+    console.log(`copy end ${JSON.stringify(message.result)}`);
   }
   else if(message.task === 'getCurTemplates') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        getTemplatesFromMenuDevotedToGoogleChrome(tab);
+        getTemplates(tab).then((arr) => {
+          CUR_POPUP_TEMPLATES = arr;
+          browser.runtime.sendMessage({
+            task: 'getCurTemplates',
+            result: CUR_POPUP_TEMPLATES,
+          });
+        }, (errStr) => {
+          browser.browserAction.setBadgeText({
+            text: errStr,
+            tabId: tab.id,
+          });
+        });
       }
     });
   }
   else if(message.task === 'copyFromPopup') {
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        requestCopyFromMenu(tab, message.clickedIdx);
+        let errStr = '';
+        if(!CUR_POPUP_TEMPLATES || !Array.isArray(CUR_POPUP_TEMPLATES)) {
+          errStr = 'none';
+        }
+        else if(CUR_POPUP_TEMPLATES.length === 0) {
+          errStr = 'empty';
+        }
+        console.log(`errStr: ${errStr}`);
+        if(errStr !== '') {
+          browser.browserAction.setBadgeText({
+            text: errStr,
+            tabId: tab.id,
+          });
+        }
+        else {
+          const curSpecArr = CUR_POPUP_TEMPLATES[message.clickedIdx].specArr;
+          /* NOTICE: 
+           * not update index and icon
+           */
+          browser.tabs.sendMessage(tab.id, {
+            picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
+            task: 'copyWithSpecArr',
+            specArr: curSpecArr
+          });
+        }
       }
     });
   }
