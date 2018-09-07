@@ -206,6 +206,7 @@ browser.commands.onCommand.addListener((cmd) => {
 browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   if(message.task === 'resetTemplateIndex') {
     injected[sender.tab.id].index = 0;
+    iconFlip = false;
     updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
@@ -227,7 +228,7 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
   }
   else if(message.task === 'copyFromPopup') {
     /* NOTICE:
-     * When we set CUR_POPUP_TEMPLATES, it's value check was done.
+     * When we set CUR_POPUP_TEMPLATES, it's value-check was done.
      */
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
