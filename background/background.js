@@ -167,42 +167,18 @@ const getTemplates = (tab) => {
   });
 };
 
-const requestCopy = (tab) => {
-  getTemplates(tab).then((templateArr) => {
-    const curTgt = templateArr[injected[tab.id].index].specArr;
-    injected[tab.id].index = ++injected[tab.id].index % templateArr.length;
-    iconFlip = !iconFlip;
-    updateIconOfTab(tab.id);
-    browser.tabs.sendMessage(tab.id, {
-      picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
-      task: 'copyWithSpecArr',
-      specArr: curTgt
-    });
-    //Google Chrome, sendResponse not work.
-    //sendResponse({
-    //  task: 'what',
-    //  target: curTgt
-    //});
-  }, (errBadgeText) => {
-    browser.browserAction.setBadgeText({
-      text: errBadgeText,
-      tabId: tab.id,
-    });
-  });
-};
-
-browser.tabs.onUpdated.addListener((tabId, chgInfo, tab) => {
+browser.tabs.onUpdated.addListener((tabId, chgInfo, _tab) => {
   //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
-    injected[tab.id] = {
+    injected[tabId] = {
       index: 0,
     };
     iconFlip = false;
-    updateIconOfTab(tab.id);
+    updateIconOfTab(tabId);
   }
 });
 
-browser.tabs.onRemoved.addListener((tabId, rmInfo) => {
+browser.tabs.onRemoved.addListener((tabId, _rmInfo) => {
   injected[tabId] = undefined;
 });
 
@@ -250,29 +226,20 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     });
   }
   else if(message.task === 'copyFromPopup') {
-    let errStr = '';
-    if(!CUR_POPUP_TEMPLATES || !Array.isArray(CUR_POPUP_TEMPLATES)) {
-      errStr = 'none';
-    }
-    else if(CUR_POPUP_TEMPLATES.length === 0) {
-      errStr = 'empty';
-    }
+    /* NOTICE:
+     * When we set CUR_POPUP_TEMPLATES, it's value check was done.
+     */
     browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
       for(const tab of tabs) {
-        if(errStr !== '') {
-          onError({message: errStr, tabId: tab.id, });
-        }
-        else {
-          const curSpecArr = CUR_POPUP_TEMPLATES[message.clickedIdx].specArr;
-          /* NOTICE: 
-           * not update index and icon
-           */
-          browser.tabs.sendMessage(tab.id, {
-            picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
-            task: 'copyWithSpecArr',
-            specArr: curSpecArr
-          });
-        }
+        const curSpecArr = CUR_POPUP_TEMPLATES[message.clickedIdx].specArr;
+        /* NOTICE: 
+          * not update index and icon
+          */
+        browser.tabs.sendMessage(tab.id, {
+          picker: tab.url.startsWith('https://twitter.com') ? 'twitter' : 'default',
+          task: 'copyWithSpecArr',
+          specArr: curSpecArr
+        });
       }
     });
   }
