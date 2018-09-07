@@ -4,6 +4,15 @@ const escapeHtmlChar = (tgtText) => {
     .replace(/>/g, '&gt;');
 };
 
+const escapeReST = (tgtText) => {
+  return tgtText.replace(/`/g, '\\`');
+};
+
+const escapeMd = (tgtText) => {
+  return tgtText.replace(/\[/g, '\\[')
+    .replace(/]/g, '\\]');
+};
+
 /**
  * make and return Object contains each datetime infos as string, made from mill seconds string.
  * @param {number} milsec_txt - string
@@ -47,11 +56,10 @@ const commonSpecExtractor = (specRecord) => {
       return escapeHtmlChar(document.title);
     }
     else if(specRecord.plain === 'title_reST') {
-      return document.title.replace(/`/g, '\\`');
+      return escapeReST(document.title);
     }
     else if(specRecord.plain === 'title_md') {
-      return document.title.replace(/\[/g, '\\[')
-        .replace(/]/g, '\\]');
+      return escapeMd(document.title);
     }
     else if(specRecord.plain === 'today') {
       return getDatetimeTextFromMillsec(Date.now());
@@ -270,6 +278,12 @@ const tweetPicker = {
         else if(val.twitter === 'username_esc') {
           result.push(escapeHtmlChar(tweetPicker.getTweetUsername(tweetBody)));
         }
+        else if(val.twitter === 'username_reST') {
+          result.push(escapeReST(tweetPicker.getTweetUsername(tweetBody)));
+        }
+        else if(val.twitter === 'username_md') {
+          result.push(escapeMd(tweetPicker.getTweetUsername(tweetBody)));
+        }
         else if(val.twitter === 'text') {
           result.push(tweetPicker.CUR_MAIN_TEXT);
         }
@@ -294,6 +308,12 @@ const tweetPicker = {
           }
           else if(val.twitter === 'qt_username_esc') {
             result.push(escapeHtmlChar(tweetPicker.getQTUsername(tweetBody)));
+          }
+          else if(val.twitter === 'qt_username_reST') {
+            result.push(escapeReST(tweetPicker.getQTUsername(tweetBody)));
+          }
+          else if(val.twitter === 'qt_username_md') {
+            result.push(escapeMd(tweetPicker.getQTUsername(tweetBody)));
           }
           else if(val.twitter === 'qt_text') {
             result.push(tweetPicker.CUR_QT_TEXT);
