@@ -136,7 +136,7 @@ const tweetPicker = {
     else if(opt.format === 'md') {
       while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
         resultTextArr.push(tgtText.slice(headIdx, wkMatchArr.index));
-        resultTextArr.push(`(URL)[${wkMatchArr[1]}]`);
+        resultTextArr.push(`[URL](${wkMatchArr[1]})`);
         headIdx = tweetPicker.regexHref.lastIndex;
       }
       resultTextArr.push(tgtText.slice(headIdx));
