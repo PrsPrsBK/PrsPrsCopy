@@ -47,7 +47,7 @@ const commonSpecExtractor = (specRecord) => {
       // when url includes '#!' path, all things become 'hash' after that part.
       // so, we cannot use very convenient properties like URL.hash, URL.search.
       // if we can use, we assigning URL.hash = "" and URL.search = "" is enough.
-      return wkURL.protocol + wkURL.host + wkURL.pathname;
+      return `${wkURL.protocol}//${wkURL.host}${wkURL.pathname}`;
     }
     else if(specRecord.plain === 'title') {
       return document.title;
