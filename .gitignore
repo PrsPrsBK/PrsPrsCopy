@@ -5,5 +5,4 @@ note/*
 npm-debug.log
 package-lock.json
 yarn.lock
-jsconfig.json
 *.js.svg
