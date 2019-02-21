@@ -1,0 +1,133 @@
+@charset "utf8";
+html {
+  background-color: #26232A;
+}
+h1 {
+  color: #F24D92;
+}
+h2 {
+  background-color: #26232A;
+  color: #CCC739;
+}
+button.save {
+  font-weight: bold;
+  font-size: 144%;
+  width: 160px;
+  height: 40px;
+}
+button.goHot {
+  border-color: brown;
+  border-width: 4px;
+  background-color: #E8B683;
+}
+button {
+  cursor: pointer;
+}
+button:hover {
+  background-color: #55ee55;
+}
+div.loud {
+  font-size: 200%;
+}
+.show_error {
+  font-size: 300%;
+  font-weight: bold;
+  color: red;
+}
+select {
+  vertical-align: top;
+}
+textarea {
+  background-color: #DFE2F1;
+}
+input[type="text"] {
+  background-color: #DFE2F1;
+}
+input[type='url'] {
+  background-color: #DFE2F1;
+}
+input:invalid+span:after {
+  position: absolute;
+  content: '✖';
+  padding-left: 5px;
+}
+input:valid+span:after {
+  position: absolute;
+  content: '✓';
+  padding-left: 5px;
+}
+div.twitter th {
+  background-color: #1DA1F2;
+}
+
+.each_site {
+  display: grid;
+  grid-template-columns: 80px 20px 1fr 1fr 1fr 1fr;
+  background-color: #293256;
+}
+.site_top {
+  grid-column-start: 1;
+  grid-column-end:   5;
+  grid-row-start: 1;
+  width: 100%;
+}
+.site_top label {
+  display: inline;
+  align-items: bottom;
+}
+.site_top label {
+  font-weight: bold;
+  font-size: 120%;
+  padding-left: 0.5em;
+  padding-bottom: 0.5ex;
+  padding-right: 1.5em;
+  background-color: #E8B683;
+}
+.site_ope {
+  grid-column-start: 5;
+  grid-row-start: 1;
+}
+.site_ope button {
+  min-height: 6ex;
+  width: 100%;
+}
+
+.each_template {
+  border: 1px solid black;
+  grid-column-start: 1;
+  grid-column-end:   7;
+  display: grid;
+  grid-template-columns: 80px 20px 1fr 1fr 1fr 1fr;
+}
+.new_template {
+  background-color: #60AC39;
+}
+.template_ope {
+  grid-column-start: 1;
+  grid-column-end:   2;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.template_body {
+  grid-column-start: 3;
+  grid-column-end:   5;
+}
+.template_rows th {
+  background-color: #E8B683;
+}
+.template_rows label {
+  font-weight: bold;
+  padding-top: 0.5ex;
+  padding-bottom: 0.5ex;
+  background-color: #CCC739;
+}
+.template_rows label input {
+  width: 160px;
+  padding-left: 1em;
+}
+.template_preview {
+  grid-column-start: 5;
+  grid-column-end:   7;
+  background-color: #DFE2F1;
+}
