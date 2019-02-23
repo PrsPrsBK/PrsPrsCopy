@@ -24,8 +24,8 @@ const loadTemplates = (templatesArr) => {
   rootElm.appendChild(docFragment);
 };
 
-document.addEventListener('click', (e) => {
-  if(e.target.id.indexOf('template_') === 0) {
+document.addEventListener('click', e => {
+  if(!e.target.id && e.target.id.startsWith('template_')) {
     console.log('let us copy ' + e.target.id);
     const clickedIdx = e.target.id.replace(/^template_(.+)$/, '$1');
     browser.runtime.sendMessage({
@@ -39,15 +39,15 @@ document.addEventListener('click', (e) => {
   window.close();
 });
 
-document.getElementById('menu_root').addEventListener('mouseover', (e) => {
-  if(e.target.id.indexOf('template_') === 0) {
+document.getElementById('menu_root').addEventListener('mouseover', e => {
+  if(!e.target.id && e.target.id.startsWith('template_')) {
     const tgtIdx = e.target.id.replace(/^template_(.+)$/, '$1');
     const monitorElm = document.getElementById('spec_monitor');
     while(monitorElm.firstChild) {
       monitorElm.removeChild(monitorElm.firstChild);
     }
     let descAcc = '';
-    CUR_TEMPLATES[tgtIdx].specArr.forEach((spec) => {
+    CUR_TEMPLATES[tgtIdx].specArr.forEach(spec => {
       const idx = Object.values(spec)[0] === 'qt_string' ? 1 : 0;
       descAcc += Object.values(spec)[idx];
     });
@@ -61,7 +61,7 @@ document.getElementById('menu_root').addEventListener('mouseover', (e) => {
   }
 });
 
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   console.log(`${message.task} coming`);
   if(message.task === 'getCurTemplates') {
     loadTemplates(message.result);

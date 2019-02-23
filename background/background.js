@@ -126,7 +126,7 @@ const onError = (errObj) => {
 };
 
 const restoreEmptyTemplate = () => {
-  browser.storage.local.get(STORE_NAME, (store_obj) => {
+  browser.storage.local.get(STORE_NAME).then(store_obj => {
     const result = store_obj[STORE_NAME];
     if(!result || result.length === 0) {
       browser.storage.local.set({
@@ -149,10 +149,10 @@ const updateIconOfTab = (tabId) => {
 
 const getTemplates = (tab) => {
   return new Promise((resolve, reject) => {
-    browser.storage.local.get(STORE_NAME, (store_obj) => {
+    browser.storage.local.get(STORE_NAME).then(store_obj => {
       const result = store_obj[STORE_NAME];
-      const match1st = result.find((elm) => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
-      const curTempateArr = match1st ? match1st.templates : result.find((elm) => { return elm.default; }).templates;
+      const match1st = result.find(elm => { return (elm.urlHead && tab.url.startsWith(elm.urlHead)); });
+      const curTempateArr = match1st ? match1st.templates : result.find(elm => { return elm.default; }).templates;
       if(!curTempateArr || !Array.isArray(curTempateArr)) {
         reject({message: 'none', tabId: tab.id, });
       }
@@ -181,11 +181,11 @@ browser.tabs.onRemoved.addListener((tabId, _rmInfo) => {
   INJECTED[tabId] = undefined;
 });
 
-browser.commands.onCommand.addListener((cmd) => {
+browser.commands.onCommand.addListener(cmd => {
   if(cmd === 'PrsPrsCopy') {
-    browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
+    browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
       for(const tab of tabs) {
-        getTemplates(tab).then((templateArr) => {
+        getTemplates(tab).then(templateArr => {
           // console.log(`requestCopy: ${tab.url} with ${templateArr[INJECTED[tab.id].index].name}`);
           const curSpecArr = templateArr[INJECTED[tab.id].index].specArr;
           INJECTED[tab.id].index = ++INJECTED[tab.id].index % templateArr.length;
@@ -213,9 +213,9 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     // console.log(`copy end ${JSON.stringify(message.result)}`);
   }
   else if(message.task === 'getCurTemplates') {
-    browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
+    browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
       for(const tab of tabs) {
-        getTemplates(tab).then((templateArr) => {
+        getTemplates(tab).then(templateArr => {
           CUR_POPUP_TEMPLATES = templateArr;
           browser.runtime.sendMessage({
             task: 'getCurTemplates',
@@ -229,7 +229,7 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     /* NOTICE:
      * When we set CUR_POPUP_TEMPLATES, it's value-check was done.
      */
-    browser.tabs.query({currentWindow: true, active: true}, (tabs) => {
+    browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
       for(const tab of tabs) {
         const curSpecArr = CUR_POPUP_TEMPLATES[message.clickedIdx].specArr;
         /* NOTICE: 

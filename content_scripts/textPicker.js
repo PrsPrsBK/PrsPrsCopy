@@ -78,7 +78,7 @@ const textPicker = {
   
   build : (tgt) => {
     const result = [];
-    tgt.forEach((val) => {
+    tgt.forEach(val => {
       result.push(commonSpecExtractor(val));
     });
     textPicker.RESULT_ARR = result;
@@ -379,7 +379,7 @@ if(window.location.href.startsWith('https://twitter.com')) {
   document.addEventListener('keydown', tweetPicker.handleKeydown);
 }
 
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   if(message.task === 'copyWithSpecArr') {
     if(message.picker === 'twitter') {
       document.addEventListener('copy', tweetPicker.onCopy);
