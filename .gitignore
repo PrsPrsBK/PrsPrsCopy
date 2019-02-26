@@ -1,6 +1,7 @@
 node_modules/*
 chrome/*
 note/*
+testTgt/*
 web-ext-artifacts/*
 .web-extension-id
 *.log
