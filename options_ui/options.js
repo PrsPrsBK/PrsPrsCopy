@@ -165,7 +165,7 @@ const configUI = {
         How to use: if we click left near-outside part from this zone, we get plain concatenated-form, 
         for each template.\n
         ⇦⇦⇦⇦\n
-        'xxx ESC' means (only) '&amp; &lt; &gt;' to '&amp;amp; &amp;lt; &amp;gt;'
+        'xxx ESC' means (only) '& < >' to '&amp; &lt; &gt;'
         `;
     }
     else if(siteOrd === 0 && templateOrd === 1) {
