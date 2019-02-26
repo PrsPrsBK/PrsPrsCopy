@@ -217,7 +217,10 @@ const tweetPicker = {
             .replace(/\n\r/g, ' ')
             .replace(/\n/g, ' ');
         }
-        mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
+        // when text exists after (maybe QT's) URL, avoid replacing.
+        if(!mainText.match(/(.+)(https:\/\/twitter\.com\/\S+\s+…)(.+)$/)) {
+          mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
+        }
       }
       tweetPicker.CUR_MAIN_TEXT = mainText;
       tweetPicker.CUR_QT_TEXT = qtText;
@@ -255,76 +258,76 @@ const tweetPicker = {
     return tweetPicker.CUR_MAIN_TWEET;
   },
   
-  build : (tgt) => {
+  build : (specArr) => {
     const result = [];
-    tgt.forEach((val) => {
-      if(val.hasOwnProperty('twitter') === false) {
-        result.push(commonSpecExtractor(val));
+    specArr.forEach(spec => {
+      if(spec.hasOwnProperty('twitter') === false) {
+        result.push(commonSpecExtractor(spec));
       }
       else {
         const tweetBody = tweetPicker.getCurTweet();
         if(!tweetBody) {
           console.debug('cannot copy for tweet');
         }
-        else if(val.twitter === 'url') {
+        else if(spec.twitter === 'url') {
           result.push(tweetPicker.getTweetUrl(tweetBody));
         }
-        else if(val.twitter === 'datetime') {
+        else if(spec.twitter === 'datetime') {
           result.push(tweetPicker.getTweetTimestamp(tweetBody));
         }
-        else if(val.twitter === 'username') {
+        else if(spec.twitter === 'username') {
           result.push(tweetPicker.getTweetUsername(tweetBody));
         }
-        else if(val.twitter === 'username_esc') {
+        else if(spec.twitter === 'username_esc') {
           result.push(escapeHtmlChar(tweetPicker.getTweetUsername(tweetBody)));
         }
-        else if(val.twitter === 'username_reST') {
+        else if(spec.twitter === 'username_reST') {
           result.push(escapeReST(tweetPicker.getTweetUsername(tweetBody)));
         }
-        else if(val.twitter === 'username_md') {
+        else if(spec.twitter === 'username_md') {
           result.push(escapeMd(tweetPicker.getTweetUsername(tweetBody)));
         }
-        else if(val.twitter === 'text') {
+        else if(spec.twitter === 'text') {
           result.push(tweetPicker.CUR_MAIN_TEXT);
         }
-        else if(val.twitter === 'text_html') {
+        else if(spec.twitter === 'text_html') {
           result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'html'}));
         }
-        else if(val.twitter === 'text_reST') {
+        else if(spec.twitter === 'text_reST') {
           result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'reST'}));
         }
-        else if(val.twitter === 'text_md') {
+        else if(spec.twitter === 'text_md') {
           result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'md'}));
         }
         else if(tweetPicker.CUR_HAS_QT) {
-          if(val.twitter === 'qt_string' && val.hasOwnProperty('string')) {
-            result.push(val.string);
+          if(spec.twitter === 'qt_string' && spec.hasOwnProperty('string')) {
+            result.push(spec.string);
           }
-          else if(val.twitter === 'qt_url') {
+          else if(spec.twitter === 'qt_url') {
             result.push(tweetPicker.getQTUrl(tweetBody));
           }
-          else if(val.twitter === 'qt_username') {
+          else if(spec.twitter === 'qt_username') {
             result.push(tweetPicker.getQTUsername(tweetBody));
           }
-          else if(val.twitter === 'qt_username_esc') {
+          else if(spec.twitter === 'qt_username_esc') {
             result.push(escapeHtmlChar(tweetPicker.getQTUsername(tweetBody)));
           }
-          else if(val.twitter === 'qt_username_reST') {
+          else if(spec.twitter === 'qt_username_reST') {
             result.push(escapeReST(tweetPicker.getQTUsername(tweetBody)));
           }
-          else if(val.twitter === 'qt_username_md') {
+          else if(spec.twitter === 'qt_username_md') {
             result.push(escapeMd(tweetPicker.getQTUsername(tweetBody)));
           }
-          else if(val.twitter === 'qt_text') {
+          else if(spec.twitter === 'qt_text') {
             result.push(tweetPicker.CUR_QT_TEXT);
           }
-          else if(val.twitter === 'qt_text_html') {
+          else if(spec.twitter === 'qt_text_html') {
             result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'html'}));
           }
-          else if(val.twitter === 'qt_text_reST') {
+          else if(spec.twitter === 'qt_text_reST') {
             result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'reST'}));
           }
-          else if(val.twitter === 'qt_text_md') {
+          else if(spec.twitter === 'qt_text_md') {
             result.push(tweetPicker.activateHrefText(tweetPicker.CUR_QT_TEXT, {format: 'md'}));
           }
         }
