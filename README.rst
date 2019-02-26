@@ -4,7 +4,8 @@ PrsPrsCopy
 
 This add-on is utility for copy url or texts in active web page, specified in templates.
 This is Currently published to AMO: 
-`PrsPrsCopy <https://addons.mozilla.org/ja/firefox/addon/prsprscopy/>`__ .
+`PrsPrsCopy <https://addons.mozilla.org/ja/firefox/addon/prsprscopy/>`__ ,
+or `Chrome Web Store <https://chrome.google.com/webstore/detail/prsprscopy/hghdhiodkbbogfnbhknleobjjpadlmcc>`__
 
 
 What it does
@@ -46,5 +47,5 @@ Release Notes
 0.9.6
 --------------------
 
-fix: When text exists after QT's URL, it will be dropped.
+fix: When text exists after quoted-tweet's URL, it will be dropped.
 
