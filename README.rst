@@ -41,8 +41,12 @@ And we can do copy by simply clicking button.
 Known Issue
 ====================
 
-Fail to copy when quoted tweet inserted in the middle.
---------------------------------------------------------------------------------
 
-only noticed. I saw it just once.
+Release Notes
+====================
+
+0.9.6
+--------------------
+
+fix: When text exists after QT's URL, it will be dropped.
 
