@@ -218,7 +218,7 @@ const tweetPicker = {
             .replace(/\n/g, ' ');
         }
         // when text exists after (maybe QT's) URL, avoid replacing.
-        if(!mainText.match(/(.+)(https:\/\/twitter\.com\/\S+\s+…)(.+)$/)) {
+        if(!mainText.match(/(.+)(https:\/\/twitter\.com\/\S+)(\s+…?)?(.+)$/)) {
           mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
         }
       }
