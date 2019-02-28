@@ -97,10 +97,14 @@ qtElm.innerHTML = `
 </li>`;
 
 const specArr = [
+  { twitter: 'url' },
   { twitter: 'datetime' },
+  { twitter: 'username' },
 ];
 const resultArr = [
+  '/EXAMPLE_ACC/status/ITEM_ID',
   '2019-02-27 13:46',
+  'サンプルアカウントさん',
 ];
 document.body.appendChild(qtElm);
 tweetPicker.getCurTweet();
