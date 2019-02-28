@@ -100,11 +100,13 @@ const specArr = [
   { twitter: 'url' },
   { twitter: 'datetime' },
   { twitter: 'username' },
+  { twitter: 'text_html' },
 ];
 const resultArr = [
   '/EXAMPLE_ACC/status/ITEM_ID',
   '2019-02-27 13:46',
   'サンプルアカウントさん',
+  'THIS IS TWEET-TEXTです <a href="https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID">URL</a>',
 ];
 document.body.appendChild(qtElm);
 tweetPicker.getCurTweet();
