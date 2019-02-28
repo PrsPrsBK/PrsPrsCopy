@@ -96,19 +96,32 @@ qtElm.innerHTML = `
   </div>
 </li>`;
 
+const specArr = [
+  { twitter: 'datetime' },
+];
+const resultArr = [
+  '2019-02-27 13:46',
+];
 document.body.appendChild(qtElm);
 tweetPicker.getCurTweet();
+const mainText = tweetPicker.CUR_MAIN_TEXT;
+const qtText = tweetPicker.CUR_QT_TEXT;
+tweetPicker.build(specArr);
+
 
 test('tweetPicker', t => {
 	const tgtText = 'before URL. https://www.example.com … after URL.';
 	const resultText = tweetPicker.activateHrefText(tgtText, {format: 'html'});
 	t.is(resultText, 'before URL. <a href="https://www.example.com">URL</a> after URL.');
 });
+
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-	const resultText = tweetPicker.CUR_MAIN_TEXT;
-	t.is(resultText, 'THIS IS TWEET-TEXTです');
+	t.is(mainText, 'THIS IS TWEET-TEXTです');
 });
 test('tweetPicker.CUR_QT_TEXT', t => {
-	const qtText = tweetPicker.CUR_QT_TEXT;
 	t.is(qtText, '** THIS IS QUOTED TEXT ** です');
+});
+
+test('tweetPicker.RESULT_ARR', t => {
+	t.deepEqual(tweetPicker.RESULT_ARR, resultArr);
 });
