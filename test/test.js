@@ -3,8 +3,16 @@ import { tweetPicker } from '../testTgt/textPicker.js'
 const fs = require('fs');
 
 const divElm = document.createElement('div');
-divElm.insertAdjacentHTML('afterbegin', fs.readFileSync('./test/helpers/tweetQt.html', 'utf8'));
-const qtElm = divElm.firstElementChild;
+document.body.appendChild(divElm);
+// divElm.insertAdjacentHTML('afterbegin', fs.readFileSync('./test/helpers/tweetQt.html', 'utf8').replace(/^\s*(\S+)$/g, '$1').replace(/\r\n/g, ''));
+let text = fs.readFileSync('./test/helpers/tweetQt.html', 'utf8');
+// I can not understand nodejs's regex at all. 
+// text = text.replace(/^(\s+)(\S+.+)/g, '$2');
+text = text.replace(/  /g, '');
+text = text.replace(/\r\n/g, '');
+divElm.innerHTML = text;
+// const qtElm = divElm.firstElementChild;
+// document.body.appendChild(qtElm);
 
 const specArr = [
   { twitter: 'url' },
@@ -24,7 +32,6 @@ const resultArr = [
   '/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
   'QUOTED-ACCさん',
 ];
-document.body.appendChild(qtElm);
 tweetPicker.getCurTweet();
 const mainText = tweetPicker.CUR_MAIN_TEXT;
 const qtText = tweetPicker.CUR_QT_TEXT;
