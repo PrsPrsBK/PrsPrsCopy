@@ -1,10 +1,29 @@
 import test from 'ava';
 import { tweetPicker } from '../testTgt/textPicker.js'
 const fs = require('fs');
+const cheerio = require('cheerio');
 
 const divElm = document.createElement('div');
-divElm.insertAdjacentHTML('afterbegin', fs.readFileSync('./test/helpers/tweetQt.html', 'utf8'));
-const qtElm = divElm.firstElementChild;
+// divElm.insertAdjacentHTML('afterbegin', fs.readFileSync('./test/helpers/tweetQt.html', 'utf8'));
+// const qtElm = divElm.firstElementChild;
+const htmlText = fs.readFileSync('./test/helpers/tweetQt.html', 'utf8');
+// console.log(htmlText);
+const $ = cheerio.load(htmlText, {
+  normalizeWhitespace: true,
+  withDomLvl1: true,
+  ignoreWhiteSpace: true,
+});
+// console.log(`WOW ${$.root().find('li')}`);
+let qtElm;
+try {
+  console.log(`${$.root().find('ul').length}`);
+  qtElm = $.root().find('li').parent();
+  divElm.innerHTML = qtElm.html();
+  document.body.appendChild(divElm);
+  // document.body.appendChild(qtElm.html());
+} catch(err) {
+  console.log(`------------------- ${err}`);
+}
 
 const specArr = [
   { twitter: 'url' },
@@ -24,7 +43,6 @@ const resultArr = [
   '/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
   'QUOTED-ACCさん',
 ];
-document.body.appendChild(qtElm);
 tweetPicker.getCurTweet();
 const mainText = tweetPicker.CUR_MAIN_TEXT;
 const qtText = tweetPicker.CUR_QT_TEXT;
