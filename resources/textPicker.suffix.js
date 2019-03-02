@@ -1,4 +1,5 @@
 
 module.exports = {
+  textPicker,
   tweetPicker,
 };

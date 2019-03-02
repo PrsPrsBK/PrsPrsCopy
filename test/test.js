@@ -1,4 +1,9 @@
 import test from 'ava';
+// can not use jsdom.reconfigure(). this works.
+import browserEnv from 'browser-env';
+browserEnv(['window', 'document', 'navigator'], {
+  url: 'https://twitter.com/',
+});
 import { tweetPicker } from '../testTgt/textPicker.js'
 const fs = require('fs');
 
@@ -25,7 +30,7 @@ test.before(t => {
     { twitter: 'qt_username' },
   ];
   t.context.resultArr = [
-    '/EXAMPLE_ACC/status/ITEM_ID',
+    'https://twitter.com/EXAMPLE_ACC/status/ITEM_ID',
     '2019-02-27 13:46',
     '[]サンプル`&`アカウントさん<>',
     '[]サンプル`&amp;`アカウントさん&lt;&gt;',
@@ -35,7 +40,7 @@ test.before(t => {
     'THIS IS TWEET-TEXTです ',
     'THIS IS TWEET-TEXTです ',
     'just quoted',
-    '/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
+    'https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
     'QUOTED-ACCさん',
   ];
   tweetPicker.getCurTweet();
