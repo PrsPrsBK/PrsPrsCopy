@@ -16,11 +16,13 @@ test.before(t => {
     { string: 'just string' },
     { plain: 'url'},
     { plain: 'title'},
+    { plain: 'title_esc'},
   ];
   t.context.resultArr = [
     'just string',
     'http://www.example.com/',
-    'foo title',
+    '[]foo `&` title<>',
+    '[]foo `&amp;` title&lt;&gt;',
   ];
   textPicker.build(specArr);
 });
