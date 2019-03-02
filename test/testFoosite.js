@@ -15,6 +15,7 @@ test.before(t => {
   const specArr = [
     { string: 'just string' },
     { plain: 'url'},
+    // { plain: 'url_nohs'},
     { plain: 'title'},
     { plain: 'title_esc'},
     { plain: 'title_reST'},
@@ -22,7 +23,8 @@ test.before(t => {
   ];
   t.context.resultArr = [
     'just string',
-    'http://www.example.com/',
+    'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
+    // 'http://www.example.com/foo/#!/foo.html',
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
     '[]foo \\`&\\` title<>',
