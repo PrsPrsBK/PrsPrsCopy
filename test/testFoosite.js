@@ -17,12 +17,14 @@ test.before(t => {
     { plain: 'url'},
     { plain: 'title'},
     { plain: 'title_esc'},
+    { plain: 'title_reST'},
   ];
   t.context.resultArr = [
     'just string',
     'http://www.example.com/',
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
+    '[]foo \\`&\\` title<>',
   ];
   textPicker.build(specArr);
 });
