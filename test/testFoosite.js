@@ -24,6 +24,7 @@ test.before(t => {
   t.context.resultArr = [
     'just string',
     'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
+    // Stab's URL() behavior maybe differ from browser's one.
     // 'http://www.example.com/foo/#!/foo.html',
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
