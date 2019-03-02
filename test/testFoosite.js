@@ -15,10 +15,12 @@ test.before(t => {
   const specArr = [
     { string: 'just string' },
     { plain: 'url'},
+    { plain: 'title'},
   ];
   t.context.resultArr = [
     'just string',
     'http://www.example.com/',
+    'foo title',
   ];
   textPicker.build(specArr);
 });
