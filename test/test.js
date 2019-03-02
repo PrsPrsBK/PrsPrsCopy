@@ -5,15 +5,10 @@ const fs = require('fs');
 test.before(t => {
   const divElm = document.createElement('div');
   document.body.appendChild(divElm);
-  // divElm.insertAdjacentHTML('afterbegin', fs.readFileSync('./test/helpers/tweetQt.html', 'utf8').replace(/^\s*(\S+)$/g, '$1').replace(/\r\n/g, ''));
   let text = fs.readFileSync('./test/helpers/tweetQt.html', 'utf8');
-  // I can not understand nodejs's regex at all. 
-  // text = text.replace(/^(\s+)(\S+.+)/g, '$2');
-  text = text.replace(/  /g, '');
+  text = text.replace(/\r\n\s+(.+)/g, '$1');
   text = text.replace(/\r\n/g, '');
   divElm.innerHTML = text;
-  // const qtElm = divElm.firstElementChild;
-  // document.body.appendChild(qtElm);
 
   const specArr = [
     { twitter: 'url' },
@@ -36,9 +31,9 @@ test.before(t => {
     '[]サンプル`&amp;`アカウントさん&lt;&gt;',
     '[]サンプル\\`&\\`アカウントさん<>',
     '\\[\\]サンプル`&`アカウントさん<>',
-    'THIS IS TWEET-TEXTです <a href="https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID">URL</a>',
-    'THIS IS TWEET-TEXTです `URL <https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID>`__',
-    'THIS IS TWEET-TEXTです [URL](https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID)',
+    'THIS IS TWEET-TEXTです ',
+    'THIS IS TWEET-TEXTです ',
+    'THIS IS TWEET-TEXTです ',
     'just quoted',
     '/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
     'QUOTED-ACCさん',
@@ -56,10 +51,10 @@ test('tweetPicker', t => {
 });
 
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-	t.is(t.context.mainText, 'THIS IS TWEET-TEXTです');
+	t.is(t.context.mainText, 'THIS IS TWEET-TEXTです ');
 });
 test('tweetPicker.CUR_QT_TEXT', t => {
-	t.is(t.context.qtText, '** THIS IS QUOTED TEXT ** です');
+	t.is(t.context.qtText, '** THIS IS QUOTED TEXT ** ですpic.twitter.com/XXXXXXXXXX');
 });
 
 test('tweetPicker.RESULT_ARR', t => {
