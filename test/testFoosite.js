@@ -18,6 +18,7 @@ test.before(t => {
     { plain: 'title'},
     { plain: 'title_esc'},
     { plain: 'title_reST'},
+    { plain: 'title_md'},
   ];
   t.context.resultArr = [
     'just string',
@@ -25,6 +26,7 @@ test.before(t => {
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
     '[]foo \\`&\\` title<>',
+    '\\[\\]foo `&` title<>',
   ];
   textPicker.build(specArr);
 });
