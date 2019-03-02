@@ -19,6 +19,7 @@ test.before(t => {
     { twitter: 'url' },
     { twitter: 'datetime' },
     { twitter: 'username' },
+    { twitter: 'username_esc' },
     { twitter: 'text_html' },
     { twitter: 'text_reST' },
     { twitter: 'text_md' },
@@ -29,7 +30,8 @@ test.before(t => {
   t.context.resultArr = [
     '/EXAMPLE_ACC/status/ITEM_ID',
     '2019-02-27 13:46',
-    'サンプルアカウントさん',
+    'サンプル&アカウントさん<>',
+    'サンプル&amp;アカウントさん&lt;&gt;',
     'THIS IS TWEET-TEXTです <a href="https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID">URL</a>',
     'THIS IS TWEET-TEXTです `URL <https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID>`__',
     'THIS IS TWEET-TEXTです [URL](https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID)',
