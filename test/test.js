@@ -36,9 +36,9 @@ test.before(t => {
     '[]サンプル`&amp;`アカウントさん&lt;&gt;',
     '[]サンプル\\`&\\`アカウントさん<>',
     '\\[\\]サンプル`&`アカウントさん<>',
-    'THIS IS TWEET-TEXTです ',
-    'THIS IS TWEET-TEXTです ',
-    'THIS IS TWEET-TEXTです ',
+    'THIS IS TWEET-TEXT [&amp;&gt;&lt;]です`` ',
+    'THIS IS TWEET-TEXT [&><]です`` ',
+    'THIS IS TWEET-TEXT [&><]です`` ',
     'just quoted',
     'https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
     'QUOTED-ACCさん',
@@ -56,7 +56,7 @@ test('tweetPicker', t => {
 });
 
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-	t.is(t.context.mainText, 'THIS IS TWEET-TEXTです ');
+	t.is(t.context.mainText, 'THIS IS TWEET-TEXT [&><]です`` ');
 });
 test('tweetPicker.CUR_QT_TEXT', t => {
 	t.is(t.context.qtText, '** THIS IS QUOTED TEXT ** ですpic.twitter.com/XXXXXXXXXX');
