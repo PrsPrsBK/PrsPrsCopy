@@ -1,4 +1,9 @@
 import test from 'ava';
+// can not use jsdom.reconfigure(). this works.
+import browserEnv from 'browser-env';
+browserEnv(['window', 'document', 'navigator'], {
+  url: 'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
+});
 import { textPicker } from '../testTgt/textPicker.js'
 const fs = require('fs');
 // import { fs } from 'fs';
