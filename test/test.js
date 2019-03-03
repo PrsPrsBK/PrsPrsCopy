@@ -1,7 +1,7 @@
 import test from 'ava';
 // can not use jsdom.reconfigure(). this works.
 import browserEnv from 'browser-env';
-browserEnv(['window', 'document', 'navigator'], {
+browserEnv({
   url: 'https://twitter.com/',
 });
 import { tweetPicker } from '../testTgt/textPicker.js'
