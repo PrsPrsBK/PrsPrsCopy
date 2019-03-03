@@ -4,16 +4,16 @@ import browserEnv from 'browser-env';
 browserEnv({
   url: 'https://twitter.com/',
 });
-import { tweetPicker } from '../testTgt/textPicker.js'
+import { tweetPicker } from '../testTgt/textPicker.js';
 const fs = require('fs');
 
 test.before(t => {
   const divElm = document.createElement('div');
   document.body.appendChild(divElm);
-  let text = fs.readFileSync('./test/helpers/tweetQt.html', 'utf8');
-  text = text.replace(/\r\n\s+(.+)/g, '$1');
-  text = text.replace(/\r\n/g, '');
-  divElm.innerHTML = text;
+  let htmlText = fs.readFileSync('./test/helpers/tweetQt.html', 'utf8');
+  htmlText = htmlText.replace(/\r\n\s+(.+)/g, '$1');
+  htmlText = htmlText.replace(/\r\n/g, '');
+  divElm.innerHTML = htmlText;
 
   const specArr = [
     { twitter: 'url' },
@@ -50,18 +50,18 @@ test.before(t => {
 });
 
 test('tweetPicker', t => {
-	const tgtText = 'before URL. https://www.example.com … after URL.';
-	const resultText = tweetPicker.activateHrefText(tgtText, {format: 'html'});
-	t.is(resultText, 'before URL. <a href="https://www.example.com">URL</a> after URL.');
+  const tgtText = 'before URL. https://www.example.com … after URL.';
+  const resultText = tweetPicker.activateHrefText(tgtText, {format: 'html'});
+  t.is(resultText, 'before URL. <a href="https://www.example.com">URL</a> after URL.');
 });
 
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-	t.is(t.context.mainText, 'THIS IS TWEET-TEXT [&><]です`` ');
+  t.is(t.context.mainText, 'THIS IS TWEET-TEXT [&><]です`` ');
 });
 test('tweetPicker.CUR_QT_TEXT', t => {
-	t.is(t.context.qtText, '** THIS IS QUOTED TEXT ** ですpic.twitter.com/XXXXXXXXXX');
+  t.is(t.context.qtText, '** THIS IS QUOTED TEXT ** ですpic.twitter.com/XXXXXXXXXX');
 });
 
 test('tweetPicker.RESULT_ARR', t => {
-	t.deepEqual(tweetPicker.RESULT_ARR, t.context.resultArr);
+  t.deepEqual(tweetPicker.RESULT_ARR, t.context.resultArr);
 });

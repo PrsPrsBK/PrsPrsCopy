@@ -2,9 +2,13 @@ module.exports = {
   'env': {
     'browser': true,
     'es6': true,
+    'node': true,
     'webextensions': true
   },
   'extends': 'eslint:recommended',
+  'parserOptions': {
+      'sourceType': 'module'
+  },
   'rules': {
     'func-style': [2, 'expression', {'allowArrowFunctions': true}],
     'func-call-spacing': [2, 'never'],

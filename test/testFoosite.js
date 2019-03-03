@@ -4,7 +4,7 @@ import browserEnv from 'browser-env';
 browserEnv({
   url: 'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
 });
-import { textPicker } from '../testTgt/textPicker.js'
+import { textPicker } from '../testTgt/textPicker.js';
 const fs = require('fs');
 // import { fs } from 'fs';
 
@@ -14,8 +14,8 @@ test.before(t => {
   // window.location.assign('http://www.example.com/');
   //message: 'Cannot set property URL of #<Document> which has only a getter',
   // document.URL = 'http://www.example.com/';
-  let text = fs.readFileSync('./test/helpers/foo.html', 'utf8');
-  document.body.innerHTML = text;
+  const htmlText = fs.readFileSync('./test/helpers/foo.html', 'utf8');
+  document.body.innerHTML = htmlText;
 
   const specArr = [
     { string: 'just string' },
@@ -40,5 +40,5 @@ test.before(t => {
 });
 
 test('tweetPicker.RESULT_ARR', t => {
-	t.deepEqual(textPicker.RESULT_ARR, t.context.resultArr);
+  t.deepEqual(textPicker.RESULT_ARR, t.context.resultArr);
 });
