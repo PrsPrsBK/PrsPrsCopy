@@ -2,7 +2,7 @@ import test from 'ava';
 // can not use jsdom.reconfigure(). this works.
 import browserEnv from 'browser-env';
 browserEnv({
-  url: 'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
+  url: 'http://www.example.com/foo/#!/foo.html#point?query=foo&next=bar',
 });
 import { textPicker } from '../testTgt/textPicker.js';
 const fs = require('fs');
@@ -20,7 +20,6 @@ test.before(t => {
   const specArr = [
     { string: 'just string' },
     { plain: 'url'},
-    { plain: 'url_nohs'},
     { plain: 'title'},
     { plain: 'title_esc'},
     { plain: 'title_reST'},
@@ -28,8 +27,7 @@ test.before(t => {
   ];
   t.context.resultArr = [
     'just string',
-    'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
-    'http://www.example.com/foo/#!/foo.html',
+    'http://www.example.com/foo/#!/foo.html#point?query=foo&next=bar',
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
     '[]foo \\`&\\` title<>',
