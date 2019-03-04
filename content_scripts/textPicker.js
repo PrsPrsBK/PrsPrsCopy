@@ -43,11 +43,32 @@ const commonSpecExtractor = (specRecord) => {
       return window.location.href;
     }
     else if(specRecord.plain === 'url_nohs') {
-      const wkURL = new URL(window.location.href);
-      // when url includes '#!' path, all things become 'hash' after that part.
-      // so, we cannot use very convenient properties like URL.hash, URL.search.
-      // if we can use, we assigning URL.hash = "" and URL.search = "" is enough.
-      return `${wkURL.protocol}//${wkURL.host}${wkURL.pathname}`;
+      // when URL includes '#!' path, all things become 'hash' after that part.
+      // so, you cannot use very convenient properties like URL.hash, URL.search.
+      // if you can use them, assigning URL.hash = "" and URL.search = "" is enough.
+      const parts = window.location.href.split('#');
+      if(parts.length === 1) {
+        // no #. remove query part.
+        return window.location.href.split('?')[0];
+      }
+      else if(parts.length === 2) {
+        // only 1 #
+        if(parts[1].includes('/')) {
+          // only remove query http://example.com/#!/foo.html?bar=1
+          // dont know http://example.com/#!/?bar=1
+          return window.location.href.split('?')[0];
+        }
+        else {
+          // O.K. http://example.com/foo#point?bar=1
+          // dont know http://example.com/#foo?bar=1
+          return parts[0];
+        }
+      }
+      else {
+        // more #. remove last one and after part.
+        const lastIdx = window.location.href.lastIndexOf('#');
+        return window.location.href.slice(0, lastIdx);
+      }
     }
     else if(specRecord.plain === 'title') {
       return document.title;

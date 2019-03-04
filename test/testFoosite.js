@@ -20,7 +20,7 @@ test.before(t => {
   const specArr = [
     { string: 'just string' },
     { plain: 'url'},
-    // { plain: 'url_nohs'},
+    { plain: 'url_nohs'},
     { plain: 'title'},
     { plain: 'title_esc'},
     { plain: 'title_reST'},
@@ -29,8 +29,7 @@ test.before(t => {
   t.context.resultArr = [
     'just string',
     'http://www.example.com/foo/#!/foo.html#tomorrow?query=foo&next=bar',
-    // Stab's URL() behavior maybe differ from browser's one.
-    // 'http://www.example.com/foo/#!/foo.html',
+    'http://www.example.com/foo/#!/foo.html',
     '[]foo `&` title<>',
     '[]foo `&amp;` title&lt;&gt;',
     '[]foo \\`&\\` title<>',
