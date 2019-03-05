@@ -16,6 +16,8 @@ test.before(t => {
   // document.URL = 'http://www.example.com/';
   const htmlText = fs.readFileSync('./test/helpers/foo.html', 'utf8');
   document.body.innerHTML = htmlText;
+  const myDate = new Date(1551742317279);
+  Date.now = function() { return myDate; };
 
   const specArr = [
     { string: 'just string' },
@@ -24,6 +26,7 @@ test.before(t => {
     { plain: 'title_esc'},
     { plain: 'title_reST'},
     { plain: 'title_md'},
+    { plain: 'today'},
   ];
   t.context.resultArr = [
     'just string',
@@ -32,6 +35,7 @@ test.before(t => {
     '[]foo `&amp;` title&lt;&gt;',
     '[]foo \\`&\\` title<>',
     '\\[\\]foo `&` title<>',
+    '2019-03-05 08:31',
   ];
   textPicker.build(specArr);
 });
