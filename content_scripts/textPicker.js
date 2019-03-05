@@ -148,19 +148,19 @@ const tweetPicker = {
     }
     else if(opt.format === 'reST') {
       while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
-        resultTextArr.push(tgtText.slice(headIdx, wkMatchArr.index));
+        resultTextArr.push(escapeReST(tgtText.slice(headIdx, wkMatchArr.index)));
         resultTextArr.push(`\`URL <${wkMatchArr[1]}>\`__`);
         headIdx = tweetPicker.regexHref.lastIndex;
       }
-      resultTextArr.push(tgtText.slice(headIdx));
+      resultTextArr.push(escapeReST(tgtText.slice(headIdx)));
     }
     else if(opt.format === 'md') {
       while((wkMatchArr = tweetPicker.regexHref.exec(tgtText)) !== null) {
-        resultTextArr.push(tgtText.slice(headIdx, wkMatchArr.index));
+        resultTextArr.push(escapeMd(tgtText.slice(headIdx, wkMatchArr.index)));
         resultTextArr.push(`[URL](${wkMatchArr[1]})`);
         headIdx = tweetPicker.regexHref.lastIndex;
       }
-      resultTextArr.push(tgtText.slice(headIdx));
+      resultTextArr.push(escapeMd(tgtText.slice(headIdx)));
     }
 
     return resultTextArr.join('');
