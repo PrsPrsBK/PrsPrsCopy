@@ -49,3 +49,9 @@ Release Notes
 
 fix: When text exists after quoted-tweet's URL, it will be dropped.
 
+0.9.7
+--------------------
+
+fix: help text
+fix: qt_text escapes for reST, Md
+
