@@ -46,10 +46,10 @@ test.before(t => {
     'just quoted',
     'https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
     'QUOTED-ACCさん',
-    '** THIS IS QUOTED TEXT ** ``<&][>ですpic.twitter.com/XXXXXXXXXX',
-    '** THIS IS QUOTED TEXT ** ``&lt;&amp;][&gt;ですpic.twitter.com/XXXXXXXXXX',
-    '** THIS IS QUOTED TEXT ** \\`\\`<&][>ですpic.twitter.com/XXXXXXXXXX',
-    '** THIS IS QUOTED TEXT ** ``<&\\]\\[>ですpic.twitter.com/XXXXXXXXXX',
+    '** THIS IS QUOTED TEXT ** ``<&][>ですpic.twitter.com/XXXXXXXXXXhttps://www.example.com/qtlink.html\u00A0…',
+    '** THIS IS QUOTED TEXT ** ``&lt;&amp;][&gt;ですpic.twitter.com/XXXXXXXXXX<a href="https://www.example.com/qtlink.html">URL</a>',
+    '** THIS IS QUOTED TEXT ** \\`\\`<&][>ですpic.twitter.com/XXXXXXXXXX`URL <https://www.example.com/qtlink.html>`__',
+    '** THIS IS QUOTED TEXT ** ``<&\\]\\[>ですpic.twitter.com/XXXXXXXXXX[URL](https://www.example.com/qtlink.html)',
   ];
   tweetPicker.getCurTweet();
   t.context.mainText = tweetPicker.CUR_MAIN_TEXT;
