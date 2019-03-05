@@ -28,6 +28,7 @@ test.before(t => {
     { twitter: 'qt_string', string: 'just quoted', },
     { twitter: 'qt_url' },
     { twitter: 'qt_username' },
+    { twitter: 'qt_text' },
   ];
   t.context.resultArr = [
     'https://twitter.com/EXAMPLE_ACC/status/ITEM_ID',
@@ -42,6 +43,7 @@ test.before(t => {
     'just quoted',
     'https://twitter.com/QUOTED-TWEET-ACC/status/QUOTED-TWEET-ITEM-ID',
     'QUOTED-ACCさん',
+    '** THIS IS QUOTED TEXT ** ですpic.twitter.com/XXXXXXXXXX',
   ];
   tweetPicker.getCurTweet();
   t.context.mainText = tweetPicker.CUR_MAIN_TEXT;
