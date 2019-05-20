@@ -1,11 +1,11 @@
 .nyc_output/
-node_modules/*
-chrome/*
-note/*
-testTgt/*
-web-ext-artifacts/*
+node_modules/
+chrome/
+note/
+testTgt/
+web-ext-artifacts/
 .web-extension-id
+*.js.svg
 *.log
 package-lock.json
 yarn.lock
-*.js.svg
