@@ -36,6 +36,7 @@
     {
       "matches": ["*://*/*"],
       "js": [
+        "lib/browser-polyfill.min.js",
         "content_scripts/textPicker.js"
         ]
     }
