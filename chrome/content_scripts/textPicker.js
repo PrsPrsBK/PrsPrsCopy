@@ -211,6 +211,9 @@ const tweetPicker = {
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
         wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2)');
+        if(wk_elm === null) {
+          wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2)');
+        }
         if(wk_elm !== null) {
           qtText = wk_elm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
