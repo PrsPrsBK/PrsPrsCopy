@@ -47,6 +47,7 @@ const configUI = {
       ['text_md', 'text md'],
       ['qt_string', 'QT string'],
       ['qt_url', 'QT url'],
+      ['qt_datetime', 'QT datetime'],
       ['qt_username', 'QT username'],
       ['qt_username_esc', 'QT username ESC'],
       ['qt_username_reST', 'QT username reST'],
