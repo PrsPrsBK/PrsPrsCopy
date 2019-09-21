@@ -210,9 +210,9 @@ const tweetPicker = {
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2)');
+        wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]');
         if(wk_elm === null) {
-          wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2)');
+          wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]');
         }
         if(wk_elm !== null) {
           qtText = wk_elm.textContent.trim();
