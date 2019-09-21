@@ -194,17 +194,18 @@ const tweetPicker = {
       return getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim())); //YYYY-MM-DDTHH:mm:ss.xxxZ
     }
     else {
-      // console.log('NO');
       return '';
     }
   },
   
   getTweetUsername : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('fullname');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].textContent.trim();
+    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a > div:nth-child(1) > div:nth-child(1)');
+    if(wk_elm !== null) {
+      console.log(`YES ${wk_elm.textContent}`);
+      return wk_elm.textContent.trim();
     }
     else {
+      console.log('NO');
       return '';
     }
   },
