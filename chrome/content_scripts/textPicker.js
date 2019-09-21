@@ -210,9 +210,9 @@ const tweetPicker = {
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-text');
-        if(wk_elm && wk_elm.length > 0) {
-          qtText = wk_elm[0].textContent.trim();
+        wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2)');
+        if(wk_elm !== null) {
+          qtText = wk_elm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
             .replace(/\n\r/g, ' ')
             .replace(/\n/g, ' ');
@@ -250,8 +250,13 @@ const tweetPicker = {
         }
       }
       if(tweetPicker.CUR_MAIN_TWEET !== null) {
-        wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
-        tweetPicker.CUR_HAS_QT = (wk_elm && wk_elm.length > 0) ? true : false;
+        wk_elm = tweetPicker.CUR_MAIN_TWEET.querySelector(':scope > div:nth-child(3)');
+        if(wk_elm !== null) {
+          if(wk_elm.hasAttribute('role') === false){
+            wk_elm = wk_elm.querySelector(':scope > div:nth-child(2) > div > div:nth-child(2) > div');
+            tweetPicker.CUR_HAS_QT = wk_elm !== null ? true : false;
+          }
+        }
         tweetPicker.prepareCurText(tweetPicker.CUR_MAIN_TWEET);
       }
     }
