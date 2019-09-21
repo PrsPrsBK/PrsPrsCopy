@@ -166,13 +166,7 @@ const tweetPicker = {
   },
   
   getQTUrl : tgt_elm => {
-    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-link');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].href.trim();
-    }
-    else {
-      return '';
-    }
+    return '';
   },
   
   getTweetTimestamp : tgt_elm => {
