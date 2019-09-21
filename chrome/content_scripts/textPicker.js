@@ -1,3 +1,4 @@
+console.log('------------------ 読まれた');
 const escapeHtmlChar = (tgtText) => {
   return tgtText.replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -269,23 +270,21 @@ const tweetPicker = {
         // main > div > div > divの下にdiv2つある; data-testid = primaryColumn, sidebarColumn。1つ目がツイートを格納している。
         //primaryColumn > div > div[4th].css-1dbjc4n.r-1jgb5lz.r-1ye8kvj.r-13qz1uu > div > div > section > (h1の次)div(aria-label タイムライン: ホームタイムライン) > div > div > 複数のTW
         //TWはdiv > div > article; jkで選択されたartivleは属性が増える。data-focusvisible-polyfill="true" aria-labelledby="色々"
-        //article > div > div(2nd data-testid: tweet) > div(2nd)
+        //article > div > div(2nd/2 data-testid: tweet) > div(2nd; 1stはアイコンを格納する列)
         //  div(1st) アカウント情報
         //  div(2nd) 本文
+        //  div(あれば) 画像
         //  div(3rd) リプライ等のボタン
-        let selected = undefined;
-        wk_elm = document.getElementsByTagName('article');
-        for(const wk of wk_elm) {
-          const wk_attr = wk.getAttribute('data-focusvisible-polyfill');
-          if(wk_attr === 'true') {
-            selected = wk;
-            break;
-          }
-        }
-        if(selected !== undefined) {
+        const selected = document.querySelector('article[data-focusvisible-polyfill="true"] div[data-testid="tweet"] > div:nth-child(2)');
+        if(selected !== null) {
+          // console.log('------------------ after foc');
           tweetPicker.CUR_MAIN_TWEET = selected;
-          console.log(`${JSON.stringify(selected.textContent)}`);
+          // console.log(`AAA ${JSON.stringify(selected.innerHTML)}`);
+          // console.log(`AAA ${JSON.stringify(selected.textContent)}`);
         }
+        // else {
+        //   console.log('3');
+        // }
       }
       if(tweetPicker.CUR_MAIN_TWEET !== null) {
         wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
