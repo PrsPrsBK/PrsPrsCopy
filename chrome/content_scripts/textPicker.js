@@ -188,11 +188,13 @@ const tweetPicker = {
   },
   
   getTweetTimestamp : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
-    if(wk_elm && wk_elm.length > 0 && wk_elm[0].getAttribute('data-time-ms')) {
-      return getDatetimeTextFromMillsec(parseInt(wk_elm[0].getAttribute('data-time-ms').trim()));
+    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a > time');
+    if(wk_elm !== null) {
+      // console.log(`YES ${Date.parse(wk_elm.getAttribute('datetime').trim())}--`);
+      return getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim())); //YYYY-MM-DDTHH:mm:ss.xxxZ
     }
     else {
+      // console.log('NO');
       return '';
     }
   },
