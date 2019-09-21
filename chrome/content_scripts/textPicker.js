@@ -223,9 +223,9 @@ const tweetPicker = {
   CUR_QT_TEXT : '',
   
   prepareCurText : (tgt_elm) => {
-    let wk_elm = tgt_elm.getElementsByClassName('tweet-text');
-    if(wk_elm && wk_elm.length > 0) {
-      let mainText = wk_elm[0].textContent.trim();
+    let wk_elm = tgt_elm.querySelector(':scope > div:nth-child(2)');
+    if(wk_elm !== null) {
+      let mainText = wk_elm.textContent.trim();
       let qtText = '';
       // anyway oneline
       mainText = mainText.replace(/\r\n/g, ' ')
@@ -245,6 +245,7 @@ const tweetPicker = {
         }
       }
       tweetPicker.CUR_MAIN_TEXT = mainText;
+      // console.log(`main ${mainText}`);
       tweetPicker.CUR_QT_TEXT = qtText;
     }
   },
