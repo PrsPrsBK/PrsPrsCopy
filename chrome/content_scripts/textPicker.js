@@ -174,6 +174,11 @@ const tweetPicker = {
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
   
+  getQTTimestamp : tgt_elm => {
+    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time');
+    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
+  },
+  
   getTweetUsername : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a > div:nth-child(1) > div:nth-child(1)');
     return wk_elm === null ? '' : wk_elm.textContent.trim();
@@ -299,6 +304,9 @@ const tweetPicker = {
           }
           else if(spec.twitter === 'qt_url') {
             result.push(tweetPicker.getQTUrl(tweetBody));
+          }
+          else if(spec.twitter === 'qt_datetime') {
+            result.push(tweetPicker.getQTTimestamp(tweetBody));
           }
           else if(spec.twitter === 'qt_username') {
             result.push(tweetPicker.getQTUsername(tweetBody));
