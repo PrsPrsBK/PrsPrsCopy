@@ -180,13 +180,8 @@ const tweetPicker = {
   },
   
   getQTUsername : tgt_elm => {
-    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].textContent.trim();
-    }
-    else {
-      return '';
-    }
+    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div');
+    return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
   
   CUR_MAIN_TWEET : null,
