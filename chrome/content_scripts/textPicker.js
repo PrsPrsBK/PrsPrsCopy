@@ -168,9 +168,9 @@ const tweetPicker = {
   },
   
   getTweetUrl : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('tweet-timestamp');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].href.trim();
+    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a');
+    if(wk_elm !== null) {
+      return wk_elm.href.trim();
     }
     else {
       return '';
@@ -295,7 +295,7 @@ const tweetPicker = {
     }
     return tweetPicker.CUR_MAIN_TWEET;
   },
-  
+
   build : (specArr) => {
     const result = [];
     specArr.forEach(spec => {
