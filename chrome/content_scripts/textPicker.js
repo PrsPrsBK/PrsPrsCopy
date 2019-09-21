@@ -246,10 +246,7 @@ const tweetPicker = {
       if(tweetPicker.CUR_MAIN_TWEET !== null) {
         wk_elm = tweetPicker.CUR_MAIN_TWEET.querySelector(':scope > div:nth-child(3)');
         if(wk_elm !== null) {
-          if(wk_elm.hasAttribute('role') === false){
-            wk_elm = wk_elm.querySelector(':scope > div:nth-child(2) > div > div:nth-child(2) > div');
-            tweetPicker.CUR_HAS_QT = wk_elm !== null ? true : false;
-          }
+          tweetPicker.CUR_HAS_QT = wk_elm.hasAttribute('role') === false;
         }
         tweetPicker.prepareCurText(tweetPicker.CUR_MAIN_TWEET);
       }
