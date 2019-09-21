@@ -175,7 +175,10 @@ const tweetPicker = {
   },
 
   getQTTimestamp : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time');
+    let wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time');
+    if(wk_elm === null) {
+      wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time');
+    }
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
 
