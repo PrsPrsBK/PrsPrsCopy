@@ -82,7 +82,7 @@ const commonSpecExtractor = specRecord => {
     }
   }
 };
-  
+
 const resetTemplateIndex = () => {
   browser.runtime.sendMessage({
     task: 'resetTemplateIndex',
@@ -91,7 +91,7 @@ const resetTemplateIndex = () => {
 
 const textPicker = {
   RESULT_ARR : [],
-  
+
   build : tgt => {
     const result = [];
     tgt.forEach(val => {
@@ -126,7 +126,7 @@ const tweetPicker = {
   RESULT_ARR : [],
 
   regexHref : /(https?:\/\/\S+)(\s…?)?/g,
-  
+
   activateHrefText : (tgtText, opt) => {
     const resultTextArr = [];
     let headIdx = 0;
@@ -159,41 +159,44 @@ const tweetPicker = {
 
     return resultTextArr.join('');
   },
-  
+
   getTweetUrl : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a');
     return wk_elm === null ? '' : wk_elm.href.trim();
   },
-  
+
   getQTUrl : tgt_elm => {
     return '';
   },
-  
+
   getTweetTimestamp : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a > time');
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
-  
+
   getQTTimestamp : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time');
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
-  
+
   getTweetUsername : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a > div:nth-child(1) > div:nth-child(1)');
     return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
-  
+
   getQTUsername : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div');
+    let wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div');
+    if(wk_elm === null) {
+      wk_elm = tgt_elm.querySelector(':scope > div:nth-child(3) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div');
+    }
     return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
-  
+
   CUR_MAIN_TWEET : null,
   CUR_HAS_QT : false,
   CUR_MAIN_TEXT : '',
   CUR_QT_TEXT : '',
-  
+
   prepareCurText : tgt_elm => {
     let wk_elm = tgt_elm.querySelector(':scope > div:nth-child(2)');
     if(wk_elm !== null) {
@@ -220,7 +223,7 @@ const tweetPicker = {
       tweetPicker.CUR_QT_TEXT = qtText;
     }
   },
-  
+
   getCurTweet : () => {
     // almost once in each request to copy-with-template
     if(!tweetPicker.CUR_MAIN_TWEET) {
@@ -344,7 +347,7 @@ const tweetPicker = {
     tweetPicker.CUR_MAIN_TEXT = '';
     tweetPicker.CUR_QT_TEXT = '';
   },
-  
+
   handleKeydown : evt => {
     switch(evt.key) {
       case 'j':
@@ -374,7 +377,7 @@ const tweetPicker = {
       result: tweetPicker.RESULT_ARR,
     });
   },
-  
+
 };
 
 if(window.location.href.startsWith('https://twitter.com')) {
