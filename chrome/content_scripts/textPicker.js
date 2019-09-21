@@ -1,25 +1,19 @@
-console.log('------------------ 読まれた');
-const escapeHtmlChar = (tgtText) => {
+const escapeHtmlChar = tgtText => {
   return tgtText.replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 };
 
-const escapeReST = (tgtText) => {
+const escapeReST = tgtText => {
   return tgtText.replace(/`/g, '\\`');
 };
 
-const escapeMd = (tgtText) => {
+const escapeMd = tgtText => {
   return tgtText.replace(/\[/g, '\\[')
     .replace(/]/g, '\\]');
 };
 
-/**
- * make and return Object contains each datetime infos as string, made from mill seconds string.
- * @param {number} milsec_txt - string
- * @returns {?result} - Object
- */
-const parseFromMillsec = (milsec_int) => {
+const parseFromMillsec = milsec_int => {
   const wk = new Date(milsec_int);
   return {
     year : wk.getFullYear(),
@@ -30,12 +24,12 @@ const parseFromMillsec = (milsec_int) => {
   };
 };
 
-const getDatetimeTextFromMillsec = (milsec_int) => {
+const getDatetimeTextFromMillsec = milsec_int => {
   const dtObj = parseFromMillsec(milsec_int);
   return `${dtObj['year']}-${dtObj['month']}-${dtObj['day']} ${dtObj['hour']}:${dtObj['minute']}`;
 };
 
-const commonSpecExtractor = (specRecord) => {
+const commonSpecExtractor = specRecord => {
   if(specRecord.hasOwnProperty('string')) {
     return specRecord.string;
   }
@@ -98,7 +92,7 @@ const resetTemplateIndex = () => {
 const textPicker = {
   RESULT_ARR : [],
   
-  build : (tgt) => {
+  build : tgt => {
     const result = [];
     tgt.forEach(val => {
       result.push(commonSpecExtractor(val));
@@ -106,13 +100,12 @@ const textPicker = {
     textPicker.RESULT_ARR = result;
   },
 
-  onCopy : (evt) => {
+  onCopy : evt => {
     if(window.getSelection().toString() === '') {
       const outputText = textPicker.RESULT_ARR
         .reduce((acm, val) => {
           return acm + val;
         }, '');
-      //console.log(outputText);
       if(outputText !== '') {
         evt.preventDefault();
         const transfer = evt.clipboardData;
@@ -167,17 +160,12 @@ const tweetPicker = {
     return resultTextArr.join('');
   },
   
-  getTweetUrl : (tgt_elm) => {
+  getTweetUrl : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a');
-    if(wk_elm !== null) {
-      return wk_elm.href.trim();
-    }
-    else {
-      return '';
-    }
+    return wk_elm === null ? '' : wk_elm.href.trim();
   },
   
-  getQTUrl : (tgt_elm) => {
+  getQTUrl : tgt_elm => {
     const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-link');
     if(wk_elm && wk_elm.length > 0) {
       return wk_elm[0].href.trim();
@@ -187,30 +175,17 @@ const tweetPicker = {
     }
   },
   
-  getTweetTimestamp : (tgt_elm) => {
+  getTweetTimestamp : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > a > time');
-    if(wk_elm !== null) {
-      // console.log(`YES ${Date.parse(wk_elm.getAttribute('datetime').trim())}--`);
-      return getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim())); //YYYY-MM-DDTHH:mm:ss.xxxZ
-    }
-    else {
-      return '';
-    }
+    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
   
-  getTweetUsername : (tgt_elm) => {
+  getTweetUsername : tgt_elm => {
     const wk_elm = tgt_elm.querySelector(':scope > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a > div:nth-child(1) > div:nth-child(1)');
-    if(wk_elm !== null) {
-      console.log(`YES ${wk_elm.textContent}`);
-      return wk_elm.textContent.trim();
-    }
-    else {
-      console.log('NO');
-      return '';
-    }
+    return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
   
-  getQTUsername : (tgt_elm) => {
+  getQTUsername : tgt_elm => {
     const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
     if(wk_elm && wk_elm.length > 0) {
       return wk_elm[0].textContent.trim();
@@ -225,7 +200,7 @@ const tweetPicker = {
   CUR_MAIN_TEXT : '',
   CUR_QT_TEXT : '',
   
-  prepareCurText : (tgt_elm) => {
+  prepareCurText : tgt_elm => {
     let wk_elm = tgt_elm.querySelector(':scope > div:nth-child(2)');
     if(wk_elm !== null) {
       let mainText = wk_elm.textContent.trim();
@@ -248,7 +223,6 @@ const tweetPicker = {
         }
       }
       tweetPicker.CUR_MAIN_TEXT = mainText;
-      // console.log(`main ${mainText}`);
       tweetPicker.CUR_QT_TEXT = qtText;
     }
   },
@@ -270,25 +244,10 @@ const tweetPicker = {
         }
       }
       if(!tweetPicker.CUR_MAIN_TWEET) {
-        // main > div > div > div > div > div > div.css-1dbjc4n.r-1jgb5lz.r-1ye8kvj.r-13qz1uu > div > div > section > div > div > div > div:nth-child(3) > div > article
-        // main > div > div > divの下にdiv2つある; data-testid = primaryColumn, sidebarColumn。1つ目がツイートを格納している。
-        //primaryColumn > div > div[4th].css-1dbjc4n.r-1jgb5lz.r-1ye8kvj.r-13qz1uu > div > div > section > (h1の次)div(aria-label タイムライン: ホームタイムライン) > div > div > 複数のTW
-        //TWはdiv > div > article; jkで選択されたartivleは属性が増える。data-focusvisible-polyfill="true" aria-labelledby="色々"
-        //article > div > div(2nd/2 data-testid: tweet) > div(2nd; 1stはアイコンを格納する列)
-        //  div(1st) アカウント情報
-        //  div(2nd) 本文
-        //  div(あれば) 画像
-        //  div(3rd) リプライ等のボタン
         const selected = document.querySelector('article[data-focusvisible-polyfill="true"] div[data-testid="tweet"] > div:nth-child(2)');
         if(selected !== null) {
-          // console.log('------------------ after foc');
           tweetPicker.CUR_MAIN_TWEET = selected;
-          // console.log(`AAA ${JSON.stringify(selected.innerHTML)}`);
-          // console.log(`AAA ${JSON.stringify(selected.textContent)}`);
         }
-        // else {
-        //   console.log('3');
-        // }
       }
       if(tweetPicker.CUR_MAIN_TWEET !== null) {
         wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
@@ -299,7 +258,7 @@ const tweetPicker = {
     return tweetPicker.CUR_MAIN_TWEET;
   },
 
-  build : (specArr) => {
+  build : specArr => {
     const result = [];
     specArr.forEach(spec => {
       if(spec.hasOwnProperty('twitter') === false) {
@@ -387,7 +346,7 @@ const tweetPicker = {
     tweetPicker.CUR_QT_TEXT = '';
   },
   
-  handleKeydown : (evt) => {
+  handleKeydown : evt => {
     switch(evt.key) {
       case 'j':
         resetTemplateIndex();
@@ -398,7 +357,7 @@ const tweetPicker = {
     }
   },
 
-  onCopy : (evt) => {
+  onCopy : evt => {
     if(window.getSelection().toString() === '') {
       const outputText = tweetPicker.RESULT_ARR
         .reduce((acm, val) => {
