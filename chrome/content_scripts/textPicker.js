@@ -161,7 +161,7 @@ const tweetPicker = {
   },
 
   getTweetUrl : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a');
+    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a');
     return wk_elm === null ? '' : wk_elm.href.trim();
   },
 
@@ -170,7 +170,7 @@ const tweetPicker = {
   },
 
   getTweetTimestamp : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a > time');
+    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > time');
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
 
@@ -183,7 +183,7 @@ const tweetPicker = {
   },
 
   getTweetUsername : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a > div:nth-child(1) > div:nth-child(1)');
+    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > a > div > div');
     return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
 
