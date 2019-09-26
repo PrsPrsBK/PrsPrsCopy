@@ -197,25 +197,38 @@ const tweetPicker = {
 
   CUR_ARTICLE : null,
   CUR_HAS_QT : false,
+  CUR_IS_PICKUP : false,
+  CUR_IS_REPLY : false,
   CUR_MAIN_TEXT : '',
   CUR_QT_TEXT : '',
 
   prepareCurText : tgt_elm => {
-    let wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2)');
-    if(wk_elm !== null) {
-      let mainText = wk_elm.textContent.trim();
+    const mainElmNth = tweetPicker.CUR_IS_REPLY ? 3 : 2;
+    const mainSelStr = tweetPicker.CUR_IS_PICKUP
+      ? `:scope div[data-testid="tweet"] > div:nth-child(${mainElmNth})`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${mainElmNth})`;
+    const mainTextElm = tgt_elm.querySelector(mainSelStr);
+    if(mainTextElm !== null) {
+      let mainText = mainTextElm.textContent.trim();
       let qtText = '';
       // anyway oneline
       mainText = mainText.replace(/\r\n/g, ' ')
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]');
-        if(wk_elm === null) {
-          wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]');
+        const qtTextElmNth = tweetPicker.CUR_IS_REPLY ? 4 : 3;
+        let qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+          ? `:scope div[data-testid="tweet"] > div:nth-child(${qtTextElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${qtTextElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`;
+        let qtTextElm = tgt_elm.querySelector(qtTextSelStr);
+        if(qtTextElm === null) { // NO img card
+          qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+            ? `:scope div[data-testid="tweet"] > div:nth-child(${qtTextElmNth}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`
+            : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${qtTextElmNth}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`;
+          qtTextElm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]');
         }
-        if(wk_elm !== null) {
-          qtText = wk_elm.textContent.trim();
+        if(qtTextElm !== null) {
+          qtText = qtTextElm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
             .replace(/\n\r/g, ' ')
             .replace(/\n/g, ' ');
@@ -233,12 +246,26 @@ const tweetPicker = {
   getCurTweet : () => {
     // almost once in each request to copy-with-template
     if(tweetPicker.CUR_ARTICLE === null) {
-      const selected = document.querySelector('article[data-focusvisible-polyfill="true"]');
-      if(selected !== null) {
-        tweetPicker.CUR_ARTICLE = selected;
-        const wk_elm = tweetPicker.CUR_ARTICLE.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3)');
-        if(wk_elm !== null) {
-          tweetPicker.CUR_HAS_QT = wk_elm.hasAttribute('role') === false;
+      tweetPicker.CUR_ARTICLE = document.querySelector('article[data-focusvisible-polyfill="true"]');
+      if(tweetPicker.CUR_ARTICLE !== null) {
+        const childrenOfTw = tweetPicker.CUR_ARTICLE.querySelectorAll(':scope div[data-testid="tweet"] > div');
+        if(childrenOfTw !== null && childrenOfTw.length > 2) {
+          tweetPicker.CUR_IS_PICKUP = true;
+        }
+        const replySelStr = tweetPicker.CUR_IS_PICKUP
+          ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a'
+          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div > a';
+        const replyAhref = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
+        if(replyAhref !== null && replyAhref.textContent === `@${replyAhref.href.slice(1)}`) {
+          tweetPicker.CUR_IS_REPLY = true;
+        }
+        const qtElmNth = tweetPicker.CUR_IS_REPLY ? 4 : 3;
+        const qtSelStr = tweetPicker.CUR_IS_PICKUP
+          ? `:scope div[data-testid="tweet"] > div:nth-child(${qtElmNth})`
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${qtElmNth})`;
+        const qtElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
+        if(qtElm !== null) {
+          tweetPicker.CUR_HAS_QT = qtElm.hasAttribute('role') === false;
         }
         tweetPicker.prepareCurText(tweetPicker.CUR_ARTICLE);
       }
