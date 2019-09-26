@@ -161,7 +161,10 @@ const tweetPicker = {
   },
 
   getTweetUrl : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a');
+    const wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? ':scope div[data-testid="tweet"] > div > div > a'
+      : ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a';
+    const wk_elm = tgt_elm.querySelector(wkSelStr);
     return wk_elm === null ? '' : wk_elm.href.trim();
   },
 
