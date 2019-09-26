@@ -284,12 +284,10 @@ const tweetPicker = {
         }
         const qtElmNth = tweetPicker.CUR_IS_REPLY ? 4 : 3;
         const qtSelStr = tweetPicker.CUR_IS_PICKUP
-          ? `:scope div[data-testid="tweet"] > div:nth-child(${qtElmNth})`
-          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${qtElmNth})`;
+          ? `:scope div[data-testid="tweet"] > div:nth-child(${qtElmNth}) div[role="blockquote"]`
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${qtElmNth}) div[role="blockquote"]`;
         const qtElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
-        if(qtElm !== null) {
-          tweetPicker.CUR_HAS_QT = qtElm.hasAttribute('role') === false;
-        }
+        tweetPicker.CUR_HAS_QT = qtElm !== null;
         tweetPicker.prepareCurText(tweetPicker.CUR_ARTICLE);
       }
     }
