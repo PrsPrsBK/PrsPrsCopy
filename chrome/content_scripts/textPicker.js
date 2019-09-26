@@ -279,7 +279,7 @@ const tweetPicker = {
           ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a'
           : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div > a';
         const replyAhref = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
-        if(replyAhref !== null && replyAhref.textContent === `@${replyAhref.href.slice(1)}`) {
+        if(replyAhref !== null && replyAhref.href === `https://twitter.com/${replyAhref.textContent.slice(1)}`) {
           tweetPicker.CUR_IS_REPLY = true;
         }
         const qtElmNth = tweetPicker.CUR_IS_REPLY ? 4 : 3;
@@ -383,6 +383,8 @@ const tweetPicker = {
   clearCurTweet : () => {
     tweetPicker.CUR_ARTICLE = null;
     tweetPicker.CUR_HAS_QT = false;
+    tweetPicker.CUR_IS_PICKUP = false;
+    tweetPicker.CUR_IS_REPLY = false;
     tweetPicker.CUR_MAIN_TEXT = '';
     tweetPicker.CUR_QT_TEXT = '';
   },
