@@ -239,6 +239,7 @@ const tweetPicker = {
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
+        // I throw away the case of 'PICKUP and has img card and has QT that has its own img card'
         let qtTextSelStr = tweetPicker.CUR_IS_PICKUP
           ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`
           : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`;
