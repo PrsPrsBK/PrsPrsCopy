@@ -170,6 +170,9 @@ const tweetPicker = {
   },
 
   getTweetTimestamp : tgt_elm => {
+    if(tweetPicker.CUR_IS_PICKUP) {
+      return '';
+    }
     const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > time');
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
@@ -195,14 +198,14 @@ const tweetPicker = {
     let wkSelStr = tweetPicker.CUR_IS_PICKUP
       ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
       : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
-    let wkTextElm = tgt_elm.querySelector(wkSelStr);
-    if(wkTextElm === null) {
+    let wk_elm = tgt_elm.querySelector(wkSelStr);
+    if(wk_elm === null) {
       wkSelStr = tweetPicker.CUR_IS_PICKUP
         ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
         : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
-      wkTextElm = tgt_elm.querySelector(wkSelStr);
+      wk_elm = tgt_elm.querySelector(wkSelStr);
     }
-    return wkTextElm === null ? '' : wkTextElm.textContent.trim();
+    return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
 
   CUR_ARTICLE : null,
