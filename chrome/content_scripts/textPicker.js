@@ -178,9 +178,16 @@ const tweetPicker = {
   },
 
   getQTTimestamp : tgt_elm => {
-    let wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time');
-    if(wk_elm === null) {
-      wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time');
+    const wkElmNth = tweetPicker.CUR_IS_REPLY ? 4 : 3;
+    let wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
+    let wk_elm = tgt_elm.querySelector(wkSelStr);
+    if(wk_elm === null) { // No img card
+      wkSelStr = tweetPicker.CUR_IS_PICKUP
+        ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`
+        : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
+      wk_elm = tgt_elm.querySelector(wkSelStr);
     }
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
@@ -199,7 +206,7 @@ const tweetPicker = {
       ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
       : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
     let wk_elm = tgt_elm.querySelector(wkSelStr);
-    if(wk_elm === null) {
+    if(wk_elm === null) { // No img card
       wkSelStr = tweetPicker.CUR_IS_PICKUP
         ? `:scope div[data-testid="tweet"] > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
         : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${wkElmNth}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
