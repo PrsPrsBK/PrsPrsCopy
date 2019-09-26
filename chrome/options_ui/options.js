@@ -36,7 +36,7 @@ const configUI = {
     ],
     twitter : [
       ['url', 'url'],
-      ['datetime', 'datetime'],
+      ['datetime', 'datetime (works UNLESS it is picked up)'],
       ['username', 'username'],
       ['username_esc', 'username ESC'],
       ['username_reST', 'username reST'],
@@ -46,7 +46,7 @@ const configUI = {
       ['text_reST', 'text reST'],
       ['text_md', 'text md'],
       ['qt_string', 'QT string'],
-      ['qt_url', 'QT url'],
+      ['qt_url', 'QT url(NOT WORK)'],
       ['qt_datetime', 'QT datetime'],
       ['qt_username', 'QT username'],
       ['qt_username_esc', 'QT username ESC'],
