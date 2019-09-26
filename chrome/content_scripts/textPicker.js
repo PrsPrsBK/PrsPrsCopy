@@ -183,7 +183,10 @@ const tweetPicker = {
   },
 
   getTweetUsername : tgt_elm => {
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > a > div > div');
+    const wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? ':scope div[data-testid="tweet"] > div > div > div > a > div > div'
+      : ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > a > div > div';
+    const wk_elm = tgt_elm.querySelector(wkSelStr);
     return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
 
