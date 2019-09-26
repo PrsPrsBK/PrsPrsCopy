@@ -125,7 +125,7 @@ const tweetPicker = {
 
   RESULT_ARR : [],
 
-  regexHref : /(https?:\/\/\S+)(\s…?)?/g,
+  regexHref : /(https?:\/\/[^\s…]+)…?/g,
 
   activateHrefText : (tgtText, opt) => {
     const resultTextArr = [];
