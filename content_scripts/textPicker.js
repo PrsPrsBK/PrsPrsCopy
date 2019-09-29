@@ -1,24 +1,19 @@
-const escapeHtmlChar = (tgtText) => {
+const escapeHtmlChar = tgtText => {
   return tgtText.replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 };
 
-const escapeReST = (tgtText) => {
+const escapeReST = tgtText => {
   return tgtText.replace(/`/g, '\\`');
 };
 
-const escapeMd = (tgtText) => {
+const escapeMd = tgtText => {
   return tgtText.replace(/\[/g, '\\[')
     .replace(/]/g, '\\]');
 };
 
-/**
- * make and return Object contains each datetime infos as string, made from mill seconds string.
- * @param {number} milsec_txt - string
- * @returns {?result} - Object
- */
-const parseFromMillsec = (milsec_int) => {
+const parseFromMillsec = milsec_int => {
   const wk = new Date(milsec_int);
   return {
     year : wk.getFullYear(),
@@ -29,12 +24,12 @@ const parseFromMillsec = (milsec_int) => {
   };
 };
 
-const getDatetimeTextFromMillsec = (milsec_int) => {
+const getDatetimeTextFromMillsec = milsec_int => {
   const dtObj = parseFromMillsec(milsec_int);
   return `${dtObj['year']}-${dtObj['month']}-${dtObj['day']} ${dtObj['hour']}:${dtObj['minute']}`;
 };
 
-const commonSpecExtractor = (specRecord) => {
+const commonSpecExtractor = specRecord => {
   if(specRecord.hasOwnProperty('string')) {
     return specRecord.string;
   }
@@ -87,7 +82,7 @@ const commonSpecExtractor = (specRecord) => {
     }
   }
 };
-  
+
 const resetTemplateIndex = () => {
   browser.runtime.sendMessage({
     task: 'resetTemplateIndex',
@@ -96,8 +91,8 @@ const resetTemplateIndex = () => {
 
 const textPicker = {
   RESULT_ARR : [],
-  
-  build : (tgt) => {
+
+  build : tgt => {
     const result = [];
     tgt.forEach(val => {
       result.push(commonSpecExtractor(val));
@@ -105,13 +100,12 @@ const textPicker = {
     textPicker.RESULT_ARR = result;
   },
 
-  onCopy : (evt) => {
+  onCopy : evt => {
     if(window.getSelection().toString() === '') {
       const outputText = textPicker.RESULT_ARR
         .reduce((acm, val) => {
           return acm + val;
         }, '');
-      //console.log(outputText);
       if(outputText !== '') {
         evt.preventDefault();
         const transfer = evt.clipboardData;
@@ -131,8 +125,8 @@ const tweetPicker = {
 
   RESULT_ARR : [],
 
-  regexHref : /(https?:\/\/\S+)(\s…?)?/g,
-  
+  regexHref : /(https?:\/\/[^\s…]+)…?/g,
+
   activateHrefText : (tgtText, opt) => {
     const resultTextArr = [];
     let headIdx = 0;
@@ -165,75 +159,102 @@ const tweetPicker = {
 
     return resultTextArr.join('');
   },
-  
-  getTweetUrl : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('tweet-timestamp');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].href.trim();
+
+  getTweetUrl : tgt_elm => {
+    if(tweetPicker.CUR_IS_PICKUP) {
+      return window.location.href;
     }
     else {
-      return '';
+      const wkSelStr = ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a';
+      const wk_elm = tgt_elm.querySelector(wkSelStr);
+      return wk_elm === null ? '' : wk_elm.href.trim();
     }
   },
-  
-  getQTUrl : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-link');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].href.trim();
-    }
-    else {
+
+  getQTUrl : tgt_elm => {
+    return '';
+  },
+
+  getTweetTimestamp : tgt_elm => {
+    if(tweetPicker.CUR_IS_PICKUP) {
       return '';
     }
+    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > time');
+    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
-  
-  getTweetTimestamp : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('_timestamp');
-    if(wk_elm && wk_elm.length > 0 && wk_elm[0].getAttribute('data-time-ms')) {
-      return getDatetimeTextFromMillsec(parseInt(wk_elm[0].getAttribute('data-time-ms').trim()));
+
+  getQTTimestamp : tgt_elm => {
+    let wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
+    let wk_elm = tgt_elm.querySelector(wkSelStr);
+    if(wk_elm === null) { // No img card
+      wkSelStr = tweetPicker.CUR_IS_PICKUP
+        ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`
+        : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
+      wk_elm = tgt_elm.querySelector(wkSelStr);
     }
-    else {
-      return '';
-    }
+    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
-  
-  getTweetUsername : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('fullname');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].textContent.trim();
-    }
-    else {
-      return '';
-    }
+
+  getTweetUsername : tgt_elm => {
+    const wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > div > div'
+      : ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > a > div > div';
+    const wk_elm = tgt_elm.querySelector(wkSelStr);
+    return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
-  
-  getQTUsername : (tgt_elm) => {
-    const wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-fullname');
-    if(wk_elm && wk_elm.length > 0) {
-      return wk_elm[0].textContent.trim();
+
+  getQTUsername : tgt_elm => {
+    let wkSelStr = tweetPicker.CUR_IS_PICKUP
+      ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
+    let wk_elm = tgt_elm.querySelector(wkSelStr);
+    if(wk_elm === null) { // No img card
+      wkSelStr = tweetPicker.CUR_IS_PICKUP
+        ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
+        : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
+      wk_elm = tgt_elm.querySelector(wkSelStr);
     }
-    else {
-      return '';
-    }
+    return wk_elm === null ? '' : wk_elm.textContent.trim();
   },
-  
-  CUR_MAIN_TWEET : null,
+
+  CUR_ARTICLE : null,
   CUR_HAS_QT : false,
+  CUR_IS_PICKUP : false,
+  CUR_IS_REPLY : false,
   CUR_MAIN_TEXT : '',
   CUR_QT_TEXT : '',
-  
-  prepareCurText : (tgt_elm) => {
-    let wk_elm = tgt_elm.getElementsByClassName('tweet-text');
-    if(wk_elm && wk_elm.length > 0) {
-      let mainText = wk_elm[0].textContent.trim();
+
+  prepareCurText : tgt_elm => {
+    const mainSelStr = tweetPicker.CUR_IS_PICKUP
+      ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[dir]`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2})`;
+    let mainTextElm = tgt_elm.querySelector(mainSelStr);
+    if(mainTextElm !== null) {
+      mainTextElm = tgt_elm.querySelector(`:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3})`);
+    }
+    if(mainTextElm !== null) {
+      let mainText = mainTextElm.textContent.trim();
       let qtText = '';
       // anyway oneline
       mainText = mainText.replace(/\r\n/g, ' ')
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        wk_elm = tgt_elm.getElementsByClassName('QuoteTweet-text');
-        if(wk_elm && wk_elm.length > 0) {
-          qtText = wk_elm[0].textContent.trim();
+        // I throw away the case of 'PICKUP and has img card and has QT that has its own img card'
+        let qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+          ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`;
+        let qtTextElm = tgt_elm.querySelector(qtTextSelStr);
+        if(qtTextElm === null) { // NO img card
+          qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+            ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`
+            : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`;
+          qtTextElm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]');
+        }
+        if(qtTextElm !== null) {
+          qtText = qtTextElm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
             .replace(/\n\r/g, ' ')
             .replace(/\n/g, ' ');
@@ -247,39 +268,35 @@ const tweetPicker = {
       tweetPicker.CUR_QT_TEXT = qtText;
     }
   },
-  
+
   getCurTweet : () => {
     // almost once in each request to copy-with-template
-    if(!tweetPicker.CUR_MAIN_TWEET) {
-      let wk_elm = document.getElementById('permalink-overlay');
-      if(wk_elm) {
-        const computedStyle = window.getComputedStyle(wk_elm);
-        if(computedStyle === undefined
-          || computedStyle.display === undefined
-          || computedStyle.display === 'block'
-          || computedStyle.opacity === 1) {
-          wk_elm = wk_elm.getElementsByClassName('permalink-tweet-container');
-          if(wk_elm && wk_elm.length > 0) {
-            tweetPicker.CUR_MAIN_TWEET = wk_elm[0];
-          }
+    if(tweetPicker.CUR_ARTICLE === null) {
+      tweetPicker.CUR_ARTICLE = document.querySelector('article[data-focusvisible-polyfill="true"]');
+      if(tweetPicker.CUR_ARTICLE !== null) {
+        const siblingOfTw = tweetPicker.CUR_ARTICLE.querySelectorAll(':scope > div > div');
+        if(siblingOfTw !== null && siblingOfTw.length > 2) {
+          tweetPicker.CUR_IS_PICKUP = true;
         }
-      }
-      if(!tweetPicker.CUR_MAIN_TWEET) {
-        wk_elm = document.getElementsByClassName('selected-stream-item');
-        if(wk_elm && wk_elm.length > 0) {
-          tweetPicker.CUR_MAIN_TWEET = wk_elm[0];
+        const replySelStr = tweetPicker.CUR_IS_PICKUP
+          ? ':scope > div > div:nth-child(3) > div > div > a'
+          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div > a';
+        const replyAhref = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
+        if(replyAhref !== null && replyAhref.href === `https://twitter.com/${replyAhref.textContent.slice(1)}`) {
+          tweetPicker.CUR_IS_REPLY = true;
         }
-      }
-      if(tweetPicker.CUR_MAIN_TWEET !== null) {
-        wk_elm = tweetPicker.CUR_MAIN_TWEET.getElementsByClassName('QuoteTweet-link');
-        tweetPicker.CUR_HAS_QT = (wk_elm && wk_elm.length > 0) ? true : false;
-        tweetPicker.prepareCurText(tweetPicker.CUR_MAIN_TWEET);
+        const qtSelStr = tweetPicker.CUR_IS_PICKUP
+          ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) div[role="blockquote"]`
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[role="blockquote"]`;
+        const qtElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
+        tweetPicker.CUR_HAS_QT = qtElm !== null;
+        tweetPicker.prepareCurText(tweetPicker.CUR_ARTICLE);
       }
     }
-    return tweetPicker.CUR_MAIN_TWEET;
+    return tweetPicker.CUR_ARTICLE;
   },
-  
-  build : (specArr) => {
+
+  build : specArr => {
     const result = [];
     specArr.forEach(spec => {
       if(spec.hasOwnProperty('twitter') === false) {
@@ -327,6 +344,9 @@ const tweetPicker = {
           else if(spec.twitter === 'qt_url') {
             result.push(tweetPicker.getQTUrl(tweetBody));
           }
+          else if(spec.twitter === 'qt_datetime') {
+            result.push(tweetPicker.getQTTimestamp(tweetBody));
+          }
           else if(spec.twitter === 'qt_username') {
             result.push(tweetPicker.getQTUsername(tweetBody));
           }
@@ -361,13 +381,15 @@ const tweetPicker = {
   },
 
   clearCurTweet : () => {
-    tweetPicker.CUR_MAIN_TWEET = null;
+    tweetPicker.CUR_ARTICLE = null;
     tweetPicker.CUR_HAS_QT = false;
+    tweetPicker.CUR_IS_PICKUP = false;
+    tweetPicker.CUR_IS_REPLY = false;
     tweetPicker.CUR_MAIN_TEXT = '';
     tweetPicker.CUR_QT_TEXT = '';
   },
-  
-  handleKeydown : (evt) => {
+
+  handleKeydown : evt => {
     switch(evt.key) {
       case 'j':
         resetTemplateIndex();
@@ -378,7 +400,7 @@ const tweetPicker = {
     }
   },
 
-  onCopy : (evt) => {
+  onCopy : evt => {
     if(window.getSelection().toString() === '') {
       const outputText = tweetPicker.RESULT_ARR
         .reduce((acm, val) => {
@@ -396,7 +418,7 @@ const tweetPicker = {
       result: tweetPicker.RESULT_ARR,
     });
   },
-  
+
 };
 
 if(window.location.href.startsWith('https://twitter.com')) {

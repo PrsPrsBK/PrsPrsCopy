@@ -118,7 +118,7 @@ const INITIAL_STORE = [
 let IS_ICON_FLIP = false;
 let CUR_POPUP_TEMPLATES = [];
 
-const onError = (errObj) => {
+const onError = errObj => {
   browser.browserAction.setBadgeText({
     text: errObj.message,
     tabId: errObj.tabId,
@@ -136,7 +136,7 @@ const restoreEmptyTemplate = () => {
   });
 };
 
-const updateIconOfTab = (tabId) => {
+const updateIconOfTab = tabId => {
   browser.browserAction.setIcon({
     path: `icons/icon-48_${IS_ICON_FLIP ? 1 : 0}.png`,
     tabId: tabId
@@ -147,7 +147,7 @@ const updateIconOfTab = (tabId) => {
   });
 };
 
-const getTemplates = (tab) => {
+const getTemplates = tab => {
   return new Promise((resolve, reject) => {
     browser.storage.local.get(STORE_NAME).then(store_obj => {
       const result = store_obj[STORE_NAME];

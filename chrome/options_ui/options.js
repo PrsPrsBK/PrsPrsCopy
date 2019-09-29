@@ -1,7 +1,3 @@
-if(typeof browser === 'undefined') {
-  window.browser = window.chrome;
-}
-
 const STORE_NAME = 'site_arr';
 
 const configUI = {
@@ -60,7 +56,7 @@ const configUI = {
   },
 
   restoreEntries : () => {
-    browser.storage.local.get(STORE_NAME, (store_obj) => {
+    browser.storage.local.get(STORE_NAME).then(store_obj => {
       const result = store_obj[STORE_NAME];
       if(!result || result.length === 0) {
         return;
@@ -152,7 +148,7 @@ const configUI = {
 
   displayErrorMessage : (message) => {
     const previewDivList = document.querySelectorAll('.template_preview');
-    previewDivList.forEach((elm) => {
+    previewDivList.forEach(elm => {
       while(elm.firstChild) {
         elm.removeChild(elm.firstChild);
       }
@@ -170,7 +166,7 @@ const configUI = {
         How to use: if we click left near-outside part from this zone, we get plain concatenated-form, 
         for each template.\n
         ⇦⇦⇦⇦\n
-        'xxx ESC' means (only) '&amp; &lt; &gt;' to '&amp;amp; &amp;lt; &amp;gt;'
+        'xxx ESC' means (only) '& < >' to '&amp; &lt; &gt;'
         `;
     }
     else if(siteOrd === 0 && templateOrd === 1) {
@@ -322,7 +318,7 @@ const configUI = {
       let curSpecType = ''; // delete, string, plain, twitter...
       selectElm = document.createElement('select');
       selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_type`;
-      configUI.specTypeList[siteOpt.type].forEach((elm) => {
+      configUI.specTypeList[siteOpt.type].forEach(elm => {
         optionElm = document.createElement('option');
         optionElm.value = elm;
         wkTxtNode = document.createTextNode(elm);
@@ -354,7 +350,7 @@ const configUI = {
       else if(curSpecType === 'plain') {
         selectElm = document.createElement('select');
         selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
-        configUI.specItemMap[curSpecType].forEach((pair) => {
+        configUI.specItemMap[curSpecType].forEach(pair => {
           optionElm = document.createElement('option');
           optionElm.value = pair[0];
           wkTxtNode = document.createTextNode(pair[1]);
@@ -370,7 +366,7 @@ const configUI = {
         selectElm = document.createElement('select');
         selectElm.id = `si_${siteOpt.ord}_te_${template.ord}_sp_${idx}_val_0`;
         let has3rdInput = false;
-        configUI.specItemMap[curSpecType].forEach((pair) => {
+        configUI.specItemMap[curSpecType].forEach(pair => {
           optionElm = document.createElement('option');
           optionElm.value = pair[0];
           wkTxtNode = document.createTextNode(pair[1]);
@@ -729,7 +725,7 @@ const regexSpecValId_0 = /^si_(\d+)_te_(\d+)_sp_(\d+)_val_0$/;
 const regexTBodyId = /^si_(\d+)_te_(\d+)_body$/;
 document.addEventListener('DOMContentLoaded', configUI.restoreEntries);
 document.getElementById('save').addEventListener('click', configUI.saveEntries);
-document.getElementById('site_list').addEventListener('change', (e) => {
+document.getElementById('site_list').addEventListener('change', e => {
   let wkMatchArr;
   if((wkMatchArr = regexSpecValId_0.exec(e.target.id)) !== null
     && e.target.tagName && e.target.tagName.toLowerCase() === 'select') {
@@ -783,7 +779,7 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     else if(newSpecType === 'plain') {
       selectElm = document.createElement('select');
       selectElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
-      configUI.specItemMap[newSpecType].forEach((pair) => {
+      configUI.specItemMap[newSpecType].forEach(pair => {
         optionElm = document.createElement('option');
         optionElm.value = pair[0];
         wkTxtNode = document.createTextNode(pair[1]);
@@ -798,7 +794,7 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     else if(newSpecType === 'twitter') {
       selectElm = document.createElement('select');
       selectElm.id = `si_${wkMatchArr[1]}_te_${wkMatchArr[2]}_sp_${wkMatchArr[3]}_val_0`;
-      configUI.specItemMap[newSpecType].forEach((pair) => {
+      configUI.specItemMap[newSpecType].forEach(pair => {
         optionElm = document.createElement('option');
         optionElm.value = pair[0];
         wkTxtNode = document.createTextNode(pair[1]);
@@ -818,7 +814,7 @@ document.getElementById('site_list').addEventListener('change', (e) => {
     }
   }
 });
-document.getElementById('site_list').addEventListener('click', (e) => {
+document.getElementById('site_list').addEventListener('click', e => {
   let wkMatchArr;
   if((wkMatchArr = regexTMenuId.exec(e.target.id)) !== null) {
     if(wkMatchArr[3] === 'freeze') {
