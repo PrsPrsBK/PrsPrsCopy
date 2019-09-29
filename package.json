@@ -12,10 +12,10 @@
     ]
   },
   "dependencies": {
-    "webextension-polyfill": "^0.4.0"
+    "webextension-polyfill": ">=0.4.0"
   },
   "devDependencies": {
-    "@types/firefox-webext-browser": "^65.0.0",
+    "@types/firefox-webext-browser": ">=65.0.0",
     "ava": "^1.2.1",
     "browser-env": "^3.2.6",
     "eslint": "^5.14.1",
@@ -24,7 +24,7 @@
     "nyc": "^13.3.0",
     "prettier": "^1.14.2",
     "tern-def-webextensions": ">=0.6.0",
-    "webextensions-api-fake": "^0.5.1"
+    "webextensions-api-fake": ">=0.5.1"
   },
   "keywords": [
     "WebExtensions",
