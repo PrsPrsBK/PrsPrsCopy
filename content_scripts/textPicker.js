@@ -231,7 +231,7 @@ const tweetPicker = {
       ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[dir]`
       : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2})`;
     let mainTextElm = tgt_elm.querySelector(mainSelStr);
-    if(mainTextElm !== null) {
+    if(mainTextElm === null) {
       mainTextElm = tgt_elm.querySelector(`:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3})`);
     }
     if(mainTextElm !== null) {
