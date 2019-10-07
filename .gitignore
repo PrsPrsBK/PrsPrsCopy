@@ -1,6 +1,7 @@
 .nyc_output/
 node_modules/
 chrome/
+firefox/
 note/
 testTgt/
 web-ext-artifacts/
@@ -9,3 +10,4 @@ web-ext-artifacts/
 *.log
 package-lock.json
 yarn.lock
+work.ps1
