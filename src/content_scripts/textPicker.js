@@ -179,7 +179,7 @@ const tweetPicker = {
     if(tweetPicker.CUR_IS_PICKUP) {
       return '';
     }
-    const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > time');
+    const wk_elm = tgt_elm.querySelector(':scope time');
     return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
   },
 
