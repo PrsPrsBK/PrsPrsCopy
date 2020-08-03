@@ -165,7 +165,7 @@ const tweetPicker = {
       return window.location.href;
     }
     else {
-      const wkSelStr = ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a';
+      const wkSelStr = ':scope > div > div > div > div > div > div > div > div > div > a';
       const wk_elm = tgt_elm.querySelector(wkSelStr);
       return wk_elm === null ? '' : wk_elm.href.trim();
     }
