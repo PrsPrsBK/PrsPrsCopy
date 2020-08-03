@@ -21,15 +21,3 @@ Copy-Item src/options_ui/options.js firefox/options_ui/options.js
 Copy-Item src/popup/menu.css firefox/popup/menu.css
 Copy-Item src/popup/menu.html firefox/popup/menu.html
 Copy-Item src/popup/menu.js firefox/popup/menu.js
-
-
-
-
-
-
-
-
-
-
-
-

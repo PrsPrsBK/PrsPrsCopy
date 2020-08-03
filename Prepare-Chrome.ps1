@@ -21,15 +21,3 @@ Copy-Item src/options_ui/options.js chrome/options_ui/options.js
 Copy-Item src/popup/menu.css chrome/popup/menu.css
 Copy-Item src/popup/menu.html chrome/popup/menu.html
 Copy-Item src/popup/menu.js chrome/popup/menu.js
-
-
-
-
-
-
-
-
-
-
-
-
