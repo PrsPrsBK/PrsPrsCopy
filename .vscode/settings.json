@@ -3,8 +3,11 @@
   "editor.formatOnSave": false,
   "json.schemas": [
     {
-      "fileMatch": ["manifest.json"],
+      "fileMatch": ["manifest.jsons"],
       "url": "./node_modules/ffext-manifest-schema/ffext.min.json"
     }
-  ]
+  ],
+  "files.exclude": {
+    "**/node_modules": true
+  }
 }
