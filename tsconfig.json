@@ -3,5 +3,7 @@
     "allowJs": true,
     "noEmit": true,
     "typeRoots": ["node_modules/@types", "types"]
-  }
+  },
+  "include": [ "./src" ],
+  "exclude": [ "./chrome", "./firefox" ],
 }
