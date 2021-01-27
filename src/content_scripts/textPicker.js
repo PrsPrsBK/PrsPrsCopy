@@ -30,10 +30,10 @@ const getDatetimeTextFromMillsec = milsec_int => {
 };
 
 const commonSpecExtractor = specRecord => {
-  if(specRecord.hasOwnProperty('string')) {
+  if(Object.prototype.hasOwnProperty.call(specRecord, 'string')) {
     return specRecord.string;
   }
-  else if(specRecord.hasOwnProperty('plain')) {
+  else if(Object.prototype.hasOwnProperty.call(specRecord, 'plain')) {
     if(specRecord.plain === 'url') {
       return window.location.href;
     }
@@ -301,7 +301,7 @@ const tweetPicker = {
   build : specArr => {
     const result = [];
     specArr.forEach(spec => {
-      if(spec.hasOwnProperty('twitter') === false) {
+      if(Object.prototype.hasOwnProperty.call(spec, 'twitter') === false) {
         result.push(commonSpecExtractor(spec));
       }
       else {
@@ -340,7 +340,7 @@ const tweetPicker = {
           result.push(tweetPicker.activateHrefText(tweetPicker.CUR_MAIN_TEXT, {format: 'md'}));
         }
         else if(tweetPicker.CUR_HAS_QT) {
-          if(spec.twitter === 'qt_string' && spec.hasOwnProperty('string')) {
+          if(spec.twitter === 'qt_string' && Object.prototype.hasOwnProperty.call(spec, 'string')) {
             result.push(spec.string);
           }
           else if(spec.twitter === 'qt_url') {
