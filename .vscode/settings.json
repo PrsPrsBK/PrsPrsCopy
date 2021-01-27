@@ -8,6 +8,19 @@
     }
   ],
   "files.exclude": {
-    "**/node_modules": true
+    "**/node_modules": true,
+    ".nyc_output": true,
+    "web-ext-artifacts": true,
+    "chrome/background": true,
+    "chrome/content_scripts": true,
+    "chrome/icons": true,
+    "chrome/lib": true,
+    "chrome/options_ui": true,
+    "chrome/popup": true,
+    "firefox/background": true,
+    "firefox/content_scripts": true,
+    "firefox/icons": true,
+    "firefox/options_ui": true,
+    "firefox/popup": true,
   }
 }

@@ -167,7 +167,6 @@ const getTemplates = tab => {
 };
 
 browser.tabs.onUpdated.addListener((tabId, chgInfo, _tab) => {
-  //console.log(`chgInfo ${JSON.stringify(chgInfo)}`);
   if(chgInfo.status === 'complete') {
     INJECTED[tabId] = {
       index: 0,
@@ -186,7 +185,6 @@ browser.commands.onCommand.addListener(cmd => {
     browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
       for(const tab of tabs) {
         getTemplates(tab).then(templateArr => {
-          // console.log(`requestCopy: ${tab.url} with ${templateArr[INJECTED[tab.id].index].name}`);
           const curSpecArr = templateArr[INJECTED[tab.id].index].specArr;
           INJECTED[tab.id].index = ++INJECTED[tab.id].index % templateArr.length;
           IS_ICON_FLIP = !IS_ICON_FLIP;
