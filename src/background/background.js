@@ -120,7 +120,7 @@ let CUR_POPUP_TEMPLATES = [];
 
 const onError = errObj => {
   browser.browserAction.setBadgeText({
-    text: errObj.message,
+    text: errObj.message, // max length is that of 'x: xxx'.
     tabId: errObj.tabId,
   });
 };
@@ -209,8 +209,16 @@ browser.runtime.onMessage.addListener((message, sender, _sendResponse) => {
     updateIconOfTab(sender.tab.id);
   }
   else if(message.task === 'copyEnd') {
-    // nothing to do... change the color of badgetext to green?
-    // console.log(`copy end ${JSON.stringify(message.result)}`);
+    // cannot show enough length of message
+    // if(message.result === '') {
+    //   const tab = sender.tab;
+    //   getTemplates(tab).then(templateArr => {
+    //     INJECTED[tab.id].index = INJECTED[tab.id].index === 0 ? (templateArr.length - 1) : (INJECTED[tab.id].index - 1);
+    //     IS_ICON_FLIP = !IS_ICON_FLIP;
+    //     updateIconOfTab(tab.id);
+    //     onError({ 'message': `${INJECTED[tab.id].index}: empty result`, tabId: tab.id });
+    //   }, onError);
+    // }
   }
   else if(message.task === 'getCurTemplates') {
     browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
