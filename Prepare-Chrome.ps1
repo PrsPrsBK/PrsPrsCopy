@@ -1,14 +1,14 @@
 $script_path =  (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-New-Item ./lib -ItemType "directory" -Force | Out-Null
-Copy-Item ./node_modules/webextension-polyfill/dist/browser-polyfill.min.js ./chrome/lib/
-
 New-Item chrome -ItemType "directory" -Force | Out-Null
 New-Item chrome/background -ItemType "directory" -Force | Out-Null
 New-Item chrome/content_scripts -ItemType "directory" -Force | Out-Null
 New-Item chrome/icons -ItemType "directory" -Force | Out-Null
 New-Item chrome/options_ui -ItemType "directory" -Force | Out-Null
 New-Item chrome/popup -ItemType "directory" -Force | Out-Null
+New-Item chrome/lib -ItemType "directory" -Force | Out-Null
+
+Copy-Item ./node_modules/webextension-polyfill/dist/browser-polyfill.min.js ./chrome/lib/
 
 Copy-Item src/background/background.js chrome/background/background.js
 Copy-Item src/content_scripts/textPicker.js chrome/content_scripts/textPicker.js
