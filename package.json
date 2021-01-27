@@ -8,10 +8,12 @@
       "test/*.js",
       "!test/helpers"
     ],
+    "verbose": true,
     "require": [
       "esm",
       "./test/helpers/setup-browser-env.js"
-    ]
+    ],
+    "timeout": "2m"
   },
   "dependencies": {
     "webextension-polyfill": ">=0.4.0"
