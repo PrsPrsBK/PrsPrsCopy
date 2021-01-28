@@ -6,6 +6,7 @@
   "ava": {
     "files": [
       "test/testFoosite.js",
+      "test/testTwPlain.js",
       "test/testTwR.js",
       "test/testUrlHash.js",
       "!test/helpers"
