@@ -280,9 +280,9 @@ const tweetPicker = {
         }
         const replySelStr = tweetPicker.CUR_IS_PICKUP
           ? ':scope > div > div:nth-child(3) > div > div > a'
-          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div > div a';
+          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div';
         const replyAhref = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
-        if(replyAhref !== null && replyAhref.href === `https://twitter.com/${replyAhref.textContent.slice(1)}`) {
+        if(replyAhref !== null && !replyAhref.getAttribute('lang')) {
           tweetPicker.CUR_IS_REPLY = true;
         }
         const qtSelStr = tweetPicker.CUR_IS_PICKUP
