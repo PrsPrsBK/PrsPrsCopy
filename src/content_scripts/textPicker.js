@@ -229,9 +229,7 @@ const tweetPicker = {
   prepareCurText : tgt_elm => {
     const mainSelStr = tweetPicker.CUR_IS_PICKUP
       ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[dir]`
-      : tweetPicker.CUR_IS_REPLY
-        ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) div[dir]'
-        : `:scope > div > div > div > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div:nth-child(2) > div`;
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) ${tweetPicker.CUR_IS_REPLY ? '> div:nth-child(2)' : ''} > div`;
     let mainTextElm = tgt_elm.querySelector(mainSelStr);
     if(mainTextElm === null) {
       mainTextElm = tgt_elm.querySelector(`:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3})`);
