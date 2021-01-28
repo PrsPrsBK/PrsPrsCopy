@@ -5,7 +5,8 @@
   "author": "PrsPrsBK",
   "ava": {
     "files": [
-      "test/*.js",
+      "test/testFoosite.js",
+      "test/testTwR.js",
       "!test/helpers"
     ],
     "verbose": true,
