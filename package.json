@@ -32,8 +32,8 @@
     "nyc": "^15.0.0",
     "prettier": "^2.0.0",
     "sinon": "^9.2.4",
-    "tern-def-webextensions": ">=0.6.0",
-    "webextensions-api-fake": ">=0.5.1"
+    "tern-def-webextensions": "^0.21.1",
+    "webextensions-api-fake": "^1.3.0"
   },
   "keywords": [
     "WebExtensions",
