@@ -228,13 +228,10 @@ const tweetPicker = {
 
   prepareCurText : tgt_elm => {
     const mainSelStr = tweetPicker.CUR_IS_PICKUP
-      ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[dir]`
-      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) ${tweetPicker.CUR_IS_REPLY ? '> div:nth-child(2)' : ''} > div`;
-    let mainTextElm = tgt_elm.querySelector(mainSelStr);
-    if(mainTextElm === null) {
-      mainTextElm = tgt_elm.querySelector(`:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3})`);
-    }
-    if(mainTextElm !== null) {
+      ? `:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div > div`
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div`;
+    const mainTextElm = tgt_elm.querySelector(mainSelStr);
+    if(mainTextElm?.hasAttribute('lang')) {
       let mainText = mainTextElm.textContent.trim();
       let qtText = '';
       // anyway oneline
@@ -279,7 +276,7 @@ const tweetPicker = {
           tweetPicker.CUR_IS_PICKUP = true;
         }
         const replySelStr = tweetPicker.CUR_IS_PICKUP
-          ? ':scope div[data-testid="tweet"] + div > div:nth-child(2) > div > div'
+          ? ':scope div[data-testid="tweet"] + div > div:nth-child(1) > div > div'
           : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div';
         const textUnlessReply = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
         if(textUnlessReply?.hasAttribute('lang') === false) {
