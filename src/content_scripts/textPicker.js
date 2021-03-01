@@ -200,7 +200,7 @@ const tweetPicker = {
 
   getTweetUsername : tgt_elm => {
     const wkSelStr = tweetPicker.CUR_IS_PICKUP
-      ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > a > div > div'
+      ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > a > div > div'
       : ':scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > a > div > div > div';
     const wk_elm = tgt_elm.querySelector(wkSelStr);
     return wk_elm === null ? '' : wk_elm.textContent.trim();
