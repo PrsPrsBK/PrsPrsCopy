@@ -8,6 +8,7 @@
       "test/testFoosite.js",
       "test/testTwPlain.js",
       "test/testTwR.js",
+      "test/testTwPickup.js",
       "test/testUrlHash.js",
       "!test/helpers"
     ],
