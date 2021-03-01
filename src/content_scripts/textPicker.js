@@ -274,15 +274,15 @@ const tweetPicker = {
     if(tweetPicker.CUR_ARTICLE === null) {
       tweetPicker.CUR_ARTICLE = document.querySelector('article[data-focusvisible-polyfill="true"]');
       if(tweetPicker.CUR_ARTICLE !== null) {
-        const siblingOfTw = tweetPicker.CUR_ARTICLE.querySelectorAll(':scope > div > div');
-        if(siblingOfTw !== null && siblingOfTw.length > 2) {
+        const siblingOnlyWhenPickup = tweetPicker.CUR_ARTICLE.querySelector(':scope div[data-testid="tweet"] + div');
+        if(siblingOnlyWhenPickup !== null) {
           tweetPicker.CUR_IS_PICKUP = true;
         }
         const replySelStr = tweetPicker.CUR_IS_PICKUP
-          ? ':scope > div > div:nth-child(3) > div > div > a'
-          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div';
-        const replyAhref = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
-        if(replyAhref !== null && !replyAhref.getAttribute('lang')) {
+          ? ':scope div[data-testid="tweet"] + div > div:nth-child(2) > div > div[lang]'
+          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div[lang]';
+        const textUnlessReply = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
+        if(textUnlessReply === null) {
           tweetPicker.CUR_IS_REPLY = true;
         }
         const qtSelStr = tweetPicker.CUR_IS_PICKUP
