@@ -277,7 +277,7 @@ const tweetPicker = {
         }
         const replySelStr = tweetPicker.CUR_IS_PICKUP
           ? ':scope div[data-testid="tweet"] + div > div:nth-child(1) > div > div'
-          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div > div';
+          : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div';
         const textUnlessReply = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
         if(textUnlessReply?.hasAttribute('lang') === false) {
           tweetPicker.CUR_IS_REPLY = true;
