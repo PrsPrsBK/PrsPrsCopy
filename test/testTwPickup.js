@@ -2,7 +2,7 @@ import test from 'ava';
 // can not use jsdom.reconfigure(). this works.
 import browserEnv from 'browser-env';
 browserEnv({
-  url: 'https://twitter.com/',
+  url: 'https://twitter.com/pickup/status/1111222233334444555',
 });
 import { tweetPicker } from '../testTgt/textPicker.js';
 const fs = require('fs');
@@ -15,7 +15,7 @@ test.before(t => {
   divElm.innerHTML = htmlText;
 
   const specArr = [
-    // { twitter: 'url' },
+    { twitter: 'url' },
     // { twitter: 'datetime' },
     // { twitter: 'username' },
     // { twitter: 'username_esc' },
@@ -26,7 +26,7 @@ test.before(t => {
     { twitter: 'text_md' },
   ];
   t.context.resultArr = [
-    // 'https://twitter.com/foouser/status/1111222233334444555',
+    'https://twitter.com/pickup/status/1111222233334444555',
     // '2021-01-27 23:50',
     // '[]Foo`&`User<>',
     // '[]Foo`&amp;`User&lt;&gt;',
