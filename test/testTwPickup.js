@@ -16,7 +16,7 @@ test.before(t => {
 
   const specArr = [
     { twitter: 'url' },
-    // { twitter: 'datetime' },
+    { twitter: 'datetime' },
     // { twitter: 'username' },
     // { twitter: 'username_esc' },
     // { twitter: 'username_reST' },
@@ -27,7 +27,7 @@ test.before(t => {
   ];
   t.context.resultArr = [
     'https://twitter.com/pickup/status/1111222233334444555',
-    // '2021-01-27 23:50',
+    '午後11:50 · 2021年3月1日',
     // '[]Foo`&`User<>',
     // '[]Foo`&amp;`User&lt;&gt;',
     // '[]Foo\\`&\\`User<>',
