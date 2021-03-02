@@ -3,7 +3,7 @@
   "editor.formatOnSave": false,
   "json.schemas": [
     {
-      "fileMatch": ["manifest.jsons"],
+      "fileMatch": ["manifest.json"],
       "url": "./node_modules/ffext-manifest-schema/ffext.min.json"
     }
   ],
