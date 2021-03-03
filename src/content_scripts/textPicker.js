@@ -177,7 +177,7 @@ const tweetPicker = {
 
   getTweetTimestamp : tgt_elm => {
     if(tweetPicker.CUR_IS_PICKUP) {
-      const wk_elm = tgt_elm.querySelector(':scope div[data-testid="tweet"] + div > div:nth-child(3) > div > div > a');
+      const wk_elm = tgt_elm.querySelector(`:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > a`);
       return wk_elm === null ? '' : wk_elm.textContent.trim();
     }
     const wk_elm = tgt_elm.querySelector(':scope time');
