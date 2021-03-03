@@ -9,6 +9,7 @@
       "test/testTwPlain.js",
       "test/testTwR.js",
       "test/testTwPickup.js",
+      "test/testTwPickupR.js",
       "test/testUrlHash.js",
       "!test/helpers"
     ],

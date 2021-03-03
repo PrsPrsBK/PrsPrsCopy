@@ -1,0 +1,73 @@
+<main role="main">
+  <div>
+    <!-- ピックアップあり、@リプライあり、それ以外は普通のツイート -->
+    <article role="article" data-focusable="true" tabindex="0" data-focusvisible-polyfill="true">
+      <div>
+        <div>
+          <div>
+            <div><div><div></div></div></div>
+            <!-- 次のdiv[data-testid="tweet"]はピックアップの場合アイコンと名前 -->
+            <div data-testid="tweet">
+              <!-- アイコン -->
+              <div></div>
+              <div>
+                <div>
+                  <div>
+                    <div>
+                      <!-- 名前 -->
+                      <div>
+                        <a href="/foouser" role="link" data-focusable="true">
+                          <div>
+                            <div>
+                              <div dir="auto">
+                                <span><span>[]Foo`&amp;`User&lt;&gt;</span></span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                      <!-- [...]もっと見る -->
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ピックアップの場合次のdiv(3)が存在し、本文からいいねボタンまで全部 -->
+            <div>
+              <!-- リプライ標示 -->
+              <div>
+                <div dir="auto">"返信先: "
+                  <div><a href="/barUser">@barUser</a></div>
+                  "さん"
+                </div>
+              </div>
+              <!-- 本文 -->
+              <div>
+                <div>
+                  <div lang="en" dir="auto">
+                    <span>TwPickupReplyのテキスト [&amp;&gt;&lt;]です`` </span>
+                  </div>
+                </div>
+              </div>
+              <!-- 空 -->
+              <div></div>
+              <!-- 日付(数値ではなく文字列表現のみ) -->
+              <div>
+                <div>
+                  <div dir="auto">
+                    <a href="/foouser/status/1111222233334444555">
+                      <span>午後11:50 · 2021年3月1日</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- いいね等ボタンと数 -->
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</main>
