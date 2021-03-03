@@ -1,14 +1,15 @@
 <main role="main">
   <div>
-    <!-- OGPカードあり、それ以外は普通のツイート -->
+    <!-- 引用もリプライもカードもないシンプルなツイート -->
     <article role="article" data-focusible="true" tabindex="0" data-focusvisible-polyfill="true">
       <div>
         <div> <!-- このスレッドを表示 より上-->
           <div>
-            <div></div>
-            <!-- 次のdivが本体 -->
+            <div><div><div></div></div></div>
+            <!-- 次のdiv[data-testid="tweet"]はアイコン -->
             <div data-testid="tweet">
-              <div></div> <!-- アイコンのある細い左列 -->
+              <!-- アイコンのある細い左列 -->
+              <div></div>
               <div>
                 <!-- 名前 -->
                 <div>
@@ -47,7 +48,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- 本文 -->
+                <!-- 本文等親 -->
                 <div>
                   <!-- 本文 -->
                   <div>
