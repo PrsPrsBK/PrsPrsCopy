@@ -26,15 +26,15 @@ test.before(t => {
     { twitter: 'text_md' },
   ];
   t.context.resultArr = [
-    'https://twitter.com/pickup/status/1111222233334444555',
+    'https://twitter.com/pickupReply/status/1111222233334444555',
     '午後11:50 · 2021年3月1日',
     '[]Foo`&`User<>',
     '[]Foo`&amp;`User&lt;&gt;',
     '[]Foo\\`&\\`User<>',
     '\\[\\]Foo`&`User<>',
-    'TwPickupのテキスト [&amp;&gt;&lt;]です``',
-    'TwPickupのテキスト [&><]です\\`\\`',
-    'TwPickupのテキスト \\[&><\\]です``',
+    'TwPickupReplyのテキスト [&amp;&gt;&lt;]です``',
+    'TwPickupReplyのテキスト [&><]です\\`\\`',
+    'TwPickupReplyのテキスト \\[&><\\]です``',
   ];
   tweetPicker.getCurTweet();
   t.context.mainText = tweetPicker.CUR_MAIN_TEXT;
@@ -43,7 +43,7 @@ test.before(t => {
 });
 
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-  t.is(t.context.mainText, 'TwPickupのテキスト [&><]です``');
+  t.is(t.context.mainText, 'TwPickupReplyのテキスト [&><]です``');
 });
 
 test('tweetPicker.RESULT_ARR', t => {
