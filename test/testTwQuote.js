@@ -44,11 +44,11 @@ test.before(t => {
     'TwQuoteの引用した側のテキスト \\[&><\\]です``@baruserテキストの続き',
     'just quoted',
     '',
-    '[]Quoted`&`User<>さん',
-    'これは引用されたツイートのテキスト [&><]です`` https://example.com引用されたテキストの続き',
-    'これは引用されたツイートのテキスト [&amp;&gt;&lt;]です`` https://example.com引用されたテキストの続き',
-    'これは引用されたツイートのテキスト [&><]です\\`\\` https://example.com引用されたテキストの続き',
-    'これは引用されたツイートのテキスト \\[&><\\]です`` https://example.com引用されたテキストの続き',
+    '[]Quoted`&`User<>',
+    'これは引用されたツイートのテキスト [&><]です``https://example.com引用されたテキストの続き',
+    'これは引用されたツイートのテキスト [&amp;&gt;&lt;]です``<a href="https://example.com">URL</a> 引用されたテキストの続き',
+    'これは引用されたツイートのテキスト [&><]です\\`\\``URL <https://example.com>`__ 引用されたテキストの続き',
+    'これは引用されたツイートのテキスト \\[&><\\]です``[URL](https://example.com) 引用されたテキストの続き',
   ];
   tweetPicker.getCurTweet();
   t.context.mainText = tweetPicker.CUR_MAIN_TEXT;

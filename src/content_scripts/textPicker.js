@@ -207,17 +207,11 @@ const tweetPicker = {
   },
 
   getQTUsername : tgt_elm => {
-    let wkSelStr = tweetPicker.CUR_IS_PICKUP
+    const selector = tweetPicker.CUR_IS_PICKUP
       ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
-      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
-    let wk_elm = tgt_elm.querySelector(wkSelStr);
-    if(wk_elm === null) { // No img card
-      wkSelStr = tweetPicker.CUR_IS_PICKUP
-        ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`
-        : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div`;
-      wk_elm = tgt_elm.querySelector(wkSelStr);
-    }
-    return wk_elm === null ? '' : wk_elm.textContent.trim();
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div > div > div > div > div > div > div > div:nth-child(2)`;
+    const usernameElm = tgt_elm.querySelector(selector);
+    return usernameElm === null ? '' : usernameElm.textContent.trim();
   },
 
   CUR_ARTICLE : null,
@@ -240,26 +234,15 @@ const tweetPicker = {
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        // I throw away the case of 'PICKUP and has img card and has QT that has its own img card'
-        let qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+        const qtTextSelStr = tweetPicker.CUR_IS_PICKUP
           ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`
-          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`;
-        let qtTextElm = tgt_elm.querySelector(qtTextSelStr);
-        if(qtTextElm === null) { // NO img card
-          qtTextSelStr = tweetPicker.CUR_IS_PICKUP
-            ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`
-            : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]`;
-          qtTextElm = tgt_elm.querySelector(':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2) > div > div:nth-child(2) div[dir]');
-        }
-        if(qtTextElm !== null) {
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div:nth-child(2) > div`;
+        const qtTextElm = tgt_elm.querySelector(qtTextSelStr);
+        if(qtTextElm) {
           qtText = qtTextElm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
             .replace(/\n\r/g, ' ')
             .replace(/\n/g, ' ');
-        }
-        // when text exists after (maybe QT's) URL, avoid replacing.
-        if(!mainText.match(/(.+)(https:\/\/twitter\.com\/\S+\s+…)(.+)$/)) {
-          mainText = mainText.replace(/(.+)(https:\/\/twitter\.com\/.+)$/, '$1');
         }
       }
       tweetPicker.CUR_MAIN_TEXT = mainText;
@@ -285,9 +268,9 @@ const tweetPicker = {
         }
         const qtSelStr = tweetPicker.CUR_IS_PICKUP
           ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) div[role="blockquote"]`
-          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) div[role="blockquote"]`;
-        const qtElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
-        tweetPicker.CUR_HAS_QT = qtElm !== null;
+          : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div:nth-child(2) > div`;
+        const qtTextElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
+        tweetPicker.CUR_HAS_QT = qtTextElm?.hasAttribute('lang');
         tweetPicker.prepareCurText(tweetPicker.CUR_ARTICLE);
       }
     }
