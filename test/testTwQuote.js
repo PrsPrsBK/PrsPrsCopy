@@ -39,16 +39,16 @@ test.before(t => {
     '[]Foo`&amp;`User&lt;&gt;',
     '[]Foo\\`&\\`User<>',
     '\\[\\]Foo`&`User<>',
-    'TwQuoteの引用した側のテキスト [&amp;&gt;&lt;]です``@baruserテキストの続き',
-    'TwQuoteの引用した側のテキスト [&><]です\\`\\`@baruserテキストの続き',
-    'TwQuoteの引用した側のテキスト \\[&><\\]です``@baruserテキストの続き',
+    'TwQuoteの引用した側のテキスト [&amp;&gt;&lt;]です`` <a href="https://example.com">URL</a> テキストの続き',
+    'TwQuoteの引用した側のテキスト [&><]です\\`\\` `URL <https://example.com>`__ テキストの続き',
+    'TwQuoteの引用した側のテキスト \\[&><\\]です`` [URL](https://example.com) テキストの続き',
     'just quoted',
     '',
     '[]Quoted`&`User<>',
-    'これは引用されたツイートのテキスト [&><]です``https://example.com引用されたテキストの続き',
-    'これは引用されたツイートのテキスト [&amp;&gt;&lt;]です``<a href="https://example.com">URL</a> 引用されたテキストの続き',
-    'これは引用されたツイートのテキスト [&><]です\\`\\``URL <https://example.com>`__ 引用されたテキストの続き',
-    'これは引用されたツイートのテキスト \\[&><\\]です``[URL](https://example.com) 引用されたテキストの続き',
+    'これは引用されたツイートのテキスト [&><]です``https://example.com/foopath/…スペースないので左にくっつく。引用されたテキストの続き',
+    'これは引用されたツイートのテキスト [&amp;&gt;&lt;]です``<a href="https://example.com/foopath/">URL</a>スペースないので左にくっつく。引用されたテキストの続き',
+    'これは引用されたツイートのテキスト [&><]です\\`\\``URL <https://example.com/foopath/>`__スペースないので左にくっつく。引用されたテキストの続き',
+    'これは引用されたツイートのテキスト \\[&><\\]です``[URL](https://example.com/foopath/)スペースないので左にくっつく。引用されたテキストの続き',
   ];
   tweetPicker.getCurTweet();
   t.context.mainText = tweetPicker.CUR_MAIN_TEXT;
@@ -57,7 +57,7 @@ test.before(t => {
 });
 
 test('tweetPicker.CUR_MAIN_TEXT', t => {
-  t.is(t.context.mainText, 'TwQuoteの引用した側のテキスト [&><]です``@baruserテキストの続き');
+  t.is(t.context.mainText, 'TwQuoteの引用した側のテキスト [&><]です`` https://example.com テキストの続き');
 });
 
 test('tweetPicker.RESULT_ARR', t => {
