@@ -185,17 +185,11 @@ const tweetPicker = {
   },
 
   getQTTimestamp : tgt_elm => {
-    let wkSelStr = tweetPicker.CUR_IS_PICKUP
+    const selector = tweetPicker.CUR_IS_PICKUP
       ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`
-      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div:nth-child(2) > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
-    let wk_elm = tgt_elm.querySelector(wkSelStr);
-    if(wk_elm === null) { // No img card
-      wkSelStr = tweetPicker.CUR_IS_PICKUP
-        ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`
-        : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
-      wk_elm = tgt_elm.querySelector(wkSelStr);
-    }
-    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
+      : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div > div:nth-child(2) time`;
+    const timeElm = tgt_elm.querySelector(selector);
+    return timeElm === null ? '' : getDatetimeTextFromMillsec(Date.parse(timeElm.getAttribute('datetime').trim()));
   },
 
   getTweetUsername : tgt_elm => {
