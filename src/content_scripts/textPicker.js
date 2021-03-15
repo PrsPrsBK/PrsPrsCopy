@@ -165,9 +165,9 @@ const tweetPicker = {
       return window.location.href;
     }
     else {
-      const wkSelStr = ':scope > div > div > div > div > div > div > div > div > div > a';
-      const wk_elm = tgt_elm.querySelector(wkSelStr);
-      return wk_elm === null ? '' : wk_elm.href.trim();
+      const selector = ':scope > div > div > div > div > div > div > div > div > div > a';
+      const urlElm = tgt_elm.querySelector(selector);
+      return urlElm === null ? '' : urlElm.href.trim();
     }
   },
 
@@ -177,11 +177,11 @@ const tweetPicker = {
 
   getTweetTimestamp : tgt_elm => {
     if(tweetPicker.CUR_IS_PICKUP) {
-      const wk_elm = tgt_elm.querySelector(`:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > a`);
-      return wk_elm === null ? '' : wk_elm.textContent.trim();
+      const timeElm = tgt_elm.querySelector(`:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 4 : 3}) > div > div > a`);
+      return timeElm === null ? '' : timeElm.textContent.trim();
     }
-    const wk_elm = tgt_elm.querySelector(':scope time');
-    return wk_elm === null ? '' : getDatetimeTextFromMillsec(Date.parse(wk_elm.getAttribute('datetime').trim()));
+    const timeElm = tgt_elm.querySelector(':scope time');
+    return timeElm === null ? '' : getDatetimeTextFromMillsec(Date.parse(timeElm.getAttribute('datetime').trim()));
   },
 
   getQTTimestamp : tgt_elm => {
@@ -199,11 +199,11 @@ const tweetPicker = {
   },
 
   getTweetUsername : tgt_elm => {
-    const wkSelStr = tweetPicker.CUR_IS_PICKUP
+    const selector = tweetPicker.CUR_IS_PICKUP
       ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > a > div > div > div'
       : ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > div > a > div > div > div';
-    const wk_elm = tgt_elm.querySelector(wkSelStr);
-    return wk_elm === null ? '' : wk_elm.textContent.trim();
+    const usernameElm = tgt_elm.querySelector(selector);
+    return usernameElm === null ? '' : usernameElm.textContent.trim();
   },
 
   getQTUsername : tgt_elm => {
@@ -222,10 +222,10 @@ const tweetPicker = {
   CUR_QT_TEXT : '',
 
   prepareCurText : tgt_elm => {
-    const mainSelStr = tweetPicker.CUR_IS_PICKUP
+    const mainTextSelector = tweetPicker.CUR_IS_PICKUP
       ? `:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div > div`
       : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div`;
-    const mainTextElm = tgt_elm.querySelector(mainSelStr);
+    const mainTextElm = tgt_elm.querySelector(mainTextSelector);
     if(mainTextElm?.hasAttribute('lang')) {
       let mainText = mainTextElm.textContent.trim();
       let qtText = '';
@@ -234,10 +234,10 @@ const tweetPicker = {
         .replace(/\n\r/g, ' ')
         .replace(/\n/g, ' ');
       if(tweetPicker.CUR_HAS_QT) {
-        const qtTextSelStr = tweetPicker.CUR_IS_PICKUP
+        const qtTextSelector = tweetPicker.CUR_IS_PICKUP
           ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) div[dir]`
           : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div:nth-child(2) > div`;
-        const qtTextElm = tgt_elm.querySelector(qtTextSelStr);
+        const qtTextElm = tgt_elm.querySelector(qtTextSelector);
         if(qtTextElm) {
           qtText = qtTextElm.textContent.trim();
           qtText = qtText.replace(/\r\n/g, ' ')
@@ -259,17 +259,17 @@ const tweetPicker = {
         if(siblingOnlyWhenPickup !== null) {
           tweetPicker.CUR_IS_PICKUP = true;
         }
-        const replySelStr = tweetPicker.CUR_IS_PICKUP
+        const unlessReplySelector = tweetPicker.CUR_IS_PICKUP
           ? ':scope div[data-testid="tweet"] + div > div:nth-child(1) > div > div'
           : ':scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div';
-        const textUnlessReply = tweetPicker.CUR_ARTICLE.querySelector(replySelStr);
+        const textUnlessReply = tweetPicker.CUR_ARTICLE.querySelector(unlessReplySelector);
         if(textUnlessReply?.hasAttribute('lang') === false) {
           tweetPicker.CUR_IS_REPLY = true;
         }
-        const qtSelStr = tweetPicker.CUR_IS_PICKUP
+        const qtTextSelector = tweetPicker.CUR_IS_PICKUP
           ? `:scope > div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 5 : 4}) div[role="blockquote"]`
           : `:scope div[data-testid="tweet"] > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div > div > div > div:nth-child(2) > div > div:nth-child(2) > div`;
-        const qtTextElm = tweetPicker.CUR_ARTICLE.querySelector(qtSelStr);
+        const qtTextElm = tweetPicker.CUR_ARTICLE.querySelector(qtTextSelector);
         tweetPicker.CUR_HAS_QT = qtTextElm?.hasAttribute('lang');
         tweetPicker.prepareCurText(tweetPicker.CUR_ARTICLE);
       }
