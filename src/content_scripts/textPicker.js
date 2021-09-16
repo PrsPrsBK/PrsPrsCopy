@@ -195,7 +195,7 @@ const tweetPicker = {
   getTweetUsername : tgt_elm => {
     const selector = tweetPicker.CUR_IS_PICKUP
       ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > a > div > div > div'
-      : ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > div > a > div > div > div';
+      : ':scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > a > div > div > div';
     const usernameElm = tgt_elm.querySelector(selector);
     return usernameElm === null ? '' : usernameElm.textContent.trim();
   },
