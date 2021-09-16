@@ -1,16 +1,35 @@
 
+2021-09-10 金 data-testid属性
+
 ::
 
   ふつう
-  article
+  article[data-testid="tweet"]属性が移動してきた
   >d >d >d
-  >d(2)[data-testid]
-  >d(2)右列。左はアイコン
-    -d(1)名前
-    -d(2)本文親
-      -d 本文
-      -d MOVとかOGPカード、なければ空
-      -d いいねとか
+  -d(1)「xxがリツイート」等表示される左右に伸びる枠
+  -d(2) data-testidなくなった
+    -d(1)左列。アイコン
+    -d(2)右列。
+      -d(1)名前
+      >d >d
+        -d(1)左側の名前テキスト
+          -d(1)名前テキスト
+            -a href="/fooUser"
+            >d
+              -d(1)名前テキスト
+                -d(1) dir="auto" 名前テキスト
+                >span >span **テキスト本体**
+                -d(2) dir="auto" 中身多分なし
+              -d(2)@スクリーンID
+          -d(2)名前テキストと時間の間の「·」
+          -d(3)x時間(前)とか
+        -d(2)右側の[...]メニュー
+      -d(2)本文親
+        -d 本文
+          -d lang="ja" dir="auto" id="id__hf2wo7gsn8v"
+          >span **本文テキスト**
+        -d MOVとかOGPカード、なければ空
+        -d いいねとか
 
 ::
 
