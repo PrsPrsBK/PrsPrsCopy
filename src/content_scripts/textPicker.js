@@ -218,7 +218,7 @@ const tweetPicker = {
   prepareCurText : tgt_elm => {
     const mainTextSelector = tweetPicker.CUR_IS_PICKUP
       ? `:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div > div`
-      : `:scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div > div`;
+      : `:scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div`;
     const mainTextElm = tgt_elm.querySelector(mainTextSelector);
     if(mainTextElm?.hasAttribute('lang')) {
       let mainText = mainTextElm.textContent.trim();
