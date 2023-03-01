@@ -165,7 +165,7 @@ const tweetPicker = {
       return window.location.href;
     }
     else {
-      const selector = ':scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > div > div:nth-child(2) > div > div:nth-child(3) > a';
+      const selector = ':scope > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > div:nth-child(2) > div > div:nth-child(3) > a';
       const urlElm = tgt_elm.querySelector(selector);
       return urlElm === null ? '' : urlElm.href.trim();
     }
@@ -195,7 +195,7 @@ const tweetPicker = {
   getTweetUsername : tgt_elm => {
     const selector = tweetPicker.CUR_IS_PICKUP
       ? ':scope div[data-testid="tweet"] > div:nth-child(2) > div > div > div > div > a > div > div > div'
-      : ':scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > div > div > div > a > div > div';
+      : ':scope > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > div > div > a > div > div';
     const usernameElm = tgt_elm.querySelector(selector);
     return usernameElm === null ? '' : usernameElm.textContent.trim();
   },
@@ -218,7 +218,8 @@ const tweetPicker = {
   prepareCurText : tgt_elm => {
     const mainTextSelector = tweetPicker.CUR_IS_PICKUP
       ? `:scope div[data-testid="tweet"] + div > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div > div`
-      : `:scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div`;
+      //: `:scope > div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 2 : 1}) > div`;
+      : `:scope > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(${tweetPicker.CUR_IS_REPLY ? 3 : 2}) > div`;
     const mainTextElm = tgt_elm.querySelector(mainTextSelector);
     if(mainTextElm?.hasAttribute('lang')) {
       let mainText = mainTextElm.textContent.trim();
