@@ -208,7 +208,7 @@ const tweetPicker = {
     return usernameElm === null ? '' : usernameElm.textContent.trim();
   },
 
-  CUR_ARTICLE : null,
+  CUR_ARTICLE : undefined,
   CUR_HAS_QT : false,
   CUR_IS_PICKUP : false,
   CUR_IS_REPLY : false,
@@ -246,9 +246,16 @@ const tweetPicker = {
 
   getCurTweet : () => {
     // almost once in each request to copy-with-template
-    if(tweetPicker.CUR_ARTICLE === null) {
-      tweetPicker.CUR_ARTICLE = document.querySelector('article[data-focusvisible-polyfill="true"]');
-      if(tweetPicker.CUR_ARTICLE !== null) {
+    if(tweetPicker.CUR_ARTICLE === undefined) {
+      // tweetPicker.CUR_ARTICLE = document.querySelector('article[data-focusvisible-polyfill="true"]');
+      tweetPicker.CUR_ARTICLE = [...document.querySelectorAll('article')].find(elm => {
+        const borderVal = window.getComputedStyle(elm)?.boxShadow;
+        if(borderVal !== 'none') {
+          console.log(`${borderVal}`);
+          return true;
+        } else { return false; }
+        });
+      if(tweetPicker.CUR_ARTICLE !== undefined) {
         const siblingOnlyWhenPickup = tweetPicker.CUR_ARTICLE.querySelector(':scope div[data-testid="tweet"] + div');
         if(siblingOnlyWhenPickup !== null) {
           tweetPicker.CUR_IS_PICKUP = true;
@@ -356,7 +363,7 @@ const tweetPicker = {
   },
 
   clearCurTweet : () => {
-    tweetPicker.CUR_ARTICLE = null;
+    tweetPicker.CUR_ARTICLE = undefined;
     tweetPicker.CUR_HAS_QT = false;
     tweetPicker.CUR_IS_PICKUP = false;
     tweetPicker.CUR_IS_REPLY = false;
